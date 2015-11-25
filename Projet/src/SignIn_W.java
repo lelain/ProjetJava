@@ -2,13 +2,10 @@
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,6 +22,8 @@ public class SignIn_W extends javax.swing.JFrame {
     public SignIn_W() {
         initComponents();
         point = jPasswordField1.getEchoChar();
+        getRootPane().setDefaultButton(jButton1);  //ne semble pas marcher pas, à voir
+        
     }
 
     /**
@@ -57,6 +56,11 @@ public class SignIn_W extends javax.swing.JFrame {
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -128,8 +132,8 @@ public class SignIn_W extends javax.swing.JFrame {
         
     }
     
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        String userName = jTextField1.getText();
+    private void sendConnectAction() {
+         String userName = jTextField1.getText();
         char[] pw = jPasswordField1.getPassword();
         String password = String.valueOf(pw);
         Connection connect = null;
@@ -148,6 +152,10 @@ public class SignIn_W extends javax.swing.JFrame {
             MainWindow.setExtendedState(Main_W.MAXIMIZED_BOTH);
             MainWindow.setVisible(true);
         } 
+    }
+    
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        sendConnectAction();
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
@@ -158,6 +166,11 @@ public class SignIn_W extends javax.swing.JFrame {
             jPasswordField1.setEchoChar(point);
         }        
     }//GEN-LAST:event_jCheckBox1ItemStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        sendConnectAction();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     
     private char point; //the default caracter used to display the password
