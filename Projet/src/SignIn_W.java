@@ -112,7 +112,7 @@ public class SignIn_W extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public Connection makeConnection(String userName, String password) throws SQLException {
+    private Connection makeConnection(String userName, String password) throws SQLException {
         Connection conn = null;
         Properties connectionProps = new Properties();
         connectionProps.put("user", userName);
@@ -132,8 +132,9 @@ public class SignIn_W extends javax.swing.JFrame {
         
     }
     
+    //try to make connection with the database with user name and password
     private void sendConnectAction() {
-         String userName = jTextField1.getText();
+        String userName = jTextField1.getText();
         char[] pw = jPasswordField1.getPassword();
         String password = String.valueOf(pw);
         Connection connect = null;
@@ -141,7 +142,7 @@ public class SignIn_W extends javax.swing.JFrame {
             connect = makeConnection(userName,password);
         } catch (SQLException ex) {
             //Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(this, "Unexpected error",
+            JOptionPane.showMessageDialog(this, "Unexpected error\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         }
         
@@ -154,12 +155,13 @@ public class SignIn_W extends javax.swing.JFrame {
         } 
     }
     
+    //when clik the Sign in button
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         sendConnectAction();
     }//GEN-LAST:event_jButton1MouseClicked
 
+    //show password if checked
     private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
-        // TODO add your handling code here:
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             jPasswordField1.setEchoChar((char)0);
         } else {
@@ -167,8 +169,8 @@ public class SignIn_W extends javax.swing.JFrame {
         }        
     }//GEN-LAST:event_jCheckBox1ItemStateChanged
 
+    //when pressing enter key
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         sendConnectAction();
     }//GEN-LAST:event_jButton1ActionPerformed
 
