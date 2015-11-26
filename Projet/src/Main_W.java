@@ -34,10 +34,11 @@ public class Main_W extends javax.swing.JFrame {
     /**
      * Creates new form Main_W
      */
-    public Main_W() {
+    public Main_W(Connection conn) throws SQLException {
+        this.conn=conn;
         initComponents();
-        MyClientTab = new ClientTab();
-        jTabbedPane1.addTab("Clients",MyClientTab);
+        myClientTab = new ClientTab(conn);
+        jTabbedPane1.addTab("Clients",myClientTab);
     }
 
     
@@ -359,7 +360,8 @@ public class Main_W extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemDisconnectActionPerformed
 
-    private ClientTab MyClientTab;
+    private Connection conn;
+    private ClientTab myClientTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;
     private javax.swing.JMenuItem aboutMenuItem;

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -133,7 +135,7 @@ public class SignIn_W extends javax.swing.JFrame {
     }
     
     //try to make connection with the database with user name and password
-    private void sendConnectAction() {
+    private void sendConnectAction() throws SQLException {
         String userName = jTextField1.getText();
         char[] pw = jPasswordField1.getPassword();
         String password = String.valueOf(pw);
@@ -149,7 +151,7 @@ public class SignIn_W extends javax.swing.JFrame {
         if (connect!=null)      //si on parvient a se connecter
         {
             this.setVisible(false);
-            Main_W MainWindow = new Main_W();
+            Main_W MainWindow = new Main_W(connect);
             MainWindow.setExtendedState(Main_W.MAXIMIZED_BOTH);
             MainWindow.setVisible(true);
         } 
@@ -157,7 +159,11 @@ public class SignIn_W extends javax.swing.JFrame {
     
     //when clik the Sign in button
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        sendConnectAction();
+        try {
+            sendConnectAction();
+        } catch (SQLException ex) {
+            Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1MouseClicked
 
     //show password if checked
@@ -171,7 +177,11 @@ public class SignIn_W extends javax.swing.JFrame {
 
     //when pressing enter key
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        sendConnectAction();
+        try {
+            sendConnectAction();
+        } catch (SQLException ex) {
+            Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     

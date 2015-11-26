@@ -3,6 +3,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import javax.sql.RowSet;
 import javax.sql.RowSetListener;
+import javax.sql.rowset.CachedRowSet;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
@@ -18,16 +19,16 @@ import javax.swing.table.TableModel;
  */
 public class DataTableModel implements TableModel {
 
-  RowSet clientRowSet; // The ResultSet to interpret
+  CachedRowSet clientRowSet; // The ResultSet to interpret
   ResultSetMetaData metadata; // Additional information about the results
   int numcols, numrows; // How many rows and columns in the table
 
-  public RowSet getClientRowSet() {
+  public CachedRowSet getClientRowSet() {
     return clientRowSet;
   }
 
 
-  public DataTableModel(RowSet rowSetArg) throws SQLException {
+  public DataTableModel(CachedRowSet rowSetArg) throws SQLException {
 
     this.clientRowSet = rowSetArg;
     this.metadata = this.clientRowSet.getMetaData();
@@ -40,6 +41,7 @@ public class DataTableModel implements TableModel {
       this.numrows++;
     }
     this.clientRowSet.beforeFirst();
+    System.out.println(numrows);
   }
 
   public void addEventHandlersToRowSet(RowSetListener listener) {
@@ -60,10 +62,11 @@ public class DataTableModel implements TableModel {
       this.clientRowSet.insertRow();
       this.clientRowSet.moveToCurrentRow();
     } catch (SQLException e) {
-      JDBCTutorialUtilities.printSQLException(e);
+        
     }
   }
   */
+  
 
   public void close() {
     try {
