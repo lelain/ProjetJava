@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -34,10 +35,10 @@ public class Main_W extends javax.swing.JFrame {
     /**
      * Creates new form Main_W
      */
-    public Main_W(Connection conn) throws SQLException {
-        this.conn=conn;
+    public Main_W(Properties prop) throws SQLException {
+        this.connectionProp=prop;
         initComponents();
-        myClientTab = new ClientTab(conn);
+        myClientTab = new ClientTab(prop);
         jTabbedPane1.addTab("Clients",myClientTab);
     }
 
@@ -360,7 +361,7 @@ public class Main_W extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemDisconnectActionPerformed
 
-    private Connection conn;
+    private Properties connectionProp;
     private ClientTab myClientTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;

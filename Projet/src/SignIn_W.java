@@ -139,6 +139,9 @@ public class SignIn_W extends javax.swing.JFrame {
         String userName = jTextField1.getText();
         char[] pw = jPasswordField1.getPassword();
         String password = String.valueOf(pw);
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", userName);
+        connectionProps.put("password", password);
         Connection connect = null;
         try {
             connect = makeConnection(userName,password);
@@ -151,7 +154,7 @@ public class SignIn_W extends javax.swing.JFrame {
         if (connect!=null)      //si on parvient a se connecter
         {
             this.setVisible(false);
-            Main_W MainWindow = new Main_W(connect);
+            Main_W MainWindow = new Main_W(connectionProps);
             MainWindow.setExtendedState(Main_W.MAXIMIZED_BOTH);
             MainWindow.setVisible(true);
         } 
