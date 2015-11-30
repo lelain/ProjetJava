@@ -38,7 +38,7 @@ public class Main_W extends javax.swing.JFrame {
     public Main_W(Properties prop) throws SQLException {
         this.connectionProp=prop;
         initComponents();
-        myClientTab = new ClientTab(prop);
+        myClientTab = new ClientTab(prop,this);
         jTabbedPane1.addTab("Clients",myClientTab);
     }
 

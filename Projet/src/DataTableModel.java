@@ -41,7 +41,6 @@ public class DataTableModel implements TableModel {
       this.numrows++;
     }
     this.clientRowSet.beforeFirst();
-    System.out.println(numrows);
   }
 
   public void addEventHandlersToRowSet(RowSetListener listener) {
