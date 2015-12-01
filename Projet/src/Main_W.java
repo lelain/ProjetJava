@@ -35,11 +35,16 @@ public class Main_W extends javax.swing.JFrame {
     /**
      * Creates new form Main_W
      */
-    public Main_W(Properties prop) throws SQLException {
+    public Main_W(Properties prop,Connection conn) throws SQLException {
         this.connectionProp=prop;
+        this.conn=conn;
         initComponents();
         myClientTab = new ClientTab(prop,this);
         jTabbedPane1.addTab("Clients",myClientTab);
+    }
+    
+    public Connection getConnection() {
+        return conn;
     }
 
     
@@ -362,6 +367,7 @@ public class Main_W extends javax.swing.JFrame {
     }//GEN-LAST:event_MenuItemDisconnectActionPerformed
 
     private Properties connectionProp;
+    private Connection conn;
     private ClientTab myClientTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;

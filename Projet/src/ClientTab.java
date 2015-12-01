@@ -33,7 +33,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     //Attention, j'aurai besoin aussi de la connection pour faire des statements
     //la passer en argument
     
-    public ClientTab(Properties prop,JFrame parent) throws SQLException {
+    public ClientTab(Properties prop,Main_W parent) throws SQLException {
         this.connectionProp=prop;
         this.parent=parent;
         CachedRowSet myRowSet = getContentsOfTable();
@@ -95,7 +95,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        AddClient NewClientW = new AddClient(getParent(),true);
+        AddClient NewClientW = new AddClient(getParent(),myTableModel,true);
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_jButton1MouseClicked
@@ -119,7 +119,8 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     return crs;
     }
     
-    public JFrame getParent() {
+    @Override
+    public Main_W getParent() {
         return parent;
     }
     
@@ -133,7 +134,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     @Override
   public void cursorMoved(RowSetEvent event) {  }
 
-    private JFrame parent;
+    private Main_W parent;
     private Properties connectionProp; 
     private DataTableModel myTableModel;
     private JTable clientTable;

@@ -1,5 +1,8 @@
 
 import java.awt.event.ItemEvent;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -18,17 +21,16 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     /**
      * Creates new form AddClient
      */
-    public AddClient(java.awt.Frame parent, boolean modal) {
+    public AddClient(Main_W parent, DataTableModel myTableMod, boolean modal) {
         super(parent, modal);
+        this.myTableMod=myTableMod;
+        this.conn=parent.getConnection();
         initComponents();
         streetMAd.getDocument().addDocumentListener(this);
         cityMAd.getDocument().addDocumentListener(this);
         countryMAd.getDocument().addDocumentListener(this);
         zipMAd.getDocument().addDocumentListener(this);
-        /*streetDAd.getDocument().addDocumentListener(this);
-        cityDAd.getDocument().addDocumentListener(this);
-        countryDAd.getDocument().addDocumentListener(this);
-        zipDAd.getDocument().addDocumentListener(this);*/
+
     }
 
     /**
@@ -77,6 +79,9 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         countryDAd = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
+        jSeparator5 = new javax.swing.JSeparator();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -125,7 +130,9 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         jLabel12.setText("Delivery Adress");
 
         streetD.setText("Street");
+        streetD.setEnabled(false);
 
+        streetDAd.setEnabled(false);
         streetDAd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 streetDAdActionPerformed(evt);
@@ -133,29 +140,49 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         });
 
         cityD.setText("City");
+        cityD.setEnabled(false);
+
+        cityDAd.setEnabled(false);
 
         zipD.setText("Zip code");
+        zipD.setEnabled(false);
+
+        zipDAd.setEnabled(false);
 
         countryD.setText("Country");
+        countryD.setEnabled(false);
 
         countryDAd.setText("中国");
+        countryDAd.setEnabled(false);
 
         jLabel17.setText("Identity & contact");
+
+        okButton.setText("Add client");
+        okButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                okButtonMouseClicked(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cancelButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator5)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator3))
+                        .addComponent(jSeparator4))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -163,72 +190,91 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addContainerGap(296, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(streetD)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(streetDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(zipD)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(zipDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(countryD, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(cityD, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(12, 12, 12))
+                                .addGap(83, 83, 83)
+                                .addComponent(cityMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel9)
-                                    .addComponent(jLabel10))
+                                .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cityMAd, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                                    .addComponent(zipMAd)
-                                    .addComponent(countryMAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(streetMAd))
-                                .addGap(55, 55, 55)
-                                .addComponent(checkDAdress)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cityDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(countryDAd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel12)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(15, 15, 15)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(45, 45, 45)
+                                        .addGap(15, 15, 15)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel1)
-                                            .addComponent(jLabel2))
+                                            .addComponent(zipD)
+                                            .addComponent(streetD))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                            .addComponent(jTextField1))
-                                        .addGap(26, 26, 26)
+                                            .addComponent(zipDAd, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                            .addComponent(streetDAd))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(countryD)
+                                            .addComponent(cityD))
+                                        .addGap(18, 18, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(cityDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(countryDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(checkDAdress)
+                                        .addGap(0, 136, Short.MAX_VALUE))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel7))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(streetMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(countryMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel4)
                                             .addComponent(jLabel5))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                            .addComponent(jTextField5))))
-                                .addGap(0, 241, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator4)))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cancelButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(okButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -269,18 +315,18 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(cityMAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(streetD)
                     .addComponent(streetDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cityD)
-                    .addComponent(cityDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cityDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(streetD))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(zipD)
-                    .addComponent(zipDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(countryDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(countryD))
+                    .addComponent(countryD)
+                    .addComponent(zipDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -290,7 +336,13 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                     .addComponent(jLabel11)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
                 .addContainerGap())
         );
 
@@ -299,15 +351,34 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
     private void checkDAdressItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkDAdressItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
+            /*si on veut avoir la meme adresse de livraison, on ne peut plus la modifier
+            et elle prend les memes choses que l'adresse principale
+            */
+            cityD.setEnabled(false);
+            cityDAd.setEnabled(false);
+            streetD.setEnabled(false);
+            streetDAd.setEnabled(false);
+            zipD.setEnabled(false);
+            zipDAd.setEnabled(false);
+            countryD.setEnabled(false);
+            countryDAd.setEnabled(false);
             streetDAd.setText(streetMAd.getText());
             cityDAd.setText(cityMAd.getText());
             zipDAd.setText(zipMAd.getText());
             countryDAd.setText(countryMAd.getText());
         } else {
+            cityD.setEnabled(true);
+            cityDAd.setEnabled(true);
+            streetD.setEnabled(true);
+            streetDAd.setEnabled(true);
+            zipD.setEnabled(true);
+            zipDAd.setEnabled(true);
+            countryD.setEnabled(true);
+            countryDAd.setEnabled(true);
             streetDAd.setText("");
             cityDAd.setText("");
             zipDAd.setText("");
-            countryDAd.setText("");
+            countryDAd.setText("中国");
         }   
     }//GEN-LAST:event_checkDAdressItemStateChanged
 
@@ -319,8 +390,58 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
        
     }//GEN-LAST:event_streetMAdActionPerformed
 
+    private void okButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_okButtonMouseClicked
+        Statement stmt = null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "INSERT INTO Adresses (street, city, zip_code,country)\n" +
+                       "VALUES ('"+streetMAd.getText()+"','"+cityMAd.getText()+
+                        "',"+zipMAd.getText()+",'"+countryMAd.getText()+"')";
+            if (checkDAdress.isSelected()) {
+                sqlQuery += ";";
+            } else {
+                sqlQuery += ",\n('"+streetDAd.getText()+"','"+cityDAd.getText()+
+                        "',"+zipDAd.getText()+",'"+countryDAd.getText()+"');";
+            }
+            stmt.executeUpdate(sqlQuery);
+            stmt.close();
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            se.printStackTrace();
+        } finally {
+        //finally block used to close resources
+        try{
+            if(stmt!=null)
+                stmt.close();
+        }catch(SQLException se2){
+        }// nothing we can do
+        
+        }//end finally
+        this.dispose();
+    }
 
+        
+        
+        /*
+        myTableMod.insertRow(textField_COF_NAME.getText(),
+                                          Integer.parseInt(textField_SUP_ID.getText().trim()),
+                                          Float.parseFloat(textField_PRICE.getText().trim()),
+                                          Integer.parseInt(textField_SALES.getText().trim()),
+                                          Integer.parseInt(textField_TOTAL.getText().trim()));
+
+        
+
+    }//GEN-LAST:event_okButtonMouseClicked
+*/
+    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
+        this.dispose(); //on ferme simplement la fenetre
+    }//GEN-LAST:event_cancelButtonMouseClicked
+
+    private Connection conn;
+    private DataTableModel myTableMod;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelButton;
     private javax.swing.JCheckBox checkDAdress;
     private javax.swing.JLabel cityD;
     private javax.swing.JTextField cityDAd;
@@ -346,12 +467,14 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JButton okButton;
     private javax.swing.JLabel streetD;
     private javax.swing.JTextField streetDAd;
     private javax.swing.JTextField streetMAd;
@@ -366,15 +489,6 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             zipDAd.setText(zipMAd.getText());
             cityDAd.setText(cityMAd.getText());
             countryDAd.setText(countryMAd.getText());
-        }
-    }
-    
-    public void DelAdressChange() {
-        if (checkDAdress.isSelected()) {
-            streetMAd.setText(streetDAd.getText());
-            zipMAd.setText(zipDAd.getText());
-            cityMAd.setText(cityDAd.getText());
-            countryMAd.setText(countryDAd.getText());
         }
     }
     

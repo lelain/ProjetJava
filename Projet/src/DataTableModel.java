@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import javax.sql.RowSet;
 import javax.sql.RowSetListener;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.JOptionPane;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
@@ -47,7 +48,6 @@ public class DataTableModel implements TableModel {
     this.clientRowSet.addRowSetListener(listener);
   }
 
-  /*
   public void insertRow(String coffeeName, int supplierID, float price,
                         int sales, int total) throws SQLException {
 
@@ -64,14 +64,13 @@ public class DataTableModel implements TableModel {
         
     }
   }
-  */
   
 
   public void close() {
     try {
       clientRowSet.getStatement().close();
     } catch (SQLException e) {
-      //JDBCTutorialUtilities.printSQLException(e);
+      System.out.println(e.getMessage());
     }
   }
 
