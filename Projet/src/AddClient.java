@@ -1,6 +1,7 @@
 
 import java.awt.event.ItemEvent;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.event.DocumentEvent;
@@ -49,13 +50,13 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         jLabel1 = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        phone1Field = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        phone2Field = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        emailField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        qqField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
@@ -69,7 +70,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         checkDAdress = new javax.swing.JCheckBox();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        infosField = new javax.swing.JTextArea();
         jSeparator2 = new javax.swing.JSeparator();
         jLabel12 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
@@ -129,9 +130,9 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel11.setText("Other informations");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        infosField.setColumns(20);
+        infosField.setRows(5);
+        jScrollPane1.setViewportView(infosField);
 
         jLabel12.setText("Delivery Adress");
 
@@ -257,11 +258,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel2)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(phone1Field, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel3)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addComponent(phone2Field, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -272,8 +273,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                                             .addComponent(jLabel5))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(qqField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -294,17 +295,17 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                     .addComponent(jLabel1)
                     .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phone1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(qqField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(phone2Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -394,32 +395,164 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         Statement stmt = null;
-        try{
+        //we prepare the values to be added
+        //for the Adresses table
+        String street,city,zip_code,country;
+        street=streetMAd.getText();
+        city=cityMAd.getText();
+        zip_code=zipMAd.getText();
+        if ("".equals(countryMAd.getText())) {
+            country="NULL";
+        } else {
+            country="'"+countryMAd.getText()+"'";
+        }
+        
+        //for the Clients table        
+        String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
+        name=nameField.getText();
+        if ("".equals(phone1Field.getText())) {
+            phone1="NULL";
+        } else {
+            phone1="'"+phone1Field.getText()+"'";
+        }
+        if ("".equals(phone2Field.getText())) {
+            phone2="NULL";
+        } else {
+            phone2="'"+phone2Field.getText()+"'";
+        }
+        if ("".equals(emailField.getText())) {
+            email="NULL";
+        } else {
+            email="'"+emailField.getText()+"'";
+        }
+        if ("".equals(qqField.getText())) {
+            qq="NULL";
+        } else {
+            qq="'"+qqField.getText()+"'";
+        }
+        if (!"".equals(infosField.getText())) {
+            infos="'"+infosField.getText()+"'";
+        } else {
+            infos="NULL";
+        }
+        
+        //if delivery adress same as main adress
+        if (checkDAdress.isSelected()) {
+            try{
             stmt = conn.createStatement();
             String sqlQuery;
             sqlQuery = "INSERT INTO Adresses (street, city, zip_code,country)\n" +
-                       "VALUES ('"+streetMAd.getText()+"','"+cityMAd.getText()+
-                        "',"+zipMAd.getText()+",'"+countryMAd.getText()+"')";
-            if (checkDAdress.isSelected()) {
-                sqlQuery += ";";
-            } else {
-                sqlQuery += ",\n('"+streetDAd.getText()+"','"+cityDAd.getText()+
-                        "',"+zipDAd.getText()+",'"+countryDAd.getText()+"');";
+                       "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+");";
+            
+            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Creating adress failed, no rows affected.");
             }
-            stmt.executeUpdate(sqlQuery);
+            
+            long key=-1L;
+            
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                key = generatedKeys.getLong(1);
+            }
+            else {
+                throw new SQLException("Creating adress failed, no ID obtained.");
+            }
+            }
+            
+            adress = Long.toString(key);  //adress est l'id de l'adresse inseree
+            delivery_adress=Long.toString(key);
+            
+            sqlQuery = "INSERT INTO Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+                       "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
+                                email+","+qq+","+infos+");";
+            int affecRows = stmt.executeUpdate(sqlQuery); 
+            
+            if (affecRows == 0) {
+                throw new SQLException("Creating adress failed, no rows affected.");
+            }
+            
             stmt.close();
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            se.printStackTrace();
-        } finally {
-        //finally block used to close resources
-        try{
-            if(stmt!=null)
-                stmt.close();
-        }catch(SQLException se2){
-        }// nothing we can do
+            
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                System.out.println("Problem with insert request");
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+            
+        } else {
+            //here we have a delivery adress different from the main one
+            //first we prepare the delivery adress strings
+            String streetD,cityD,zip_codeD,countryD;
+            streetD=streetDAd.getText();
+            cityD=cityDAd.getText();
+            zip_codeD=zipDAd.getText();
+            if ("".equals(countryDAd.getText())) {
+                countryD="NULL";
+            } else {
+                countryD="'"+countryDAd.getText()+"'";
+            }
+            
+            try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "INSERT INTO Adresses (street, city, zip_code,country)\n" +
+                       "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+")" +
+                              ",('"+streetD+"','"+cityD+"',"+zip_codeD+","+countryD+");";
+            
+            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
+            
+            if (affectedRows == 0) {
+                throw new SQLException("Creating adress failed, no rows affected.");
+            }
+            
+            long key1=-1L;
+            long key2=-1L;
+            
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (generatedKeys.next()) {
+                key1 = generatedKeys.getLong(1);     
+            }
+            if (generatedKeys.next()) {
+                key2 = generatedKeys.getLong(1);     
+            }
+            else {
+                throw new SQLException("Creating adress failed, no ID obtained.");
+            }
+            }
+            
+            adress = Long.toString(key1);  //adress est l'id de l'adresse inseree la premiere
+            delivery_adress=Long.toString(key2);
+            
+            sqlQuery = "INSERT INTO Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+                       "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
+                                email+","+qq+","+infos+");";
+            int affecRows = stmt.executeUpdate(sqlQuery); 
+            
+            if (affecRows == 0) {
+                throw new SQLException("Creating adress failed, no rows affected.");
+            }
+            
+            stmt.close();
+            
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                System.out.println("Problem with insert request");
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        }
         
-        }//end finally
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -434,6 +567,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private javax.swing.JLabel countryD;
     private javax.swing.JTextField countryDAd;
     private javax.swing.JTextField countryMAd;
+    private javax.swing.JTextField emailField;
+    private javax.swing.JTextArea infosField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -453,13 +588,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField nameField;
     private javax.swing.JButton okButton;
+    private javax.swing.JTextField phone1Field;
+    private javax.swing.JTextField phone2Field;
+    private javax.swing.JTextField qqField;
     private javax.swing.JLabel streetD;
     private javax.swing.JTextField streetDAd;
     private javax.swing.JTextField streetMAd;
