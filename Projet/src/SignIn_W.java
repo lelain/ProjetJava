@@ -55,11 +55,6 @@ public class SignIn_W extends javax.swing.JFrame {
         jLabel2.setText("Password :");
 
         jButton1.setText("Sign in");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -160,15 +155,7 @@ public class SignIn_W extends javax.swing.JFrame {
         } 
     }
     
-    //when clik the Sign in button
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        try {
-            sendConnectAction();
-        } catch (SQLException ex) {
-            Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButton1MouseClicked
-
+    
     //show password if checked
     private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {

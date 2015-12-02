@@ -29,7 +29,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         streetMAd.getDocument().addDocumentListener(this);
         cityMAd.getDocument().addDocumentListener(this);
         countryMAd.getDocument().addDocumentListener(this);
-        zipMAd.getDocument().addDocumentListener(this);
+        zipMAd.getDocument().addDocumentListener(this); 
+        streetDAd.getDocument().addDocumentListener(this);
+        cityDAd.getDocument().addDocumentListener(this);
+        zipDAd.getDocument().addDocumentListener(this);
+        nameField.getDocument().addDocumentListener(this);
 
     }
 
@@ -43,7 +47,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        nameField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -87,7 +91,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel1.setText("Name");
 
-        jTextField1.setBackground(new java.awt.Color(229, 173, 159));
+        nameField.setBackground(new java.awt.Color(229, 173, 159));
 
         jLabel2.setText("Phone");
 
@@ -102,11 +106,6 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         jLabel7.setText("Street");
 
         streetMAd.setBackground(new java.awt.Color(229, 173, 159));
-        streetMAd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                streetMAdActionPerformed(evt);
-            }
-        });
 
         jLabel8.setText("City");
 
@@ -141,11 +140,6 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         streetDAd.setBackground(new java.awt.Color(229, 173, 159));
         streetDAd.setEnabled(false);
-        streetDAd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                streetDAdActionPerformed(evt);
-            }
-        });
 
         cityD.setText("City");
         cityD.setEnabled(false);
@@ -168,9 +162,10 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         jLabel17.setText("Identity & contact");
 
         okButton.setText("Add client");
-        okButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                okButtonMouseClicked(evt);
+        okButton.setEnabled(false);
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
             }
         });
 
@@ -270,7 +265,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel1)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel4)
@@ -297,7 +292,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -393,15 +388,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         }   
     }//GEN-LAST:event_checkDAdressItemStateChanged
 
-    private void streetDAdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_streetDAdActionPerformed
-        
-    }//GEN-LAST:event_streetDAdActionPerformed
+    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
+        this.dispose(); //on ferme simplement la fenetre
+    }//GEN-LAST:event_cancelButtonMouseClicked
 
-    private void streetMAdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_streetMAdActionPerformed
-       
-    }//GEN-LAST:event_streetMAdActionPerformed
-
-    private void okButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_okButtonMouseClicked
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         Statement stmt = null;
         try{
             stmt = conn.createStatement();
@@ -430,24 +421,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         
         }//end finally
         this.dispose();
-    }
-
-        
-        
-        /*
-        myTableMod.insertRow(textField_COF_NAME.getText(),
-                                          Integer.parseInt(textField_SUP_ID.getText().trim()),
-                                          Float.parseFloat(textField_PRICE.getText().trim()),
-                                          Integer.parseInt(textField_SALES.getText().trim()),
-                                          Integer.parseInt(textField_TOTAL.getText().trim()));
-
-        
-
-    }//GEN-LAST:event_okButtonMouseClicked
-*/
-    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
-        this.dispose(); //on ferme simplement la fenetre
-    }//GEN-LAST:event_cancelButtonMouseClicked
+    }//GEN-LAST:event_okButtonActionPerformed
 
     private Connection conn;
     private DataTableModel myTableMod;
@@ -480,11 +454,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField nameField;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel streetD;
     private javax.swing.JTextField streetDAd;
@@ -494,7 +468,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     private javax.swing.JTextField zipMAd;
     // End of variables declaration//GEN-END:variables
 
-    public void mainAdressChange() {
+    private void mainAdressChange() {
         if (checkDAdress.isSelected()) {
             streetDAd.setText(streetMAd.getText());
             zipDAd.setText(zipMAd.getText());
@@ -503,23 +477,51 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         }
     }
     
+    private void readyToValidate() {
+        if ((!"".equals(nameField.getText())) && (!"".equals(streetMAd.getText())) && 
+               (!"".equals(zipMAd.getText())) && (!"".equals(cityMAd.getText())) &&
+                (!"".equals(streetDAd.getText())) && (!"".equals(zipDAd.getText())) &&
+                (!"".equals(cityDAd.getText()))) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
+    
     @Override
     public void insertUpdate(DocumentEvent e) {
+        if ((e.getDocument() == streetMAd.getDocument()) || (e.getDocument() == cityMAd.getDocument()) ||
+                (e.getDocument() == zipMAd.getDocument()) || (e.getDocument() == countryMAd.getDocument())) {
             mainAdressChange();
-        
-        /*if (e.getDocument() == zipDAd) {  -> marche pas, je pense parce que zipDad n'est pas le document!
-            DelAdressChange();
-        }*/
-        
+            readyToValidate(); 
+        } else {
+            readyToValidate();
+        }
     }
 
     @Override
     public void removeUpdate(DocumentEvent e) {
-        mainAdressChange();
+        if ((e.getDocument() == streetMAd.getDocument()) || (e.getDocument() == cityMAd.getDocument()) ||
+                (e.getDocument() == zipMAd.getDocument()) || (e.getDocument() == countryMAd.getDocument())) {
+            mainAdressChange();
+            readyToValidate(); 
+        } else {
+            readyToValidate();
+        }
     }
 
     @Override
     public void changedUpdate(DocumentEvent e) {
-        mainAdressChange();
+        if ((e.getDocument() == streetMAd.getDocument()) || (e.getDocument() == cityMAd.getDocument()) ||
+                (e.getDocument() == zipMAd.getDocument()) || (e.getDocument() == countryMAd.getDocument())) {
+            mainAdressChange();
+            readyToValidate(); 
+        } else {
+            readyToValidate();
+        }
     }
 }
+
+
+    
+    
