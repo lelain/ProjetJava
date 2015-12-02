@@ -87,6 +87,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel1.setText("Name");
 
+        jTextField1.setBackground(new java.awt.Color(229, 173, 159));
+
         jLabel2.setText("Phone");
 
         jLabel3.setText("Other Phone");
@@ -99,6 +101,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel7.setText("Street");
 
+        streetMAd.setBackground(new java.awt.Color(229, 173, 159));
         streetMAd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 streetMAdActionPerformed(evt);
@@ -107,7 +110,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel8.setText("City");
 
+        cityMAd.setBackground(new java.awt.Color(229, 173, 159));
+
         jLabel9.setText("Zip code");
+
+        zipMAd.setBackground(new java.awt.Color(229, 173, 159));
 
         jLabel10.setText("Country");
 
@@ -132,6 +139,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         streetD.setText("Street");
         streetD.setEnabled(false);
 
+        streetDAd.setBackground(new java.awt.Color(229, 173, 159));
         streetDAd.setEnabled(false);
         streetDAd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,11 +150,13 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         cityD.setText("City");
         cityD.setEnabled(false);
 
+        cityDAd.setBackground(new java.awt.Color(229, 173, 159));
         cityDAd.setEnabled(false);
 
         zipD.setText("Zip code");
         zipD.setEnabled(false);
 
+        zipDAd.setBackground(new java.awt.Color(229, 173, 159));
         zipDAd.setEnabled(false);
 
         countryD.setText("Country");
@@ -320,13 +330,14 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                     .addComponent(cityDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(streetD))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(zipD)
-                    .addComponent(countryDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(countryD)
-                    .addComponent(zipDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(countryDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(countryD)
+                        .addComponent(zipDAd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
