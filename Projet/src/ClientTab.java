@@ -95,7 +95,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        AddClient NewClientW = new AddClient(getParent(),myTableModel,true);
+        AddClient NewClientW = new AddClient(getParent(),this,myTableModel,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_jButton1MouseClicked
@@ -118,6 +118,14 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     }
     return crs;
     }
+    
+    
+    public void createNewTableModel() throws SQLException {
+        myTableModel = new DataTableModel(getContentsOfTable());
+        myTableModel.addEventHandlersToRowSet(this);
+        clientTable.setModel(myTableModel);
+    }
+    
     
     @Override
     public Main_W getParent() {

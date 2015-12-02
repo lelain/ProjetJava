@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -22,10 +24,11 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     /**
      * Creates new form AddClient
      */
-    public AddClient(Main_W parent, DataTableModel myTableMod, boolean modal) {
+    public AddClient(Main_W parent, ClientTab client,DataTableModel myTableMod, boolean modal) {
         super(parent, modal);
         this.myTableMod=myTableMod;
         this.conn=parent.getConnection();
+        this.client=client;
         initComponents();
         streetMAd.getDocument().addDocumentListener(this);
         cityMAd.getDocument().addDocumentListener(this);
@@ -553,11 +556,17 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             }//end finally
         }
         
+        try {
+            client.createNewTableModel();
+        } catch (SQLException ex) {
+            System.out.println("problem creating table");
+        }
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     private Connection conn;
     private DataTableModel myTableMod;
+    private ClientTab client;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
     private javax.swing.JCheckBox checkDAdress;
