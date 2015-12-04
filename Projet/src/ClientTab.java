@@ -1,8 +1,12 @@
 
 import com.sun.rowset.CachedRowSetImpl;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Properties;
 import javax.sql.RowSetEvent;
 import javax.sql.RowSetListener;
@@ -33,23 +37,46 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
      * @throws java.sql.SQLException
      */
     
-    //Attention, j'aurai besoin aussi de la connection pour faire des statements
-    //la passer en argument
     
     public ClientTab(Properties prop,Main_W parent) throws SQLException {
         this.connectionProp=prop;
         this.parent=parent;
+        this.selectedRow=0;
         
         
         
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
-        myTableModel.addEventHandlersToRowSet(this);    //util?
+        //myTableModel.addEventHandlersToRowSet(this);    //usefull??
 
         clientTable = new JTable(); // Displays the table
-        clientTable.setAutoCreateRowSorter(true);
         clientTable.setModel(myTableModel);
+        clientTable.setAutoCreateRowSorter(true);
+        
+        initComponents();
+        
+        
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        clientTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseReleased(java.awt.event.MouseEvent evt) {
+            selectedRow = clientTable.rowAtPoint(evt.getPoint())+1;
+            selectedRow=clientTable.convertRowIndexToModel(selectedRow);
+            if (selectedRow >= 0) {
+                modifButton.setEnabled(true);
+                removeButton.setEnabled(true);
+                for (int j = 0; j < 4; j++) 
+                        {
+                            System.out.println(" " + myTableModel.getValueAt(selectedRow, j));
+                        }
+            }
+        }
+        });
+        
+        
+        
+        /*
         ListSelectionModel rowSM = clientTable.getSelectionModel();
             rowSM.addListSelectionListener(new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent e) {
@@ -59,8 +86,6 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                         removeButton.setEnabled(false);
                     } else {
                         int selectedRow = lsm.getMinSelectionIndex();
-                        System.out.println("Row " + selectedRow
-                                           + " is now selected.");
                         modifButton.setEnabled(true);
                         removeButton.setEnabled(true);
                         for (int j = 0; j < 4; j++) 
@@ -70,8 +95,11 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                     }
                 }
             });
+        */
+        
+          
             
-            initComponents();
+            
         
         
         
@@ -93,14 +121,19 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         removeButton = new javax.swing.JButton();
 
         jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
             }
         });
 
         modifButton.setText("Modify");
         modifButton.setEnabled(false);
+        modifButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modifButtonMouseClicked(evt);
+            }
+        });
 
         removeButton.setText("Remove");
         removeButton.setEnabled(false);
@@ -139,11 +172,68 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         AddClient NewClientW = new AddClient(getParent(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButton1MouseClicked
+
+    private void modifButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifButtonMouseClicked
+        HashMap<Integer, String> content = new HashMap<Integer, String>();
+        Statement stmt = null;
+        try{
+            Connection conn=getParent().getConnection();
+            stmt = conn.createStatement();
+            String sqlQuery;
+            //we need the adress id and deliver adress id
+            int rowAd=0;
+            int rowDAd=0;
+            sqlQuery = "SELECT Clients.name,Clients.phone1,Clients.phone2,Clients.email,Clients.qq,Clients.infos,"
+                    + "main.street,main.city,main.country,main.zip_code,"
+                    + "dev.street,dev.city,dev.country,dev.zip_code "
+                    + "from Clients inner join Adresses as main on Clients.adress=main.ad_id "
+                    +  "inner join Adresses as dev on Clients.delivery_adress=dev.ad_id "
+                    + "where cl_id="+Integer.toString(selectedRow)+";";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) {
+                content.put(1,rs.getString("Clients.name"));
+                content.put(2,rs.getString("Clients.phone1"));
+                content.put(3,rs.getString("Clients.phone2"));
+                content.put(4,rs.getString("Clients.email"));
+                content.put(5,rs.getString("Clients.qq"));
+                content.put(6,rs.getString("Clients.infos"));
+                content.put(7,rs.getString("main.street"));
+                content.put(8,rs.getString("main.city"));
+                content.put(9,rs.getString("main.country"));
+                content.put(10,rs.getString("main.zip_code"));
+                content.put(11,rs.getString("dev.street"));
+                content.put(12,rs.getString("dev.city"));
+                content.put(13,rs.getString("dev.country"));
+                content.put(14,rs.getString("dev.zip_code"));
+                System.out.println(selectedRow);
+                
+            }
+        }catch(SQLException se) {
+                //Handle errors for JDBC
+                System.out.println("Problem with request");
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+            
+        
+     
+        
+        
+        //le pb est la!! a voir
+        ModifyClient ModClientW = new ModifyClient(getParent(),this,true,content,selectedRow);       
+        ModClientW.setLocationRelativeTo(null);
+        ModClientW.setVisible(true);
+
+    }//GEN-LAST:event_modifButtonMouseClicked
 
     private CachedRowSet getContentsOfTable() throws SQLException {
     CachedRowSet crs = null;
@@ -180,17 +270,19 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     public void actionPerformed(ActionEvent event) {  }
 
     @Override
-  public void rowSetChanged(RowSetEvent event) {  }
+    public void rowSetChanged(RowSetEvent event) {  }
 
     @Override
-  public void rowChanged(RowSetEvent event) { }
+    public void rowChanged(RowSetEvent event) { }
+    
     @Override
-  public void cursorMoved(RowSetEvent event) {  }
+    public void cursorMoved(RowSetEvent event) {  }
 
     private Main_W parent;
     private Properties connectionProp; 
     private DataTableModel myTableModel;
     private JTable clientTable;
+    private int selectedRow;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JSeparator jSeparator1;

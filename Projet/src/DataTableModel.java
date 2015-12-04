@@ -48,6 +48,7 @@ public class DataTableModel implements TableModel {
     this.clientRowSet.addRowSetListener(listener);
   }
 
+  /*
   public void insertRow(String coffeeName, int supplierID, float price,
                         int sales, int total) throws SQLException {
 
@@ -64,7 +65,7 @@ public class DataTableModel implements TableModel {
         
     }
   }
-  
+  */
 
   public void close() {
     try {

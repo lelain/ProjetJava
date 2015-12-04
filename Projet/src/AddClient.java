@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -362,6 +363,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+   
+    
     private void checkDAdressItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_checkDAdressItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             /*si on veut avoir la meme adresse de livraison, on ne peut plus la modifier
@@ -399,9 +402,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         //before we send the request we make sure that the fields are correctly fill
         if (fieldsRight()) {
             insertClient();
-        } else {
-            
-        }
+        } 
         
     }//GEN-LAST:event_okButtonActionPerformed
 
