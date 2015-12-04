@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -95,7 +98,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel1.setText("Name");
 
-        nameField.setBackground(new java.awt.Color(229, 173, 159));
+        nameField.setBackground(new java.awt.Color(250, 225, 199));
 
         jLabel2.setText("Phone");
 
@@ -109,15 +112,15 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
         jLabel7.setText("Street");
 
-        streetMAd.setBackground(new java.awt.Color(229, 173, 159));
+        streetMAd.setBackground(new java.awt.Color(250, 225, 199));
 
         jLabel8.setText("City");
 
-        cityMAd.setBackground(new java.awt.Color(229, 173, 159));
+        cityMAd.setBackground(new java.awt.Color(250, 225, 199));
 
         jLabel9.setText("Zip code");
 
-        zipMAd.setBackground(new java.awt.Color(229, 173, 159));
+        zipMAd.setBackground(new java.awt.Color(250, 225, 199));
 
         jLabel10.setText("Country");
 
@@ -142,19 +145,19 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         streetD.setText("Street");
         streetD.setEnabled(false);
 
-        streetDAd.setBackground(new java.awt.Color(229, 173, 159));
+        streetDAd.setBackground(new java.awt.Color(250, 225, 199));
         streetDAd.setEnabled(false);
 
         cityD.setText("City");
         cityD.setEnabled(false);
 
-        cityDAd.setBackground(new java.awt.Color(229, 173, 159));
+        cityDAd.setBackground(new java.awt.Color(250, 225, 199));
         cityDAd.setEnabled(false);
 
         zipD.setText("Zip code");
         zipD.setEnabled(false);
 
-        zipDAd.setBackground(new java.awt.Color(229, 173, 159));
+        zipDAd.setBackground(new java.awt.Color(250, 225, 199));
         zipDAd.setEnabled(false);
 
         countryD.setText("Country");
@@ -174,9 +177,9 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         });
 
         cancelButton.setText("Cancel");
-        cancelButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                cancelButtonMouseClicked(evt);
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
             }
         });
 
@@ -197,14 +200,65 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator2))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(83, 83, 83)
-                                .addComponent(cityMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel10)
+                                            .addComponent(jLabel9)
+                                            .addComponent(jLabel8)
+                                            .addComponent(jLabel7))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(streetMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(countryMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(phone2Field, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel1)
+                                                .addGap(161, 161, 161))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(phone1Field, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(60, 60, 60)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel4)
+                                            .addComponent(jLabel5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(qqField, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                            .addComponent(emailField))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(cancelButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(okButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(83, 83, 83)
+                                    .addComponent(cityMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel6)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -233,57 +287,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                                             .addComponent(countryDAd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(checkDAdress)
-                                        .addGap(0, 136, Short.MAX_VALUE))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel10)
-                                            .addComponent(jLabel9)
-                                            .addComponent(jLabel8)
-                                            .addComponent(jLabel7))
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(streetMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(12, 12, 12)
-                                                .addComponent(zipMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(countryMAd, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel2)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(phone1Field, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel3)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(phone2Field, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(nameField, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4)
-                                            .addComponent(jLabel5))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(qqField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(cancelButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(okButton)))
+                                        .addGap(0, 136, Short.MAX_VALUE)))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -392,11 +396,113 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         }   
     }//GEN-LAST:event_checkDAdressItemStateChanged
 
-    private void cancelButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cancelButtonMouseClicked
-        this.dispose(); //on ferme simplement la fenetre
-    }//GEN-LAST:event_cancelButtonMouseClicked
-
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        //before we send the request we make sure that the fields are correctly fill
+        if (fieldsRight()) {
+            insertClient();
+        } else {
+            
+        }
+        
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    
+    private boolean fieldsRight() {
+        if (!verifyLenght(nameField,40,"Name too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(emailField,30,"Email adress too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(phone1Field,20,"Phone number too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(phone2Field,20,"Phone number too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(qqField,20,"QQ number too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(streetMAd,80,"Street too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(streetDAd,80,"Street too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(cityMAd,30,"City too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(cityDAd,30,"City too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(zipMAd,8,"Zip code too long, please make it shorter")) {
+            return false;
+        }
+        if (!isInt(zipMAd,"Zip code should be numbers")) {
+            return false;
+        }
+        if (!verifyLenght(zipDAd,8,"Zip code too long, please make it shorter")) {
+            return false;
+        }
+        if (!isInt(zipDAd,"Zip code should be numbers")) {
+            return false;
+        }
+        if (!verifyLenght(countryMAd,40,"Country too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(countryDAd,40,"Country too long, please make it shorter")) {
+            return false;
+        }
+        if (!verifyLenght(infosField,500,"Information too long, please make it shorter")) {
+            return false;
+        }
+
+        return true;
+    }
+    
+    
+    private boolean isInt(JTextField text,String message) {
+        String str = text.getText();
+        if (!str.matches("^-?\\d+$")) {
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        }
+        return true;
+    }
+    
+    
+    private boolean verifyLenght(JTextField text,int length,String message) {
+        if (text.getText().length() > length) {
+            
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    private boolean verifyLenght(JTextArea text,int length,String message) {
+        if (text.getText().length() > length) {
+            
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    
+    private void insertClient() {
+        
         Statement stmt = null;
         //we prepare the values to be added
         //for the Adresses table
@@ -562,7 +668,12 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             System.out.println("problem creating table");
         }
         this.dispose();
-    }//GEN-LAST:event_okButtonActionPerformed
+    }
+    
+    
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
     private Connection conn;
     private DataTableModel myTableMod;
