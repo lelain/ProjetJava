@@ -10,7 +10,10 @@ import javax.sql.rowset.CachedRowSet;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,14 +39,41 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     public ClientTab(Properties prop,Main_W parent) throws SQLException {
         this.connectionProp=prop;
         this.parent=parent;
+        
+        
+        
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
-        //myTableModel.addEventHandlersToRowSet(this);
+        myTableModel.addEventHandlersToRowSet(this);    //util?
 
         clientTable = new JTable(); // Displays the table
         clientTable.setAutoCreateRowSorter(true);
         clientTable.setModel(myTableModel);
-        initComponents();
+        clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        ListSelectionModel rowSM = clientTable.getSelectionModel();
+            rowSM.addListSelectionListener(new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent e) {
+                    ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+                    if (lsm.isSelectionEmpty()) {
+                        modifButton.setEnabled(false);
+                        removeButton.setEnabled(false);
+                    } else {
+                        int selectedRow = lsm.getMinSelectionIndex();
+                        System.out.println("Row " + selectedRow
+                                           + " is now selected.");
+                        modifButton.setEnabled(true);
+                        removeButton.setEnabled(true);
+                        for (int j = 0; j < 4; j++) 
+                        {
+                            System.out.print(" " + myTableModel.getValueAt(selectedRow, j));
+                        }
+                    }
+                }
+            });
+            
+            initComponents();
+        
+        
         
     }
 
@@ -59,13 +89,21 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         jButton1 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         paneForTable = new javax.swing.JScrollPane(clientTable);
+        modifButton = new javax.swing.JButton();
+        removeButton = new javax.swing.JButton();
 
         jButton1.setText("Add");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
+
+        modifButton.setText("Modify");
+        modifButton.setEnabled(false);
+
+        removeButton.setText("Remove");
+        removeButton.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -78,14 +116,21 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                     .addComponent(jSeparator1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addGap(0, 337, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(modifButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeButton)
+                        .addGap(0, 175, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(modifButton)
+                    .addComponent(removeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -94,11 +139,11 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        AddClient NewClientW = new AddClient(getParent(),this,myTableModel,true);       
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        AddClient NewClientW = new AddClient(getParent(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private CachedRowSet getContentsOfTable() throws SQLException {
     CachedRowSet crs = null;
@@ -149,6 +194,8 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton modifButton;
     private javax.swing.JScrollPane paneForTable;
+    private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

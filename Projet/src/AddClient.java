@@ -27,9 +27,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     /**
      * Creates new form AddClient
      */
-    public AddClient(Main_W parent, ClientTab client,DataTableModel myTableMod, boolean modal) {
+    public AddClient(Main_W parent, ClientTab client, boolean modal) {
         super(parent, modal);
-        this.myTableMod=myTableMod;
         this.conn=parent.getConnection();
         this.client=client;
         initComponents();
@@ -676,7 +675,6 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private Connection conn;
-    private DataTableModel myTableMod;
     private ClientTab client;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;
