@@ -586,7 +586,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             
             } catch(SQLException se) {
                 //Handle errors for JDBC
-                System.out.println("Problem with insert request");
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {
                 //finally block used to close resources
                 try{
@@ -652,7 +653,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             
             } catch(SQLException se) {
                 //Handle errors for JDBC
-                System.out.println("Problem with insert request");
+                JOptionPane.showMessageDialog(this, "Unexpected error\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {
                 //finally block used to close resources
                 try{
@@ -665,7 +667,8 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         try {
             client.createNewTableModel();
         } catch (SQLException ex) {
-            System.out.println("problem creating table");
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
         }
         this.dispose();
     }

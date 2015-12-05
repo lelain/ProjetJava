@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 /*
@@ -39,8 +40,14 @@ public class Main_W extends javax.swing.JFrame {
         this.connectionProp=prop;
         this.conn=conn;
         initComponents();
+        jTabbedPane1 = new JTabbedPane();
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        
         myClientTab = new ClientTab(prop,this);
         jTabbedPane1.addTab("Clients",myClientTab);
+        
+        setContentPane(jTabbedPane1);
+        pack();
     }
     
     public Connection getConnection() {
@@ -58,7 +65,6 @@ public class Main_W extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
@@ -69,8 +75,6 @@ public class Main_W extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -117,14 +121,12 @@ public class Main_W extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 938, Short.MAX_VALUE)
+            .addGap(0, 938, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+            .addGap(0, 516, Short.MAX_VALUE)
         );
-
-        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
@@ -147,6 +149,7 @@ public class Main_W extends javax.swing.JFrame {
     private Properties connectionProp;
     private Connection conn;
     private ClientTab myClientTab;
+    private JTabbedPane jTabbedPane1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -155,7 +158,6 @@ public class Main_W extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
 

@@ -58,6 +58,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
+        /*
         clientTable.addMouseListener(new java.awt.event.MouseAdapter() {
         @Override
         public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -73,35 +74,17 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
             }
         }
         });
-        
-        
-        
-        /*
-        ListSelectionModel rowSM = clientTable.getSelectionModel();
-            rowSM.addListSelectionListener(new ListSelectionListener() {
-                public void valueChanged(ListSelectionEvent e) {
-                    ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-                    if (lsm.isSelectionEmpty()) {
-                        modifButton.setEnabled(false);
-                        removeButton.setEnabled(false);
-                    } else {
-                        int selectedRow = lsm.getMinSelectionIndex();
-                        modifButton.setEnabled(true);
-                        removeButton.setEnabled(true);
-                        for (int j = 0; j < 4; j++) 
-                        {
-                            System.out.print(" " + myTableModel.getValueAt(selectedRow, j));
-                        }
-                    }
-                }
-            });
         */
         
-          
-            
-            
         
         
+        
+        ListSelectionModel rowSM = clientTable.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                tableValueChangedEvent(e);  
+            }
+        });
         
     }
 
@@ -172,6 +155,20 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tableValueChangedEvent(ListSelectionEvent e) {
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        if (lsm.isSelectionEmpty()) {
+            modifButton.setEnabled(false);
+            removeButton.setEnabled(false);
+        } else {
+            selectedRow = lsm.getMinSelectionIndex()+1;
+            modifButton.setEnabled(true);
+            removeButton.setEnabled(true);
+        }
+    }
+    
+    
+    
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         AddClient NewClientW = new AddClient(getParent(),this,true);       
         NewClientW.setLocationRelativeTo(null);
@@ -179,7 +176,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void modifButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifButtonMouseClicked
-        HashMap<Integer, String> content = new HashMap<Integer, String>();
+        HashMap<Integer, String> content = new HashMap<>();
         Statement stmt = null;
         try{
             Connection conn=getParent().getConnection();
@@ -188,7 +185,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
             //we need the adress id and deliver adress id
             int rowAd=0;
             int rowDAd=0;
-            sqlQuery = "SELECT Clients.name,Clients.phone1,Clients.phone2,Clients.email,Clients.qq,Clients.infos,"
+            sqlQuery = "SELECT Clients.name,Clients.phone1,Clients.phone2,Clients.adress,Clients.delivery_adress,Clients.email,Clients.qq,Clients.infos,"
                     + "main.street,main.city,main.country,main.zip_code,"
                     + "dev.street,dev.city,dev.country,dev.zip_code "
                     + "from Clients inner join Adresses as main on Clients.adress=main.ad_id "
@@ -210,12 +207,20 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                 content.put(12,rs.getString("dev.city"));
                 content.put(13,rs.getString("dev.country"));
                 content.put(14,rs.getString("dev.zip_code"));
-                System.out.println(selectedRow);
+                
+                //if delivery adress is also the main adress, we add a content Y
+                if (rs.getInt("adress")==rs.getInt("delivery_adress")) {
+                    content.put(15, "Y");
+                } else {
+                    content.put(15, "N");
+                }
+                
                 
             }
         }catch(SQLException se) {
                 //Handle errors for JDBC
-                System.out.println("Problem with request");
+                JOptionPane.showMessageDialog(this, "Unexpected error, request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {
                 //finally block used to close resources
                 try{
@@ -228,7 +233,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
      
         
         
-        //le pb est la!! a voir
+        //le pb est la!! a voir, sans doute parce que quand champs vide, je prends null
         ModifyClient ModClientW = new ModifyClient(getParent(),this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);

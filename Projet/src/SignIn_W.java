@@ -148,7 +148,7 @@ public class SignIn_W extends javax.swing.JFrame {
         
         if (connect!=null)      //si on parvient a se connecter
         {
-            this.setVisible(false);
+            this.dispose();
             Main_W MainWindow = new Main_W(connectionProps,connect);
             MainWindow.setExtendedState(Main_W.MAXIMIZED_BOTH);
             MainWindow.setVisible(true);
