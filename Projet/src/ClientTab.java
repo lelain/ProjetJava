@@ -56,29 +56,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         initComponents();
         
         
-        clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        /*
-        clientTable.addMouseListener(new java.awt.event.MouseAdapter() {
-        @Override
-        public void mouseReleased(java.awt.event.MouseEvent evt) {
-            selectedRow = clientTable.rowAtPoint(evt.getPoint())+1;
-            selectedRow=clientTable.convertRowIndexToModel(selectedRow);
-            if (selectedRow >= 0) {
-                modifButton.setEnabled(true);
-                removeButton.setEnabled(true);
-                for (int j = 0; j < 4; j++) 
-                        {
-                            System.out.println(" " + myTableModel.getValueAt(selectedRow, j));
-                        }
-            }
-        }
-        });
-        */
-        
-        
-        
-        
+        clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
         ListSelectionModel rowSM = clientTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
@@ -120,6 +98,11 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
 
         removeButton.setText("Remove");
         removeButton.setEnabled(false);
+        removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -185,20 +168,20 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
             //we need the adress id and deliver adress id
             int rowAd=0;
             int rowDAd=0;
-            sqlQuery = "SELECT Clients.name,Clients.phone1,Clients.phone2,Clients.adress,Clients.delivery_adress,Clients.email,Clients.qq,Clients.infos,"
+            sqlQuery = "SELECT V_Clients.name,V_Clients.phone1,V_Clients.phone2,V_Clients.adress,V_Clients.delivery_adress,V_Clients.email,V_Clients.qq,V_Clients.infos,"
                     + "main.street,main.city,main.country,main.zip_code,"
                     + "dev.street,dev.city,dev.country,dev.zip_code "
-                    + "from Clients inner join Adresses as main on Clients.adress=main.ad_id "
-                    +  "inner join Adresses as dev on Clients.delivery_adress=dev.ad_id "
+                    + "from V_Clients inner join V_Adresses as main on V_Clients.adress=main.ad_id "
+                    +  "inner join V_Adresses as dev on V_Clients.delivery_adress=dev.ad_id "
                     + "where cl_id="+Integer.toString(selectedRow)+";";
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
-                content.put(1,rs.getString("Clients.name"));
-                content.put(2,rs.getString("Clients.phone1"));
-                content.put(3,rs.getString("Clients.phone2"));
-                content.put(4,rs.getString("Clients.email"));
-                content.put(5,rs.getString("Clients.qq"));
-                content.put(6,rs.getString("Clients.infos"));
+                content.put(1,rs.getString("V_Clients.name"));
+                content.put(2,rs.getString("V_Clients.phone1"));
+                content.put(3,rs.getString("V_Clients.phone2"));
+                content.put(4,rs.getString("V_Clients.email"));
+                content.put(5,rs.getString("V_Clients.qq"));
+                content.put(6,rs.getString("V_Clients.infos"));
                 content.put(7,rs.getString("main.street"));
                 content.put(8,rs.getString("main.city"));
                 content.put(9,rs.getString("main.country"));
@@ -229,16 +212,46 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                 }catch(SQLException se2){ }// nothing we can do
             }//end finally
             
-        
-     
-        
-        
-        //le pb est la!! a voir, sans doute parce que quand champs vide, je prends null
         ModifyClient ModClientW = new ModifyClient(getParent(),this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);
 
     }//GEN-LAST:event_modifButtonMouseClicked
+
+    private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
+        // TODO Dialog to ask if sure to remove the row
+        
+        Statement stmt = null;
+        try{
+            Connection conn=getParent().getConnection();
+            stmt = conn.createStatement();
+            String sqlQuery;
+            
+            // TODO remove the selected row : the clients, the main adress and delivery adress
+            
+            sqlQuery="DELETE FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
+            stmt.executeUpdate(sqlQuery);
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, delete request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+        try{
+            if(stmt!=null)
+                stmt.close();
+        }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //and we display the result on the table by creating a new tablemodel
+        try {
+            createNewTableModel();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_removeButtonMouseClicked
 
     private CachedRowSet getContentsOfTable() throws SQLException {
     CachedRowSet crs = null;
@@ -249,7 +262,9 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
       crs.setUsername(connectionProp.getProperty("user"));
       crs.setPassword(connectionProp.getProperty("password"));
       crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
-      crs.setCommand("select name, phone1, email, qq, infos from Clients");
+      crs.setCommand("select V_Clients.name, V_Clients.phone1, V_Clients.phone2, V_Clients.email, V_Clients.qq, "
+              + "V_Adresses.street, V_Adresses.city, V_Adresses.zip_code, V_Adresses.country, V_Clients.infos from V_Clients"
+              + " inner join V_Adresses on V_Clients.adress=V_Adresses.ad_id");
       crs.execute();
 
     } catch (SQLException e) {

@@ -550,7 +550,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             try{
             stmt = conn.createStatement();
             String sqlQuery;
-            sqlQuery = "INSERT INTO Adresses (street, city, zip_code,country)\n" +
+            sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
                        "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+");";
             
             int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
@@ -573,7 +573,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             adress = Long.toString(key);  //adress est l'id de l'adresse inseree
             delivery_adress=Long.toString(key);
             
-            sqlQuery = "INSERT INTO Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
                        "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
                                 email+","+qq+","+infos+");";
             int affecRows = stmt.executeUpdate(sqlQuery); 
@@ -612,7 +612,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             try{
             stmt = conn.createStatement();
             String sqlQuery;
-            sqlQuery = "INSERT INTO Adresses (street, city, zip_code,country)\n" +
+            sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
                        "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+")" +
                               ",('"+streetD+"','"+cityD+"',"+zip_codeD+","+countryD+");";
             
@@ -640,7 +640,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             adress = Long.toString(key1);  //adress est l'id de l'adresse inseree la premiere
             delivery_adress=Long.toString(key2);
             
-            sqlQuery = "INSERT INTO Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
                        "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
                                 email+","+qq+","+infos+");";
             int affecRows = stmt.executeUpdate(sqlQuery); 
