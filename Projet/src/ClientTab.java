@@ -39,6 +39,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     
     
     public ClientTab(Properties prop,Main_W parent) throws SQLException {
+        super(new GridLayout(1,0));
         this.connectionProp=prop;
         this.parent=parent;
         this.selectedRow=0;
@@ -219,21 +220,23 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     }//GEN-LAST:event_modifButtonMouseClicked
 
     private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
-        // TODO Dialog to ask if sure to remove the row
-        
+        //we get the client name, adress and delivery adress
+        String name="",adress="",deli_adress="";
         Statement stmt = null;
         try{
             Connection conn=getParent().getConnection();
             stmt = conn.createStatement();
-            String sqlQuery;
-            
-            // TODO remove the selected row : the clients, the main adress and delivery adress
-            
-            sqlQuery="DELETE FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
-            stmt.executeUpdate(sqlQuery);
+            String sqlQuery;           
+            sqlQuery="SELECT name,adress,delivery_adress FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) {
+                name = rs.getString("name");
+                adress = rs.getString("adress");
+                deli_adress = rs.getString("delivery_adress");
+            }
         } catch(SQLException se) {
                 //Handle errors for JDBC
-                JOptionPane.showMessageDialog(this, "Unexpected error, delete request problem\nDetails : "+se.getMessage(),
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         } finally {
             //finally block used to close resources
@@ -242,15 +245,46 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
                 stmt.close();
         }catch(SQLException se2){ }// nothing we can do
         }//end finally
-        
-        //and we display the result on the table by creating a new tablemodel
-        try {
-            createNewTableModel();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+
+
+        Object[] options = {"Yes","No"};
+                
+        int n = JOptionPane.showOptionDialog(this,"Are you sure you want to remove this client : "+name+" ?","Removing client",
+                JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+        if (n==JOptionPane.YES_OPTION) {
+            // here we are sure we want to remove the client
+            stmt = null;
+            try{
+                Connection conn=getParent().getConnection();
+                stmt = conn.createStatement();
+                String sqlQuery;
+                sqlQuery="DELETE FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
+                stmt.executeUpdate(sqlQuery);
+                sqlQuery="DELETE FROM V_Adresses WHERE ad_id="+adress;
+                stmt.executeUpdate(sqlQuery);
+                sqlQuery="DELETE FROM V_Adresses WHERE ad_id="+deli_adress;
+                stmt.executeUpdate(sqlQuery);
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, delete request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null) stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+            
+            //and we display the result on the table by creating a new tablemodel
+            try {
+                createNewTableModel();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            
         }
-        
+   
     }//GEN-LAST:event_removeButtonMouseClicked
 
     private CachedRowSet getContentsOfTable() throws SQLException {
