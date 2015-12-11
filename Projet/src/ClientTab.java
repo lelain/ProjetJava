@@ -34,18 +34,16 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     /**
      * Creates new form ClientTab
      * @param prop
+     * @param parent
      * @throws java.sql.SQLException
      */
     
     
     public ClientTab(Properties prop,Main_W parent) throws SQLException {
-        super(new GridLayout(1,0));
         this.connectionProp=prop;
         this.parent=parent;
         this.selectedRow=0;
-        
-        
-        
+
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
         //myTableModel.addEventHandlersToRowSet(this);    //usefull??
@@ -53,9 +51,6 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         clientTable = new JTable(); // Displays the table
         clientTable.setModel(myTableModel);
         clientTable.setAutoCreateRowSorter(true);
-        
-        initComponents();
-        
         
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
         ListSelectionModel rowSM = clientTable.getSelectionModel();
@@ -65,8 +60,13 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
             }
         });
         
+        
+        initComponents();
+        
+          
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

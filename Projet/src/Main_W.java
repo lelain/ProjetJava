@@ -40,14 +40,17 @@ public class Main_W extends javax.swing.JFrame {
         this.connectionProp=prop;
         this.conn=conn;
         initComponents();
-        jTabbedPane1 = new JTabbedPane();
-        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        //jTabbedPane1 = new JTabbedPane();
+        
+        tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         
         myClientTab = new ClientTab(prop,this);
-        jTabbedPane1.addTab("Clients",myClientTab);
+        tabbedPane.addTab("Clients",myClientTab);
+        tab2 = new NewJPanel();
+        tabbedPane.addTab("new",tab2);
         
-        setContentPane(jTabbedPane1);
-        pack();
+        setContentPane(tabbedPane);
+        //pack();
     }
     
     public Connection getConnection() {
@@ -65,6 +68,7 @@ public class Main_W extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        tabbedPane = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
@@ -121,11 +125,17 @@ public class Main_W extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 938, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 914, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 516, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(tabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -149,7 +159,8 @@ public class Main_W extends javax.swing.JFrame {
     private Properties connectionProp;
     private Connection conn;
     private ClientTab myClientTab;
-    private JTabbedPane jTabbedPane1;
+    private NewJPanel tab2;
+    //private JTabbedPane jTabbedPane1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;
     private javax.swing.JMenuItem aboutMenuItem;
@@ -159,6 +170,7 @@ public class Main_W extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 
 }
