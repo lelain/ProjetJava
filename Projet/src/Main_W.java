@@ -46,8 +46,8 @@ public class Main_W extends javax.swing.JFrame {
         
         myClientTab = new ClientTab(prop,this);
         tabbedPane.addTab("Clients",myClientTab);
-        tab2 = new NewJPanel();
-        tabbedPane.addTab("new",tab2);
+        myProductTab = new ProductTab();
+        tabbedPane.addTab("Products",myProductTab);
         
         setContentPane(tabbedPane);
         //pack();
@@ -159,7 +159,7 @@ public class Main_W extends javax.swing.JFrame {
     private Properties connectionProp;
     private Connection conn;
     private ClientTab myClientTab;
-    private NewJPanel tab2;
+    private ProductTab myProductTab;
     //private JTabbedPane jTabbedPane1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;

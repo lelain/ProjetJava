@@ -1,5 +1,6 @@
 
 import com.sun.rowset.CachedRowSetImpl;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
@@ -29,7 +30,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author brendan
  */
-public class ClientTab extends javax.swing.JPanel implements RowSetListener {
+public class ClientTab extends javax.swing.JPanel {
 
     /**
      * Creates new form ClientTab
@@ -49,8 +50,12 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         //myTableModel.addEventHandlersToRowSet(this);    //usefull??
 
         clientTable = new JTable(); // Displays the table
+        
         clientTable.setModel(myTableModel);
+        
         clientTable.setAutoCreateRowSorter(true);
+        clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        clientTable.setFillsViewportHeight(true);
         
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
         ListSelectionModel rowSM = clientTable.getSelectionModel();
@@ -61,7 +66,10 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         });
         
         
+        
         initComponents();
+        
+        paneForTable.setViewportView(clientTable);
         
           
     }
@@ -78,7 +86,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
 
         jButton1 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        paneForTable = new javax.swing.JScrollPane(clientTable);
+        paneForTable = new javax.swing.JScrollPane();
         modifButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
 
@@ -311,7 +319,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
     
     public void createNewTableModel() throws SQLException {
         myTableModel = new DataTableModel(getContentsOfTable());
-        myTableModel.addEventHandlersToRowSet(this);
+        //myTableModel.addEventHandlersToRowSet(this);
         clientTable.setModel(myTableModel);
     }
     
@@ -321,16 +329,7 @@ public class ClientTab extends javax.swing.JPanel implements RowSetListener {
         return parent;
     }
     
-    public void actionPerformed(ActionEvent event) {  }
 
-    @Override
-    public void rowSetChanged(RowSetEvent event) {  }
-
-    @Override
-    public void rowChanged(RowSetEvent event) { }
-    
-    @Override
-    public void cursorMoved(RowSetEvent event) {  }
 
     private Main_W parent;
     private Properties connectionProp; 
