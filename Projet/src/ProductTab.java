@@ -1,3 +1,12 @@
+
+import com.sun.rowset.CachedRowSetImpl;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+import javax.sql.rowset.CachedRowSet;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,8 +21,15 @@ public class ProductTab extends javax.swing.JPanel {
 
     /**
      * Creates new form ProductTab
+     * @param prop
+     * @param parent
+     * @throws java.sql.SQLException
      */
-    public ProductTab() {
+    public ProductTab(Properties prop,Main_W myMainWin) throws SQLException {
+        this.connectionProp=prop;
+        this.mainWin=myMainWin;
+        CachedRowSet myRowSet = getContentsOfTable();
+        myTableModel = new DataTableModel(myRowSet);
         initComponents();
     }
 
@@ -27,7 +43,7 @@ public class ProductTab extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTable1 = new javax.swing.JTable(myTableModel);
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jButton1 = new javax.swing.JButton();
@@ -35,6 +51,7 @@ public class ProductTab extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
+        /*
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -46,6 +63,7 @@ public class ProductTab extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        */
         jScrollPane1.setViewportView(jTable1);
 
         jScrollPane2.setViewportView(jTree1);
@@ -73,7 +91,7 @@ public class ProductTab extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(jButton3)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -81,6 +99,7 @@ public class ProductTab extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton1)
@@ -89,13 +108,40 @@ public class ProductTab extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private CachedRowSet getContentsOfTable() throws SQLException {
+    CachedRowSet crs = null;
+    try {
+      crs = new CachedRowSetImpl();
+      crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+      crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
+      crs.setUsername(connectionProp.getProperty("user"));
+      crs.setPassword(connectionProp.getProperty("password"));
+      crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
+      crs.setCommand("select V_Products.category,V_Products.brand,V_Products.name,V_Products.quantity,V_Products.unit,V_Products.price "
+              + "from V_Products");
+      crs.execute();
 
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Unexpected error dans getContents\nDetails : "+e.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+    }
+    return crs;
+    }
+    
+
+    public Main_W getMainWin() {
+        return mainWin;
+    }
+    
+
+    private final Properties connectionProp; 
+    private final DataTableModel myTableModel;
+    private final Main_W mainWin;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

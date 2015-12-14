@@ -153,7 +153,35 @@ public class ClientTab extends javax.swing.JPanel {
             modifButton.setEnabled(false);
             removeButton.setEnabled(false);
         } else {
-            selectedRow = lsm.getMinSelectionIndex()+1;
+            int viewRow = clientTable.getSelectedRow();
+            selectedRow = clientTable.convertRowIndexToModel(viewRow);
+            
+            Statement stmt=null;
+            String name=(String)myTableModel.getValueAt(selectedRow,0);
+            System.out.println(name);
+            try{
+                Connection conn=getMainWin().getConnection();
+                stmt = conn.createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT cl_id FROM V_Clients WHERE name ='"+name+"'";
+                System.out.println(sqlQuery);
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { selectedRow=rs.getInt("cl_id"); }
+                
+            } catch (SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+                
+            
+            //selectedRow = lsm.getMinSelectionIndex()+1;
             modifButton.setEnabled(true);
             removeButton.setEnabled(true);
         }
@@ -162,16 +190,17 @@ public class ClientTab extends javax.swing.JPanel {
     
     
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        AddClient NewClientW = new AddClient(getParent(),this,true);       
+        AddClient NewClientW = new AddClient(getMainWin(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void modifButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifButtonMouseClicked
+        System.out.println(selectedRow);
         HashMap<Integer, String> content = new HashMap<>();
         Statement stmt = null;
         try{
-            Connection conn=getParent().getConnection();
+            Connection conn=getMainWin().getConnection();
             stmt = conn.createStatement();
             String sqlQuery;
             //we need the adress id and deliver adress id
@@ -182,7 +211,8 @@ public class ClientTab extends javax.swing.JPanel {
                     + "dev.street,dev.city,dev.country,dev.zip_code "
                     + "from V_Clients inner join V_Adresses as main on V_Clients.adress=main.ad_id "
                     +  "inner join V_Adresses as dev on V_Clients.delivery_adress=dev.ad_id "
-                    + "where cl_id="+Integer.toString(selectedRow)+";";
+                    + "where cl_id="+Integer.toString(selectedRow);
+            
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
                 content.put(1,rs.getString("V_Clients.name"));
@@ -220,8 +250,8 @@ public class ClientTab extends javax.swing.JPanel {
                     stmt.close();
                 }catch(SQLException se2){ }// nothing we can do
             }//end finally
-            
-        ModifyClient ModClientW = new ModifyClient(getParent(),this,true,content,selectedRow);       
+        System.out.println(content.get(1));
+        ModifyClient ModClientW = new ModifyClient(getMainWin(),this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);
 
@@ -232,7 +262,7 @@ public class ClientTab extends javax.swing.JPanel {
         String name="",adress="",deli_adress="";
         Statement stmt = null;
         try{
-            Connection conn=getParent().getConnection();
+            Connection conn=getMainWin().getConnection();
             stmt = conn.createStatement();
             String sqlQuery;           
             sqlQuery="SELECT name,adress,delivery_adress FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
@@ -263,7 +293,7 @@ public class ClientTab extends javax.swing.JPanel {
             // here we are sure we want to remove the client
             stmt = null;
             try{
-                Connection conn=getParent().getConnection();
+                Connection conn=getMainWin().getConnection();
                 stmt = conn.createStatement();
                 String sqlQuery;
                 sqlQuery="DELETE FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
@@ -324,8 +354,8 @@ public class ClientTab extends javax.swing.JPanel {
     }
     
     
-    @Override
-    public Main_W getParent() {
+    
+    public Main_W getMainWin() {
         return parent;
     }
     

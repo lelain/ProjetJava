@@ -1,26 +1,9 @@
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -35,6 +18,9 @@ public class Main_W extends javax.swing.JFrame {
 
     /**
      * Creates new form Main_W
+     * @param prop
+     * @param conn
+     * @throws java.sql.SQLException
      */
     public Main_W(Properties prop,Connection conn) throws SQLException {
         this.connectionProp=prop;
@@ -46,11 +32,9 @@ public class Main_W extends javax.swing.JFrame {
         
         myClientTab = new ClientTab(prop,this);
         tabbedPane.addTab("Clients",myClientTab);
-        myProductTab = new ProductTab();
+        myProductTab = new ProductTab(prop,this);
         tabbedPane.addTab("Products",myProductTab);
         
-        setContentPane(tabbedPane);
-        //pack();
     }
     
     public Connection getConnection() {
