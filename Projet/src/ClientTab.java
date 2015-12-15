@@ -1,29 +1,22 @@
 
 import com.sun.rowset.CachedRowSetImpl;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Properties;
-import javax.sql.RowSetEvent;
-import javax.sql.RowSetListener;
 import javax.sql.rowset.CachedRowSet;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is a tab for viewing the information about clients
+ * It is aimed to be added to the tabbedPane of the main window
  */
 
 /**
@@ -38,8 +31,6 @@ public class ClientTab extends javax.swing.JPanel {
      * @param parent
      * @throws java.sql.SQLException
      */
-    
-    
     public ClientTab(Properties prop,Main_W parent) throws SQLException {
         this.connectionProp=prop;
         this.parent=parent;
@@ -47,16 +38,12 @@ public class ClientTab extends javax.swing.JPanel {
 
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
-        //myTableModel.addEventHandlersToRowSet(this);    //usefull??
-
+       
         clientTable = new JTable(); // Displays the table
-        
         clientTable.setModel(myTableModel);
-        
         clientTable.setAutoCreateRowSorter(true);
         clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
         clientTable.setFillsViewportHeight(true);
-        
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
         ListSelectionModel rowSM = clientTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
@@ -64,13 +51,9 @@ public class ClientTab extends javax.swing.JPanel {
                 tableValueChangedEvent(e);  
             }
         });
-        
-        
-        
+         
         initComponents();
-        
         paneForTable.setViewportView(clientTable);
-        
           
     }
     
@@ -91,25 +74,25 @@ public class ClientTab extends javax.swing.JPanel {
         removeButton = new javax.swing.JButton();
 
         jButton1.setText("Add");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
         modifButton.setText("Modify");
         modifButton.setEnabled(false);
-        modifButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                modifButtonMouseClicked(evt);
+        modifButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifButtonActionPerformed(evt);
             }
         });
 
         removeButton.setText("Remove");
         removeButton.setEnabled(false);
-        removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                removeButtonMouseClicked(evt);
+        removeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeButtonActionPerformed(evt);
             }
         });
 
@@ -153,18 +136,20 @@ public class ClientTab extends javax.swing.JPanel {
             modifButton.setEnabled(false);
             removeButton.setEnabled(false);
         } else {
+            
+            //if a line is selected, selectedRow take the client id 
+            //and we enable the modif and remove buttons
+            
             int viewRow = clientTable.getSelectedRow();
             selectedRow = clientTable.convertRowIndexToModel(viewRow);
             
             Statement stmt=null;
             String name=(String)myTableModel.getValueAt(selectedRow,0);
-            System.out.println(name);
             try{
                 Connection conn=getMainWin().getConnection();
                 stmt = conn.createStatement();
                 String sqlQuery;
                 sqlQuery="SELECT cl_id FROM V_Clients WHERE name ='"+name+"'";
-                System.out.println(sqlQuery);
                 ResultSet rs = stmt.executeQuery(sqlQuery);
                 if (rs.next()) { selectedRow=rs.getInt("cl_id"); }
                 
@@ -180,22 +165,23 @@ public class ClientTab extends javax.swing.JPanel {
                 }catch(SQLException se2){ }// nothing we can do
             }//end finally
                 
-            
-            //selectedRow = lsm.getMinSelectionIndex()+1;
             modifButton.setEnabled(true);
             removeButton.setEnabled(true);
         }
     }
     
     
-    
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         AddClient NewClientW = new AddClient(getMainWin(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void modifButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifButtonMouseClicked
+    private void modifButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifButtonActionPerformed
+        
+        //we look for all the values corresponding to the selected row, store them in a hashmap
+        //and send them to the modifyClient constructor for proper dialog construction
+        
         System.out.println(selectedRow);
         HashMap<Integer, String> content = new HashMap<>();
         Statement stmt = null;
@@ -243,21 +229,21 @@ public class ClientTab extends javax.swing.JPanel {
                 //Handle errors for JDBC
                 JOptionPane.showMessageDialog(this, "Unexpected error, request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //finally block used to close resources
-                try{
-                    if(stmt!=null)
-                    stmt.close();
-                }catch(SQLException se2){ }// nothing we can do
-            }//end finally
-        System.out.println(content.get(1));
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
         ModifyClient ModClientW = new ModifyClient(getMainWin(),this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);
 
-    }//GEN-LAST:event_modifButtonMouseClicked
+    }//GEN-LAST:event_modifButtonActionPerformed
 
-    private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
+    private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         //we get the client name, adress and delivery adress
         String name="",adress="",deli_adress="";
         Statement stmt = null;
@@ -284,7 +270,9 @@ public class ClientTab extends javax.swing.JPanel {
         }catch(SQLException se2){ }// nothing we can do
         }//end finally
 
-
+        
+        //little dialog before making the delete requests
+        
         Object[] options = {"Yes","No"};
                 
         int n = JOptionPane.showOptionDialog(this,"Are you sure you want to remove this client : "+name+" ?","Removing client",
@@ -310,7 +298,7 @@ public class ClientTab extends javax.swing.JPanel {
             //finally block used to close resources
             try{
                 if(stmt!=null) stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
+            } catch(SQLException se2){ }// nothing we can do
             }//end finally
             
             //and we display the result on the table by creating a new tablemodel
@@ -323,7 +311,7 @@ public class ClientTab extends javax.swing.JPanel {
             
         }
    
-    }//GEN-LAST:event_removeButtonMouseClicked
+    }//GEN-LAST:event_removeButtonActionPerformed
 
     private CachedRowSet getContentsOfTable() throws SQLException {
     CachedRowSet crs = null;
@@ -361,10 +349,10 @@ public class ClientTab extends javax.swing.JPanel {
     
 
 
-    private Main_W parent;
-    private Properties connectionProp; 
+    private final Main_W parent;
+    private final Properties connectionProp; 
     private DataTableModel myTableModel;
-    private JTable clientTable;
+    private final JTable clientTable;
     private int selectedRow;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

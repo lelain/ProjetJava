@@ -14,9 +14,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class makes a dialog for adding a client and his adresses
+ * to the database
  */
 
 /**
@@ -456,10 +455,48 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         if (!verifyLenght(infosField,500,"Information too long, please make it shorter")) {
             return false;
         }
+        if (!verifyName(nameField,"Name already in the data base, please find a new one")) {
+            return false;
+        }
 
         return true;
     }
     
+    
+    private boolean verifyName(JTextField text,String message) {
+        String str = text.getText();
+        Statement stmt=null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery="select name from Clients where name='"+str+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                //here we already have this name in the database --> impossible
+                JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                text.requestFocus();
+                text.selectAll();
+                return false;   
+            } else {
+                //here everything is ok
+                return true;
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+            return false; 
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ return false;  }// nothing we can do
+        }//end finally
+        
+        
+    }
     
     private boolean isInt(JTextField text,String message) {
         String str = text.getText();
@@ -586,6 +623,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
             
             } catch(SQLException se) {
                 //Handle errors for JDBC
+                System.out.println("Error Code: " + ((SQLException)se).getErrorCode());
                 JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {

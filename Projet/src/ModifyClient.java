@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -26,10 +24,14 @@ import javax.swing.event.DocumentListener;
 public class ModifyClient extends javax.swing.JDialog implements DocumentListener {
 
     /**
-     * Creates new form AddClient
+     * Creates new form ModifyClientClient
+     * @param parent
+     * @param client
+     * @param modal
+     * @param contents
+     * @param row
      */
-   
-    public ModifyClient(Main_W parent, ClientTab client, boolean modal, HashMap contents, int row) {
+       public ModifyClient(Main_W parent, ClientTab client, boolean modal, HashMap contents, int row) {
         super(parent, modal);
         this.conn=parent.getConnection();
         this.client=client;
@@ -466,9 +468,45 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
         if (!verifyLenght(infosField,500,"Information too long, please make it shorter")) {
             return false;
         }
-
-        return true;
+        return verifyName(nameField,"Name already in the data base, please find a new one");
     }
+    
+    
+    private boolean verifyName(JTextField text,String message) {
+        String str = text.getText();
+        Statement stmt=null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery="select name from Clients where name='"+str+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                //here we already have this name in the database --> impossible
+                JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                text.requestFocus();
+                text.selectAll();
+                return false;   
+            } else {
+                //here everything is ok
+                return true;
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+            return false; 
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ return false;  }// nothing we can do
+        }//end finally
+        
+        
+    }
+    
     
     
     private boolean isInt(JTextField text,String message) {
@@ -569,8 +607,7 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
                 rowAd = rs.getInt("adress");
                 rowDAd = rs.getInt("delivery_adress");
             }
-            System.out.println("rowAd :"+rowAd + "\nrowDAd :"+rowDAd+"\nrow selected"+row);
-            
+                        
             //now we do the update for the main adress
             sqlQuery = "UPDATE V_Adresses\n" +
                        "SET street='"+street+"',city='"+city+"',zip_code="+zip_code+",country="+country+"\n"+
@@ -662,8 +699,7 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
                 
             
                 delivery_adress = Long.toString(key);  //adress est l'id de l'adresse inseree
-                System.out.println(delivery_adress);
-                
+                                
                 sqlQuery = "UPDATE V_Clients\n" +
                             "SET name='"+name+"',phone1="+phone1+",phone2="+phone2+",adress="+Integer.toString(rowAd)+
                             ",delivery_adress="+delivery_adress+",email="+email+",qq="+qq+",infos="+infos+"\n"+
@@ -716,9 +752,9 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
         this.dispose();
     }                                            
 
-    private Connection conn;
-    private ClientTab client;
-    private int row;   //the row we want to modify
+    private final Connection conn;
+    private final ClientTab client;
+    private final int row;   //the row we want to modify
     // Variables declaration - do not modify                     
     private javax.swing.JButton cancelButton;
     private javax.swing.JCheckBox checkDAdress;
