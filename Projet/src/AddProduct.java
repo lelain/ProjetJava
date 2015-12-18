@@ -1,7 +1,23 @@
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,29 +29,84 @@ import javax.swing.JTextField;
  *
  * @author brendan
  */
-public class AddProduct extends javax.swing.JDialog {
+public class AddProduct extends javax.swing.JDialog implements DocumentListener {
 
     /**
      * Creates new form AddProduct
      * @param parent
      * @param modal
      */
-    public AddProduct(java.awt.Frame parent, boolean modal) {
+    public AddProduct(Main_W parent, boolean modal) {
         super(parent, modal);
+        this.conn=parent.getConnection();
         
-        // On change la locale par défaut de la JVM :
+        //To have English in my dialog
         java.util.Locale.setDefault ( java.util.Locale.ENGLISH ) ;
- 
-        // On change la locale par défaut du LookAndFeel :
         javax.swing.UIManager.getDefaults().setDefaultLocale ( java.util.Locale.ENGLISH ) ;
- 
-        // On change la locale par défaut des nouveaux composants :
         javax.swing.JComponent.setDefaultLocale ( java.util.Locale.ENGLISH ) ;
         
         //for the combo boxes
+        //we search the database for the different brands
+        
+        
+        Statement stmt = null;
+        int size=0;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            //number of brand different from 'Unknown'
+            sqlQuery="SELECT COUNT(DISTINCT brand) from V_Products WHERE brand<>'Unknown'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(DISTINCT brand)")+1; }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        brands = new String[size];
+        brands[0]="Unknown";
+        
+        //we populate it
+        stmt = null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT DISTINCT brand FROM V_Products WHERE brand<>'Unknown'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=1;
+            while (rs.next()) { 
+                brands[i]=rs.getString("brand");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
         String[] unitStrings = { "mL","L","mg","g","kg","" };
         String[] priceUnitStrings = { "euros","RMB" };
         initComponents();
+       
+        
+        quantField.getDocument().addDocumentListener(this);
+        priceField.getDocument().addDocumentListener(this);
+        nameField.getDocument().addDocumentListener(this);
     }
 
     /**
@@ -52,7 +123,7 @@ public class AddProduct extends javax.swing.JDialog {
         catCombo = new javax.swing.JComboBox<>();
         newCat = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        brandCombo = new javax.swing.JComboBox<>();
+        brandCombo = new javax.swing.JComboBox<>(brands);
         newBrand = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
@@ -79,6 +150,7 @@ public class AddProduct extends javax.swing.JDialog {
 
         jLabel2.setText("Category");
 
+        catCombo.setBackground(new java.awt.Color(250, 225, 199));
         catCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
 
         newCat.setText("+");
@@ -90,8 +162,6 @@ public class AddProduct extends javax.swing.JDialog {
 
         jLabel3.setText("Brand");
 
-        brandCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] {  }));
-
         newBrand.setText("+");
         newBrand.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,15 +171,20 @@ public class AddProduct extends javax.swing.JDialog {
 
         jLabel4.setText("Name");
 
+        nameField.setBackground(new java.awt.Color(250, 225, 199));
+
         jLabel5.setText("Quantity");
 
         quantCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mL","L","mg","g","kg" }));
+        quantCombo.setEnabled(false);
 
         jLabel6.setText("Observed price");
 
         priceCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "euros","RMB" }));
+        priceCombo.setEnabled(false);
 
         addQUnit.setText("+");
+        addQUnit.setEnabled(false);
         addQUnit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addQUnitActionPerformed(evt);
@@ -117,6 +192,7 @@ public class AddProduct extends javax.swing.JDialog {
         });
 
         addPUnit.setText("+");
+        addPUnit.setEnabled(false);
         addPUnit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addPUnitActionPerformed(evt);
@@ -124,6 +200,7 @@ public class AddProduct extends javax.swing.JDialog {
         });
 
         okButton.setText("Add product");
+        okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -169,7 +246,7 @@ public class AddProduct extends javax.swing.JDialog {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(addPUnit))
                                     .addGroup(layout.createSequentialGroup()
@@ -187,7 +264,7 @@ public class AddProduct extends javax.swing.JDialog {
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(newCat))
                                                 .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(brandCombo, 0, 130, Short.MAX_VALUE)
+                                                    .addComponent(brandCombo, 0, 150, Short.MAX_VALUE)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(newBrand)
                                                     .addGap(56, 56, 56)))
@@ -196,10 +273,10 @@ public class AddProduct extends javax.swing.JDialog {
                                                     .addComponent(quantField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                                                     .addComponent(nameField))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(quantCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(quantCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(addQUnit)))))
-                                .addGap(0, 92, Short.MAX_VALUE))
+                                .addGap(0, 72, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -225,10 +302,11 @@ public class AddProduct extends javax.swing.JDialog {
                     .addComponent(catCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(newCat))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(newBrand))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(newBrand)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -240,11 +318,13 @@ public class AddProduct extends javax.swing.JDialog {
                     .addComponent(quantField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(addQUnit))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addPUnit))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addPUnit))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel6)
+                        .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
@@ -331,11 +411,17 @@ public class AddProduct extends javax.swing.JDialog {
         if (!verifyLenght(nameField,100,"Name too long, please make it shorter")) {
             return false;
         }
-        if (!isInt(quantField,"Zip code should be numbers")) {
-            return false;
+        
+        if (!"".equals(quantField.getText())) {
+            if (!isDouble(quantField,"Quantity should be a number")) {
+                return false;
+            }
         }
-        if (!isInt(priceField,"Zip code should be numbers")) {
-            return false;
+        
+        if (!"".equals(priceField.getText())) {
+            if (!isDouble(priceField,"Price should be a number")) {
+                return false;
+            }
         }
         
         return true;
@@ -354,24 +440,114 @@ public class AddProduct extends javax.swing.JDialog {
         }
     }
     
-    private boolean isInt(JTextField text,String message) {
+    
+    private boolean isDouble(JTextField text,String message) {
         String str = text.getText();
-        if (!str.matches("^-?\\d+$")) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, message,
                     "Warning", JOptionPane.WARNING_MESSAGE);
             text.requestFocus();
             text.selectAll();
             return false;
         }
-        return true;
     }
     
+    
     private void insertProduct () {
+        //TODO prepare the strings
+        String category,brand,name,quantity,qunit,price,punit,infos;
+        category="'"+(String)catCombo.getSelectedItem()+"'";
+        brand="'"+(String)brandCombo.getSelectedItem()+"'";
+        name="'"+nameField.getText()+"'";
+        if ("".equals(quantField.getText())) {
+            quantity="NULL";
+        } else {
+            quantity="'"+quantField.getText()+"'";
+        }
+        if ("".equals((String)quantCombo.getSelectedItem())) {
+            qunit="NULL";
+        } else {
+            qunit="'"+(String)quantCombo.getSelectedItem()+"'";
+        }
+        if ("".equals(priceField.getText())) {
+            price="NULL";
+        } else {
+            price="'"+priceField.getText()+"'";
+        }
+        if ("".equals((String)priceCombo.getSelectedItem())) {
+            punit="NULL";
+        } else {
+            punit="'"+(String)priceCombo.getSelectedItem()+"'";
+        }
+        if ("".equals(jTextArea1.getText())) {
+            infos="NULL";
+        } else {
+            infos="'"+jTextArea1.getText()+"'";
+        }
+      
+        //TODO write in the file
+        //FileInputStream fis;
+        //BufferedInputStream bis;
+        
+       // try {
+            //fis = new FileInputStream(new File("products.txt"));
+            //bis = new BufferedInputStream(fis);
+            
+            /*
+        Charset charset = Charset.forName("US-ASCII");
+        Path file = FileSystems.getDefault().getPath("Try", "products.txt");
+        
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line = null;
+            //add new brand if we need
+            while ((line = reader.readLine()) != "$tree$");
+            line=reader.readLine();
+            
+               
+        } catch (IOException x) {
+            System.out.println("Problem");
+        }
+*/
+        
+        
+        //TODO do the request
+        Statement stmt = null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "INSERT INTO V_Products (category,brand,name,quantity,qunit,price,punit,infos)\n" +
+                       "VALUES ("+category+","+brand+","+name+","+quantity+","+qunit+","+price+","+punit+","+infos+")";
+            
+            int affectedRows = stmt.executeUpdate(sqlQuery); 
+            //si 1 : normal, si 0 pas normal
+            if (affectedRows == 0) {
+                JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
         
     }
     
+   
     
 
+
+    
+    private Connection conn;
+    private String[] brands;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPUnit;
     private javax.swing.JButton addQUnit;
@@ -399,4 +575,97 @@ public class AddProduct extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> quantCombo;
     private javax.swing.JTextField quantField;
     // End of variables declaration//GEN-END:variables
+
+    
+    private void readyToValidate() {
+        if ((!"".equals(nameField.getText()))) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
+    
+    
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        
+        if ((e.getDocument() == quantField.getDocument())) {
+            quantCombo.setEnabled(true);
+            addQUnit.setEnabled(true);
+        }
+        
+        if ((e.getDocument() == priceField.getDocument())) {
+            if("".equals(priceField.getText())) {
+                priceCombo.setEnabled(false);
+                addPUnit.setEnabled(false);
+            } else {
+                priceCombo.setEnabled(true);
+                addPUnit.setEnabled(true);
+            }
+        }  
+        
+        if ((e.getDocument() == nameField.getDocument())) {
+            readyToValidate();
+        }
+
+            
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        
+        if ((e.getDocument() == quantField.getDocument())) {
+            if("".equals(quantField.getText())) {
+                quantCombo.setEnabled(false);
+                addQUnit.setEnabled(false);
+            } else {
+                quantCombo.setEnabled(true);
+                addQUnit.setEnabled(true);
+            }
+        }
+        
+        if ((e.getDocument() == priceField.getDocument())) {
+            if("".equals(priceField.getText())) {
+                priceCombo.setEnabled(false);
+                addPUnit.setEnabled(false);
+            } else {
+                priceCombo.setEnabled(true);
+                addPUnit.setEnabled(true);
+            }
+        } 
+        
+        if ((e.getDocument() == nameField.getDocument())) {
+            readyToValidate();
+        }
+
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        
+        if ((e.getDocument() == quantField.getDocument())) {
+            if("".equals(quantField.getText())) {
+                quantCombo.setEnabled(false);
+                addQUnit.setEnabled(false);
+            } else {
+                quantCombo.setEnabled(true);
+                addQUnit.setEnabled(true);
+            }
+        }
+        
+        if ((e.getDocument() == priceField.getDocument())) {
+            if("".equals(priceField.getText())) {
+                priceCombo.setEnabled(false);
+                addPUnit.setEnabled(false);
+            } else {
+                priceCombo.setEnabled(true);
+                addPUnit.setEnabled(true);
+            }
+        } 
+
+        if ((e.getDocument() == nameField.getDocument())) {
+            readyToValidate();
+        }
+
+    }
 }

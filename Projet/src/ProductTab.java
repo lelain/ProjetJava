@@ -22,7 +22,7 @@ public class ProductTab extends javax.swing.JPanel {
     /**
      * Creates new form ProductTab
      * @param prop
-     * @param parent
+     * @param myMainWin
      * @throws java.sql.SQLException
      */
     public ProductTab(Properties prop,Main_W myMainWin) throws SQLException {
@@ -133,8 +133,8 @@ public class ProductTab extends javax.swing.JPanel {
       crs.setUsername(connectionProp.getProperty("user"));
       crs.setPassword(connectionProp.getProperty("password"));
       crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
-      crs.setCommand("select V_Products.category,V_Products.brand,V_Products.name,V_Products.quantity,V_Products.unit,V_Products.price "
-              + "from V_Products");
+      crs.setCommand("select V_Products.category,V_Products.brand,V_Products.name,V_Products.quantity,V_Products.qunit,V_Products.price"
+              + ",V_Products.punit,V_Products.infos from V_Products");
       crs.execute();
 
     } catch (SQLException e) {

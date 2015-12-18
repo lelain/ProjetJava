@@ -26,6 +26,9 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
 
     /**
      * Creates new form AddClient
+     * @param parent
+     * @param client
+     * @param modal
      */
     public AddClient(Main_W parent, ClientTab client, boolean modal) {
         super(parent, modal);
