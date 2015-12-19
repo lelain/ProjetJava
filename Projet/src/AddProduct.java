@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -36,9 +37,10 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
      * @param parent
      * @param modal
      */
-    public AddProduct(Main_W parent, boolean modal) {
+    public AddProduct(Main_W parent, ProductTab product, boolean modal) {
         super(parent, modal);
         this.conn=parent.getConnection();
+        this.product=product;
         
         //To have English in my dialog
         java.util.Locale.setDefault ( java.util.Locale.ENGLISH ) ;
@@ -46,9 +48,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         javax.swing.JComponent.setDefaultLocale ( java.util.Locale.ENGLISH ) ;
         
         //for the combo boxes
-        //we search the database for the different brands
-        
-        
+        //we search the different brands in the database        
         Statement stmt = null;
         int size=0;
         try{
@@ -99,10 +99,118 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             }catch(SQLException se2){ }// nothing we can do
         }//end finally 
         
-        String[] unitStrings = { "mL","L","mg","g","kg","" };
-        String[] priceUnitStrings = { "euros","RMB" };
+        //we search the different quantity unit
+        stmt = null;
+        size=0;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            //number of brand different from 'Unknown'
+            sqlQuery="SELECT COUNT(DISTINCT qunit) from V_Products WHERE qunit<>'mL' AND qunit<>'L' AND "
+                    + "qunit<>'mg' AND qunit<>'g' AND qunit<>'kg' AND qunit<>''";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(DISTINCT qunit)")+6; }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        unitString = new String[size];
+        unitString[0]="mL"; unitString[1]="L"; unitString[2]="mg"; unitString[3]="g";
+        unitString[4]="kg"; unitString[5]="";
+        
+        //we populate it
+        stmt = null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT DISTINCT qunit FROM V_Products WHERE qunit<>'mL' AND qunit<>'L' AND "
+                    + "qunit<>'mg' AND qunit<>'g' AND qunit<>'kg' AND qunit<>''";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=6;
+            while (rs.next()) { 
+                unitString[i]=rs.getString("qunit");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        //we search the different price unit
+        stmt = null;
+        size=0;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            //number of brand different from 'Unknown'
+            sqlQuery="SELECT COUNT(DISTINCT punit) from V_Products WHERE punit<>'euros' AND punit<>'RMB'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(DISTINCT punit)")+2; }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        priceUnitString = new String[size];
+        priceUnitString[0]="euros"; priceUnitString[1]="RMB";
+        
+        //we populate it
+        stmt = null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT DISTINCT punit FROM V_Products WHERE punit<>'euros' AND punit<>'RMB'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=2;
+            while (rs.next()) { 
+                priceUnitString[i]=rs.getString("punit");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        Arrays.sort(brands);
+        Arrays.sort(unitString);
+        Arrays.sort(priceUnitString);
+        
         initComponents();
-       
+        quantCombo.setSelectedItem("mL");
+        priceCombo.setSelectedItem("euros");
         
         quantField.getDocument().addDocumentListener(this);
         priceField.getDocument().addDocumentListener(this);
@@ -128,11 +236,11 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         jLabel4 = new javax.swing.JLabel();
         nameField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        quantCombo = new javax.swing.JComboBox<>();
+        quantCombo = new javax.swing.JComboBox<>(unitString);
         quantField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         priceField = new javax.swing.JTextField();
-        priceCombo = new javax.swing.JComboBox<>();
+        priceCombo = new javax.swing.JComboBox<>(priceUnitString);
         jSeparator1 = new javax.swing.JSeparator();
         addQUnit = new javax.swing.JButton();
         addPUnit = new javax.swing.JButton();
@@ -175,12 +283,10 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
 
         jLabel5.setText("Quantity");
 
-        quantCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mL","L","mg","g","kg" }));
         quantCombo.setEnabled(false);
 
         jLabel6.setText("Observed price");
 
-        priceCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "euros","RMB" }));
         priceCombo.setEnabled(false);
 
         addQUnit.setText("+");
@@ -357,6 +463,10 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         }
     }//GEN-LAST:event_newCatActionPerformed
 
+    
+    
+    
+    
     private void newBrandActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newBrandActionPerformed
         String answerBrand = JOptionPane.showInputDialog (this, "New brand :") ;
         if (answerBrand.length() > 80) {
@@ -365,12 +475,42 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             return;
         }
         if ((answerBrand != null) && (answerBrand.length() > 0)) {
+            //first we verify that it doesn't already exist
+            Statement stmt=null;
+            try{
+                stmt = conn.createStatement();
+                String sqlQuery;
+                sqlQuery="select brand from V_Products where brand='"+answerBrand+"'";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { 
+                    //here we already have this name in the database --> impossible
+                    JOptionPane.showMessageDialog(this, "This brand is already in the database",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                    //text.requestFocus();
+                    //text.selectAll();
+                    return;
+                       
+                } 
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){   }// nothing we can do
+            }//end finally
+            
+            //if we are here, everything is ok, we can add it to the combo
             brandCombo.addItem(answerBrand);
             brandCombo.setSelectedItem(answerBrand);
         }
     }//GEN-LAST:event_newBrandActionPerformed
 
     private void addQUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQUnitActionPerformed
+        //TODO verify that the new unit is not already in
         String answerUnit = JOptionPane.showInputDialog (this, "New unit :") ;
         if (answerUnit.length() > 10) {
             JOptionPane.showMessageDialog(this, "Unit too long, please make it shorter",
@@ -378,12 +518,43 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             return;
         }
         if ((answerUnit != null) && (answerUnit.length() > 0)) {
+            //first we verify that it doesn't already exist
+            Statement stmt=null;
+            try{
+                stmt = conn.createStatement();
+                String sqlQuery;
+                sqlQuery="select qunit from V_Products where qunit='"+answerUnit+"'";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { 
+                    //here we already have this name in the database --> impossible
+                    JOptionPane.showMessageDialog(this, "This unit is already in the database",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                    //text.requestFocus();
+                    //text.selectAll();
+                    return;
+                       
+                } 
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){   }// nothing we can do
+            }//end finally
+            
+            //if we are here, everything is ok, we can add it to the combo
             quantCombo.addItem(answerUnit);
             quantCombo.setSelectedItem(answerUnit);
         }
+        
     }//GEN-LAST:event_addQUnitActionPerformed
 
     private void addPUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPUnitActionPerformed
+        //TODO verify that the new unit is not already in
         String answerUnit = JOptionPane.showInputDialog (this, "New currency :") ;
         if (answerUnit.length() > 10) {
             JOptionPane.showMessageDialog(this, "Unit too long, please make it shorter",
@@ -391,6 +562,34 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             return;
         }
         if ((answerUnit != null) && (answerUnit.length() > 0)) {
+            //first we verify that it doesn't already exist
+            Statement stmt=null;
+            try{
+                stmt = conn.createStatement();
+                String sqlQuery;
+                sqlQuery="select punit from V_Products where punit='"+answerUnit+"'";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { 
+                    //here we already have this name in the database --> impossible
+                    JOptionPane.showMessageDialog(this, "This unit is already in the database",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                    //text.requestFocus();
+                    //text.selectAll();
+                    return;     
+                } 
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){   }// nothing we can do
+            }//end finally
+            
+            //if we are here, everything is ok, we can add it to the combo
             priceCombo.addItem(answerUnit);
             priceCombo.setSelectedItem(answerUnit);
         }
@@ -464,22 +663,16 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         name="'"+nameField.getText()+"'";
         if ("".equals(quantField.getText())) {
             quantity="NULL";
-        } else {
-            quantity="'"+quantField.getText()+"'";
-        }
-        if ("".equals((String)quantCombo.getSelectedItem())) {
             qunit="NULL";
         } else {
+            quantity="'"+quantField.getText()+"'";
             qunit="'"+(String)quantCombo.getSelectedItem()+"'";
         }
         if ("".equals(priceField.getText())) {
             price="NULL";
-        } else {
-            price="'"+priceField.getText()+"'";
-        }
-        if ("".equals((String)priceCombo.getSelectedItem())) {
             punit="NULL";
         } else {
+            price="'"+priceField.getText()+"'";
             punit="'"+(String)priceCombo.getSelectedItem()+"'";
         }
         if ("".equals(jTextArea1.getText())) {
@@ -539,6 +732,15 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
+        
+        try {
+            product.createNewTableModel();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        this.dispose();
+        
     }
     
    
@@ -547,7 +749,10 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
 
     
     private Connection conn;
+    private ProductTab product;
     private String[] brands;
+    private String[] unitString;
+    private String[] priceUnitString;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPUnit;
     private javax.swing.JButton addQUnit;

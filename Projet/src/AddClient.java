@@ -472,7 +472,7 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
         try{
             stmt = conn.createStatement();
             String sqlQuery;
-            sqlQuery="select name from Clients where name='"+str+"'";
+            sqlQuery="select name from V_Clients where name='"+str+"'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { 
                 //here we already have this name in the database --> impossible
@@ -497,8 +497,6 @@ public class AddClient extends javax.swing.JDialog implements DocumentListener {
                 stmt.close();
             }catch(SQLException se2){ return false;  }// nothing we can do
         }//end finally
-        
-        
     }
     
     private boolean isInt(JTextField text,String message) {

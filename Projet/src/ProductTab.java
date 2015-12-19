@@ -119,7 +119,7 @@ public class ProductTab extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddProduct NewProductW = new AddProduct(getMainWin(),true);       
+        AddProduct NewProductW = new AddProduct(getMainWin(),this,true);       
         NewProductW.setLocationRelativeTo(null);
         NewProductW.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
@@ -144,6 +144,12 @@ public class ProductTab extends javax.swing.JPanel {
     return crs;
     }
     
+    public void createNewTableModel() throws SQLException {
+        myTableModel = new DataTableModel(getContentsOfTable());
+        //myTableModel.addEventHandlersToRowSet(this);
+        jTable1.setModel(myTableModel);
+    }
+    
 
     public Main_W getMainWin() {
         return mainWin;
@@ -151,7 +157,7 @@ public class ProductTab extends javax.swing.JPanel {
     
 
     private final Properties connectionProp; 
-    private final DataTableModel myTableModel;
+    private DataTableModel myTableModel;
     private final Main_W mainWin;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;

@@ -20,59 +20,33 @@ import javax.swing.table.TableModel;
  */
 public class DataTableModel implements TableModel {
 
-  CachedRowSet clientRowSet; // The ResultSet to interpret
+  CachedRowSet RowSet; // The ResultSet to interpret
   ResultSetMetaData metadata; // Additional information about the results
   int numcols, numrows; // How many rows and columns in the table
 
-  public CachedRowSet getClientRowSet() {
-    return clientRowSet;
+  public CachedRowSet getRowSet() {
+    return RowSet;
   }
 
 
   public DataTableModel(CachedRowSet rowSetArg) throws SQLException {
 
-    this.clientRowSet = rowSetArg;
-    this.metadata = this.clientRowSet.getMetaData();
+    this.RowSet = rowSetArg;
+    this.metadata = this.RowSet.getMetaData();
     numcols = metadata.getColumnCount();
 
     // Retrieve the number of rows.
-    this.clientRowSet.beforeFirst();
+    this.RowSet.beforeFirst();
     this.numrows = 0;
-    while (this.clientRowSet.next()) {
+    while (this.RowSet.next()) {
       this.numrows++;
     }
-    this.clientRowSet.beforeFirst();
+    this.RowSet.beforeFirst();
   }
-
-  
-  /*
-  public void addEventHandlersToRowSet(RowSetListener listener) {
-    this.clientRowSet.addRowSetListener(listener);
-  }
-*/
-  
-  /*
-  public void insertRow(String coffeeName, int supplierID, float price,
-                        int sales, int total) throws SQLException {
-
-    try {
-      this.clientRowSet.moveToInsertRow();
-      this.clientRowSet.updateString("COF_NAME", coffeeName);
-      this.clientRowSet.updateInt("SUP_ID", supplierID);
-      this.clientRowSet.updateFloat("PRICE", price);
-      this.clientRowSet.updateInt("SALES", sales);
-      this.clientRowSet.updateInt("TOTAL", total);
-      this.clientRowSet.insertRow();
-      this.clientRowSet.moveToCurrentRow();
-    } catch (SQLException e) {
-        
-    }
-  }
-  */
 
   public void close() {
     try {
-      clientRowSet.getStatement().close();
+      RowSet.getStatement().close();
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
@@ -126,8 +100,8 @@ public class DataTableModel implements TableModel {
   public Object getValueAt(int rowIndex, int columnIndex) {
 
     try {
-      this.clientRowSet.absolute(rowIndex + 1);
-      Object o = this.clientRowSet.getObject(columnIndex + 1);
+      this.RowSet.absolute(rowIndex + 1);
+      Object o = this.RowSet.getObject(columnIndex + 1);
       if (o == null)
         return null;
       else
