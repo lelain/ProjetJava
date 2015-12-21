@@ -1,11 +1,28 @@
 
 import com.sun.rowset.CachedRowSetImpl;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.sql.rowset.CachedRowSet;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,8 +47,127 @@ public class ProductTab extends javax.swing.JPanel {
         this.mainWin=myMainWin;
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
+        
+        //creation of the tree
+        top = new DefaultMutableTreeNode("ALL");
+        createNodes(top);
+             
         initComponents();
+        
+        DefaultTreeModel treeModel = (DefaultTreeModel) jTree1.getModel();        
+        // Autoriser les feuilles du modele à s'afficher en tant que folder si getAllowsChildren() == true pour cette feuille
+        treeModel.setAsksAllowsChildren(true);
+        
+        jTree1.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        jTree1.addTreeSelectionListener(new TreeSelectionListener() {
+            public void valueChanged(TreeSelectionEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                           jTree1.getLastSelectedPathComponent();
+
+                /* if nothing is selected */ 
+                if (node == null) return;
+
+                /* retrieve the node that was selected */ 
+                //voir a quoi ca peut servir
+                //Object nodeInfo = node.getUserObject();                
+                try {
+                    /* React to the node selection. */
+                    
+                    String str = pathToString(e.getPath());
+                    if ("ALL".equals(str)) {
+                        myTableModel = new DataTableModel(getContentsOfTable());
+                    } else {
+                        //we drop the ALL/ at the start of the string 
+                        str=str.replace("ALL/", "");
+                        myTableModel = new DataTableModel(getContentsWithTree(str));
+                    }
+                    
+                } catch (SQLException ex) {
+                    Logger.getLogger(ProductTab.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                jTable1.setModel(myTableModel);
+        
+            }
+
+            
+        });
     }
+    
+    private String pathToString(TreePath tree) {
+        String str = tree.toString();
+        str=str.replace(", ", "/");
+        str=str.replace("[", "");
+        str=str.replace("]", "");
+        return str;
+    }
+    
+    private CachedRowSet getContentsWithTree(String cat) throws SQLException {
+        CachedRowSet crs = null;
+        try {
+        crs = new CachedRowSetImpl();
+        crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
+        crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
+        crs.setUsername(connectionProp.getProperty("user"));
+        crs.setPassword(connectionProp.getProperty("password"));
+        crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
+        crs.setCommand("select category,brand,name,quantity,qunit,price"
+              + ",punit,infos from V_Products where category LIKE '"+cat+"%'");
+        System.out.println(cat);
+        crs.execute();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Unexpected error in getContents\nDetails : "+e.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        return crs;
+    }
+    
+    
+    
+    private void createNodes(DefaultMutableTreeNode top) {
+        //read the file containing the information
+        //and store them in vectors
+        //in the file, after the tag $tree$, on one line we have the main node following by the children
+        Vector<String[]> level = new Vector<> ();   //to store the nodes 
+        Charset charset = Charset.forName("US-ASCII");   //to read the file
+        Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
+        
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line=reader.readLine();
+            while (!line.equals("$tree$")) {
+                line=reader.readLine();
+            } 
+            line=reader.readLine();  
+            //here we are on the right place in the file
+            Pattern pat = Pattern.compile(" +");
+            while(!"".equals(line)) {
+                String[] level1=pat.split(line);
+                for (int i=0; i<level1.length; i++) {
+                    level1[i]=level1[i].replace("_", " ");
+                }
+                level.add(level1);
+                line=reader.readLine(); 
+            } 
+            reader.close();
+        } catch (IOException x) {
+            JOptionPane.showMessageDialog(this, "Problem loading the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }  
+        
+        DefaultMutableTreeNode level2;
+        DefaultMutableTreeNode level3;
+    
+        for (int i=0; i<level.size(); i++) {
+            level2 = new DefaultMutableTreeNode(level.elementAt(i)[0]);
+            top.add(level2);
+            for (int j=1; j<level.elementAt(i).length; j++) {
+                level3 = new DefaultMutableTreeNode(level.elementAt(i)[j]);
+                level2.add(level3);
+            }
+        }
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -45,7 +181,7 @@ public class ProductTab extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable(myTableModel);
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
+        jTree1 = new javax.swing.JTree(top);
         addButton = new javax.swing.JButton();
         modifyButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
@@ -85,7 +221,7 @@ public class ProductTab extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
@@ -96,7 +232,7 @@ public class ProductTab extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(removeButton)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -159,6 +295,7 @@ public class ProductTab extends javax.swing.JPanel {
     private final Properties connectionProp; 
     private DataTableModel myTableModel;
     private final Main_W mainWin;
+    private DefaultMutableTreeNode top;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JScrollPane jScrollPane1;

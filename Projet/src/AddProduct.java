@@ -1,4 +1,6 @@
 
+import java.awt.Component;
+import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,10 +17,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Vector;
+import java.util.regex.Pattern;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -208,9 +217,86 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         Arrays.sort(unitString);
         Arrays.sort(priceUnitString);
         
+        //For the category combo box
+        //we take the them from the file
+        level = new Vector<> ();   //to store the nodes 
+        Charset charset = Charset.forName("US-ASCII");   //to read the file
+        Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
+        
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line=reader.readLine();
+            while (!line.equals("$tree$")) {
+                line=reader.readLine();
+            } 
+            line=reader.readLine();  
+            //here we are on the right place in the file
+            Pattern pat = Pattern.compile(" +");
+            while(!"".equals(line)) {
+                String[] level1=pat.split(line);
+                for (int i=0; i<level1.length; i++) {
+                    level1[i]=level1[i].replace("_", " ");
+                }
+                level.add(level1);
+                line=reader.readLine(); 
+            } 
+            reader.close();
+        } catch (IOException x) {
+            JOptionPane.showMessageDialog(this, "Problem loading the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }  
+        
+        //we need the size for cat
+        size=0;
+        for (int i=0; i<level.size(); i++) {
+            size =size + level.elementAt(i).length;
+        }
+        cat = new String[size];
+        
+        int k=0;
+        for (int i=0; i<level.size(); i++) {
+            for (int j=0; j<level.elementAt(i).length; j++) {
+                if (j==0) {
+                    cat[k]="**"+level.elementAt(i)[j]+"**";
+                } else {
+                    cat[k]=level.elementAt(i)[0]+"/"+level.elementAt(i)[j];
+                }
+                k++;
+            }
+        }
+        
+        
+        
+        
         initComponents();
+        
+        
+        //A voir pourquoi ca marche!!!
+        Font f1 = catCombo.getFont();
+        Font f2 = new Font("Tahoma", 0, 14);
+
+        catCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            if (value instanceof JComponent)
+                return (JComponent) value;
+
+            boolean itemEnabled = !value.toString().startsWith("**"); 
+
+            super.getListCellRendererComponent(list, value, index,
+                isSelected && itemEnabled, cellHasFocus);
+
+            // Render item as disabled and with different font:
+            setEnabled(itemEnabled);
+            setFont(itemEnabled ? f1 : f2);
+
+            return this;
+            }
+        });
+        
         quantCombo.setSelectedItem("mL");
         priceCombo.setSelectedItem("euros");
+        catCombo.setSelectedItem("Pharmacy/Skin care");
         
         quantField.getDocument().addDocumentListener(this);
         priceField.getDocument().addDocumentListener(this);
@@ -228,7 +314,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        catCombo = new javax.swing.JComboBox<>();
+        catCombo = new javax.swing.JComboBox<>(new MyComboModel(cat));
         newCat = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         brandCombo = new javax.swing.JComboBox<>(brands);
@@ -259,7 +345,6 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         jLabel2.setText("Category");
 
         catCombo.setBackground(new java.awt.Color(250, 225, 199));
-        catCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { }));
 
         newCat.setText("+");
         newCat.addActionListener(new java.awt.event.ActionListener() {
@@ -351,7 +436,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                                         .addComponent(jLabel6)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGap(12, 12, 12)
                                         .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(addPUnit))
@@ -364,16 +449,16 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                                             .addComponent(jLabel2))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(catCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(newCat))
-                                                .addGroup(layout.createSequentialGroup()
-                                                    .addComponent(brandCombo, 0, 150, Short.MAX_VALUE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(newBrand)
-                                                    .addGap(56, 56, 56)))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(brandCombo, 0, 185, Short.MAX_VALUE)
+                                                    .addComponent(catCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(newCat)
+                                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                        .addComponent(newBrand)
+                                                        .addGap(56, 56, 56))))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                     .addComponent(quantField, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
@@ -382,7 +467,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                                                 .addComponent(quantCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(addQUnit)))))
-                                .addGap(0, 72, Short.MAX_VALUE))
+                                .addGap(0, 37, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -427,10 +512,9 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(priceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(addPUnit))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(addPUnit)
+                        .addComponent(priceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
@@ -753,6 +837,8 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     private String[] brands;
     private String[] unitString;
     private String[] priceUnitString;
+    private String[] cat;
+    Vector<String[]> level;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPUnit;
     private javax.swing.JButton addQUnit;
@@ -873,4 +959,18 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         }
 
     }
+}
+
+
+class MyComboModel extends DefaultComboBoxModel<String> {
+    public MyComboModel() {}
+    public MyComboModel(String[] items) {
+        super(items);
+    }
+    @Override
+    public void setSelectedItem(Object item) {
+        if (item.toString().startsWith("**"))
+            return;
+        super.setSelectedItem(item);
+    };
 }
