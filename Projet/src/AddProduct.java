@@ -59,9 +59,25 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         java.util.Locale.setDefault ( java.util.Locale.ENGLISH ) ;
         javax.swing.UIManager.getDefaults().setDefaultLocale ( java.util.Locale.ENGLISH ) ;
         javax.swing.JComponent.setDefaultLocale ( java.util.Locale.ENGLISH ) ;
+              
+        initBrand();
+        initQUnit();
+        initPUnit();
+        initCatCombo();
+        initComponents();
+        initCatComboFont();
         
-        //for the combo boxes
-        //we search the different brands in the database        
+        quantCombo.setSelectedItem("mL");
+        priceCombo.setSelectedItem("euros");
+        catCombo.setSelectedItem("Pharmacy/Skin care");
+        
+        quantField.getDocument().addDocumentListener(this);
+        priceField.getDocument().addDocumentListener(this);
+        nameField.getDocument().addDocumentListener(this);
+    }
+
+    
+    private void initBrand() {
         Statement stmt = null;
         int size=0;
         try{
@@ -111,10 +127,14 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                 stmt.close();
             }catch(SQLException se2){ }// nothing we can do
         }//end finally 
-        
+        Arrays.sort(brands);
+    }
+    
+    
+    private void initQUnit() {
         //we search the different quantity unit
-        stmt = null;
-        size=0;
+        Statement stmt = null;
+        int size=0;
         try{
             stmt = conn.createStatement();
             String sqlQuery;
@@ -165,10 +185,14 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                 stmt.close();
             }catch(SQLException se2){ }// nothing we can do
         }//end finally 
-        
+        Arrays.sort(unitString);
+    }
+    
+    
+    private void initPUnit() {
         //we search the different price unit
-        stmt = null;
-        size=0;
+        Statement stmt = null;
+        int size=0;
         try{
             stmt = conn.createStatement();
             String sqlQuery;
@@ -216,13 +240,13 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                 stmt.close();
             }catch(SQLException se2){ }// nothing we can do
         }//end finally 
-        
-        Arrays.sort(brands);
-        Arrays.sort(unitString);
         Arrays.sort(priceUnitString);
-        
+    }
+    
+    
+    public void initCatCombo() {
         //For the category combo box
-        //we take the them from the file
+        //we take them from the file
         level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
         Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
@@ -234,12 +258,8 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             } 
             line=reader.readLine();  
             //here we are on the right place in the file
-            Pattern pat = Pattern.compile(" +");
-            while(!"".equals(line)) {
-                String[] level1=pat.split(line);
-                for (int i=0; i<level1.length; i++) {
-                    level1[i]=level1[i].replace("_", " ");
-                }
+            while(!line.equals("$endtree$")) {
+                String[] level1=line.split("/");
                 level.add(level1);
                 line=reader.readLine(); 
             } 
@@ -250,7 +270,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         }  
         
         //we need the size for cat
-        size=0;
+        int size=0;
         for (int i=0; i<level.size(); i++) {
             size =size + level.get(i).length;
         }
@@ -267,13 +287,9 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
                 k++;
             }
         }
-        
-        
-        
-        
-        initComponents();
-        
-        
+    }
+    
+    public void initCatComboFont() {
         //A voir pourquoi ca marche!!!
         Font f1 = catCombo.getFont();
         Font f2 = new Font("Tahoma", 0, 14);
@@ -297,16 +313,16 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             return this;
             }
         });
-        
-        quantCombo.setSelectedItem("mL");
-        priceCombo.setSelectedItem("euros");
-        catCombo.setSelectedItem("Pharmacy/Skin care");
-        
-        quantField.getDocument().addDocumentListener(this);
-        priceField.getDocument().addDocumentListener(this);
-        nameField.getDocument().addDocumentListener(this);
+    
     }
-
+     
+    
+    public void updateCatCombo() {
+        initCatCombo();
+        catCombo.setModel(new MyComboModel(cat));
+        initCatComboFont();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -539,7 +555,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     private void newCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCatActionPerformed
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        NewCat addCat = new NewCat(ancestor,true,level);
+        NewCat addCat = new NewCat(ancestor,true,this,level);
         addCat.setLocationRelativeTo(null);
         addCat.setVisible(true);
         

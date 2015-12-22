@@ -1,6 +1,14 @@
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -25,21 +33,21 @@ public class NewCat extends javax.swing.JDialog {
      * Creates new form NewCat
      * @param parent
      * @param modal
+     * @param dialog
      * @param level
      */
-    public NewCat(java.awt.Frame parent, boolean modal, ArrayList<String[]> level) {
+    public NewCat(java.awt.Frame parent, boolean modal, AddProduct dialog, ArrayList<String[]> level) {
         super(parent, modal);
+        this.treeString=level;
+        this.dialog=dialog;
         
         initComponents();
         
+        initializeList1();
         
-        level1=new String[level.size()];
-        for (int i=0; i<level1.length; i++) {
-            level1[i]=level.get(i)[0];
-        }
-        //listModel = new MyListModel(level1);
-        jList1.setListData(level1);
+        jList2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
         jList1.addListSelectionListener( new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -47,17 +55,40 @@ public class NewCat extends javax.swing.JDialog {
 
                     if (jList1.getSelectedIndex() == -1) {
                     //No selection, disable fire button.
+                    addChildButton.setEnabled(false);
+
+                    } else {
+                    //Selection, enable the fire button.
+                    addChildButton.setEnabled(true);
+                    //TODO fill the jList2 with the item corresponding to the level 1 selection
+                    initializeList2(jList1.getSelectedIndex());
+                    }
+                }
+            }
+
+        });
+        
+        /*
+        jList2.addListSelectionListener( new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting() == false) {
+
+                    if (jList2.getSelectedIndex() == -1) {
+                    //No selection, disable fire button.
                     jButton2.setEnabled(false);
 
                     } else {
                     //Selection, enable the fire button.
                     jButton2.setEnabled(true);
                     //TODO fill the jList2 with the item corresponding to the level 1 selection
+                    initializeList2(jList1.getSelectedIndex());
                     }
                 }
             }
 
         });
+        */
         
     }
 
@@ -77,9 +108,9 @@ public class NewCat extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        addParentButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        addChildButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         finishButton = new javax.swing.JButton();
 
@@ -98,19 +129,29 @@ public class NewCat extends javax.swing.JDialog {
 
         jLabel2.setText("Parent");
 
-        jButton1.setText("Add parent");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addParentButton.setText("Add parent");
+        addParentButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addParentButtonActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Child");
 
-        jButton2.setText("Add child");
-        jButton2.setEnabled(false);
+        addChildButton.setText("Add child");
+        addChildButton.setEnabled(false);
+        addChildButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addChildButtonActionPerformed(evt);
+            }
+        });
 
         finishButton.setText("Finish");
+        finishButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +167,7 @@ public class NewCat extends javax.swing.JDialog {
                                 .addGap(12, 12, 12)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
+                                .addComponent(addParentButton)
                                 .addGap(64, 64, 64)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
@@ -134,7 +175,7 @@ public class NewCat extends javax.swing.JDialog {
                                         .addGap(12, 12, 12)
                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton2))))
+                                        .addComponent(addChildButton))))
                             .addComponent(jLabel2))
                         .addContainerGap(109, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -165,7 +206,7 @@ public class NewCat extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1)
+                            .addComponent(addParentButton)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
                             .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -173,7 +214,7 @@ public class NewCat extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(finishButton))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(addChildButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -181,7 +222,25 @@ public class NewCat extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void initializeList1() {
+        String[] level1=new String[treeString.size()];
+        for (int i=0; i<level1.length; i++) {
+            level1[i]=treeString.get(i)[0];
+        }
+        jList1.setListData(level1);
+    }
+    
+    private void initializeList2(int index) {
+        System.out.println(index);
+        String[] level2=new String[treeString.get(index).length];
+        for (int i=1; i<level2.length; i++) {
+            level2[i]=treeString.get(index)[i];
+        }
+        jList2.setListData(level2);
+    }
+    
+    
+    private void addParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParentButtonActionPerformed
         String answerCat = JOptionPane.showInputDialog (this, "New category :") ;
         if (answerCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
@@ -189,23 +248,94 @@ public class NewCat extends javax.swing.JDialog {
             return;
         }
         if (answerCat.length() > 0) {
-            String[] copy = new String[level1.length];
-            System.arraycopy(level1, 0, copy, 0, copy.length);
-            level1 = new String[copy.length+1];
-            System.arraycopy(copy,0,level1,0,copy.length);
-            level1[level1.length-1]=answerCat;
-            jList1.setListData(level1);
+            String[] newLevel1 = {answerCat};
+            treeString.add(newLevel1);
+            initializeList1();
         }
         
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addParentButtonActionPerformed
+
+    private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
+        // TODO add your handling code here:
+        String answerCat = JOptionPane.showInputDialog (this, "New subcategory :") ;
+        if (answerCat.length() > 80) {
+            JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (answerCat.length() > 0) {
+            String[] newLevel2 = {answerCat};
+            int index = jList1.getSelectedIndex();
+            String[] subCat = new String[treeString.get(index).length+1];
+            System.arraycopy(treeString.get(index), 0, subCat, 0, subCat.length-1);
+            subCat[subCat.length-1]=answerCat;
+            treeString.set(index,subCat);
+            initializeList2(index);
+        }
+    }//GEN-LAST:event_addChildButtonActionPerformed
+
+    private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
+        //register the change in the file
+        String textBefore="";
+        String textAfter="";
+        Charset charset = Charset.forName("US-ASCII");
+        Path file = FileSystems.getDefault().getPath("Try", "products.txt"); 
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line=reader.readLine();
+            textBefore+=line+"\n";
+            while (!line.equals("$tree$")) {
+                line=reader.readLine();
+                textBefore+=line+"\n";
+            } 
+            //we read the lines until the end of the tree
+            line=reader.readLine();
+            while (!line.equals("$endtree$")) {
+                line=reader.readLine();
+            } 
+            //we stock the other lines of the files
+            textAfter+=line+"\n";
+            line=reader.readLine();
+            textAfter+=line+"\n";
+            while (line!=null) {
+                line=reader.readLine();
+                textAfter+=line+"\n";
+            } 
+            textAfter=textAfter.replace("null\n", "");
+            
+            //here we are in the right place in the file
+            try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
+                String newText=textBefore;
+                for (int i=0; i<treeString.size(); i++) {
+                    String newline = String.join("/", treeString.get(i));
+                    newText+=newline+"\n";
+                }
+                newText+=textAfter;
+                writer.write(newText, 0, newText.length());
+                writer.close();
+            } catch (IOException x) {
+                JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            reader.close();
+        } catch (IOException x) {
+            JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        } 
+        dialog.updateCatCombo();
+        this.dispose();
+        
+        
+    }//GEN-LAST:event_finishButtonActionPerformed
 
 
-    private String[] level1;
+    
+    private ArrayList<String[]> treeString;
+    private AddProduct dialog;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addChildButton;
+    private javax.swing.JButton addParentButton;
     private javax.swing.JButton finishButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

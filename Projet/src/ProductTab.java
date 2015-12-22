@@ -140,12 +140,8 @@ public class ProductTab extends javax.swing.JPanel {
             } 
             line=reader.readLine();  
             //here we are on the right place in the file
-            Pattern pat = Pattern.compile(" +");
-            while(!"".equals(line)) {
-                String[] level1=pat.split(line);
-                for (int i=0; i<level1.length; i++) {
-                    level1[i]=level1[i].replace("_", " ");
-                }
+            while(!line.equals("$endtree$")) {
+                String[] level1=line.split("/");
                 level.add(level1);
                 line=reader.readLine(); 
             } 
