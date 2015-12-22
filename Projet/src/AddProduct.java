@@ -1,6 +1,7 @@
 
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Window;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Vector;
@@ -22,9 +24,11 @@ import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -219,7 +223,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         
         //For the category combo box
         //we take the them from the file
-        level = new Vector<> ();   //to store the nodes 
+        level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
         Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
         
@@ -248,17 +252,17 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         //we need the size for cat
         size=0;
         for (int i=0; i<level.size(); i++) {
-            size =size + level.elementAt(i).length;
+            size =size + level.get(i).length;
         }
         cat = new String[size];
         
         int k=0;
         for (int i=0; i<level.size(); i++) {
-            for (int j=0; j<level.elementAt(i).length; j++) {
+            for (int j=0; j<level.get(i).length; j++) {
                 if (j==0) {
-                    cat[k]="**"+level.elementAt(i)[j]+"**";
+                    cat[k]="**"+level.get(i)[j]+"**";
                 } else {
-                    cat[k]=level.elementAt(i)[0]+"/"+level.elementAt(i)[j];
+                    cat[k]=level.get(i)[0]+"/"+level.get(i)[j];
                 }
                 k++;
             }
@@ -343,8 +347,6 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         jLabel1.setText("Description of the product");
 
         jLabel2.setText("Category");
-
-        catCombo.setBackground(new java.awt.Color(250, 225, 199));
 
         newCat.setText("+");
         newCat.addActionListener(new java.awt.event.ActionListener() {
@@ -535,6 +537,13 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
 
     @SuppressWarnings("null")
     private void newCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCatActionPerformed
+        
+        JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
+        NewCat addCat = new NewCat(ancestor,true,level);
+        addCat.setLocationRelativeTo(null);
+        addCat.setVisible(true);
+        
+        /*
         String answerCat = JOptionPane.showInputDialog (this, "New category :") ;
         if (answerCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
@@ -545,6 +554,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             catCombo.addItem(answerCat);
             catCombo.setSelectedItem(answerCat);
         }
+        */
     }//GEN-LAST:event_newCatActionPerformed
 
     
@@ -594,7 +604,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     }//GEN-LAST:event_newBrandActionPerformed
 
     private void addQUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQUnitActionPerformed
-        //TODO verify that the new unit is not already in
+        //verify that the new unit is not already in
         String answerUnit = JOptionPane.showInputDialog (this, "New unit :") ;
         if (answerUnit.length() > 10) {
             JOptionPane.showMessageDialog(this, "Unit too long, please make it shorter",
@@ -638,7 +648,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     }//GEN-LAST:event_addQUnitActionPerformed
 
     private void addPUnitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPUnitActionPerformed
-        //TODO verify that the new unit is not already in
+        //verify that the new unit is not already in
         String answerUnit = JOptionPane.showInputDialog (this, "New currency :") ;
         if (answerUnit.length() > 10) {
             JOptionPane.showMessageDialog(this, "Unit too long, please make it shorter",
@@ -690,7 +700,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     }//GEN-LAST:event_okButtonActionPerformed
 
     private boolean fieldsRight() {
-        //TODO verify that fiels are correctly filled
+        //verify that fiels are correctly filled
         if (!verifyLenght(nameField,100,"Name too long, please make it shorter")) {
             return false;
         }
@@ -740,7 +750,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     
     
     private void insertProduct () {
-        //TODO prepare the strings
+        //prepare the strings
         String category,brand,name,quantity,qunit,price,punit,infos;
         category="'"+(String)catCombo.getSelectedItem()+"'";
         brand="'"+(String)brandCombo.getSelectedItem()+"'";
@@ -765,32 +775,8 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             infos="'"+jTextArea1.getText()+"'";
         }
       
-        //TODO write in the file
-        //FileInputStream fis;
-        //BufferedInputStream bis;
-        
-       // try {
-            //fis = new FileInputStream(new File("products.txt"));
-            //bis = new BufferedInputStream(fis);
-            
-            /*
-        Charset charset = Charset.forName("US-ASCII");
-        Path file = FileSystems.getDefault().getPath("Try", "products.txt");
-        
-        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
-            String line = null;
-            //add new brand if we need
-            while ((line = reader.readLine()) != "$tree$");
-            line=reader.readLine();
-            
-               
-        } catch (IOException x) {
-            System.out.println("Problem");
-        }
-*/
-        
-        
-        //TODO do the request
+       
+        //do the request
         Statement stmt = null;
         try{
             stmt = conn.createStatement();
@@ -838,7 +824,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     private String[] unitString;
     private String[] priceUnitString;
     private String[] cat;
-    Vector<String[]> level;
+    private ArrayList<String[]> level;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addPUnit;
     private javax.swing.JButton addQUnit;

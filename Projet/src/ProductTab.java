@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -128,7 +129,7 @@ public class ProductTab extends javax.swing.JPanel {
         //read the file containing the information
         //and store them in vectors
         //in the file, after the tag $tree$, on one line we have the main node following by the children
-        Vector<String[]> level = new Vector<> ();   //to store the nodes 
+        ArrayList<String[]> level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
         Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
         
@@ -158,10 +159,10 @@ public class ProductTab extends javax.swing.JPanel {
         DefaultMutableTreeNode level3;
     
         for (int i=0; i<level.size(); i++) {
-            level2 = new DefaultMutableTreeNode(level.elementAt(i)[0]);
+            level2 = new DefaultMutableTreeNode(level.get(i)[0]);
             top.add(level2);
-            for (int j=1; j<level.elementAt(i).length; j++) {
-                level3 = new DefaultMutableTreeNode(level.elementAt(i)[j]);
+            for (int j=1; j<level.get(i).length; j++) {
+                level3 = new DefaultMutableTreeNode(level.get(i)[j]);
                 level2.add(level3);
             }
         }
