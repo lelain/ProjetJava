@@ -34,12 +34,12 @@ public class NewCat extends javax.swing.JDialog {
      * @param parent
      * @param modal
      * @param dialog
-     * @param level
      */
-    public NewCat(java.awt.Frame parent, boolean modal, AddProduct dialog, ArrayList<String[]> level) {
+    public NewCat(java.awt.Frame parent, boolean modal, AddProduct dialog) {
         super(parent, modal);
-        this.treeString=level;
         this.dialog=dialog;
+        this.treeString=dialog.getLevel();
+        this.prodTab=dialog.getProductTab();
         
         initComponents();
         
@@ -67,29 +67,7 @@ public class NewCat extends javax.swing.JDialog {
             }
 
         });
-        
-        /*
-        jList2.addListSelectionListener( new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (e.getValueIsAdjusting() == false) {
-
-                    if (jList2.getSelectedIndex() == -1) {
-                    //No selection, disable fire button.
-                    jButton2.setEnabled(false);
-
-                    } else {
-                    //Selection, enable the fire button.
-                    jButton2.setEnabled(true);
-                    //TODO fill the jList2 with the item corresponding to the level 1 selection
-                    initializeList2(jList1.getSelectedIndex());
-                    }
-                }
-            }
-
-        });
-        */
-        
+          
     }
 
     /**
@@ -113,8 +91,10 @@ public class NewCat extends javax.swing.JDialog {
         addChildButton = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
         finishButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Add new category");
 
         jScrollPane1.setViewportView(jList1);
 
@@ -153,6 +133,13 @@ public class NewCat extends javax.swing.JDialog {
             }
         });
 
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -188,6 +175,8 @@ public class NewCat extends javax.swing.JDialog {
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cancelButton)
+                .addGap(18, 18, 18)
                 .addComponent(finishButton)
                 .addContainerGap())
         );
@@ -212,7 +201,9 @@ public class NewCat extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(finishButton))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(finishButton)
+                            .addComponent(cancelButton)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addChildButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -248,7 +239,7 @@ public class NewCat extends javax.swing.JDialog {
             return;
         }
         if (answerCat.length() > 0) {
-            String[] newLevel1 = {answerCat};
+            String[] newLevel1 = {answerCat,"Other"};
             treeString.add(newLevel1);
             initializeList1();
         }
@@ -257,7 +248,7 @@ public class NewCat extends javax.swing.JDialog {
     }//GEN-LAST:event_addParentButtonActionPerformed
 
     private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
-        // TODO add your handling code here:
+        // add a child
         String answerCat = JOptionPane.showInputDialog (this, "New subcategory :") ;
         if (answerCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
@@ -265,11 +256,10 @@ public class NewCat extends javax.swing.JDialog {
             return;
         }
         if (answerCat.length() > 0) {
-            String[] newLevel2 = {answerCat};
             int index = jList1.getSelectedIndex();
-            String[] subCat = new String[treeString.get(index).length+1];
+            String[] subCat = new String[treeString.get(index).length+1];   //we copy what we already have
             System.arraycopy(treeString.get(index), 0, subCat, 0, subCat.length-1);
-            subCat[subCat.length-1]=answerCat;
+            subCat[subCat.length-1]=answerCat;  //and add the new one at the end
             treeString.set(index,subCat);
             initializeList2(index);
         }
@@ -322,19 +312,31 @@ public class NewCat extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         } 
+        
+        //update the combo
         dialog.updateCatCombo();
+        
+        //update the tree
+        prodTab.updateTree(treeString);
+        
         this.dispose();
         
-        
     }//GEN-LAST:event_finishButtonActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
 
 
     
     private ArrayList<String[]> treeString;
     private AddProduct dialog;
+    private ProductTab prodTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;
     private javax.swing.JButton addParentButton;
+    private javax.swing.JButton cancelButton;
     private javax.swing.JButton finishButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

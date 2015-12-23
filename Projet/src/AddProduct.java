@@ -555,7 +555,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     private void newCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCatActionPerformed
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        NewCat addCat = new NewCat(ancestor,true,this,level);
+        NewCat addCat = new NewCat(ancestor,true,this);
         addCat.setLocationRelativeTo(null);
         addCat.setVisible(true);
         
@@ -574,6 +574,13 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     }//GEN-LAST:event_newCatActionPerformed
 
     
+    public ProductTab getProductTab() {
+        return product;
+    }
+    
+    public ArrayList<String[]> getLevel() {
+        return level;
+    }
     
     
     

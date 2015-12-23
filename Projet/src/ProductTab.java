@@ -9,15 +9,18 @@ import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.sql.rowset.CachedRowSet;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -113,7 +116,6 @@ public class ProductTab extends javax.swing.JPanel {
         crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
         crs.setCommand("select category,brand,name,quantity,qunit,price"
               + ",punit,infos from V_Products where category LIKE '"+cat+"%'");
-        System.out.println(cat);
         crs.execute();
 
         } catch (SQLException e) {
@@ -165,6 +167,27 @@ public class ProductTab extends javax.swing.JPanel {
         
     }
     
+    
+    public void updateTree(ArrayList<String[]> tree) {
+        //update the nodes (top), giving the array of string tree
+        top = new DefaultMutableTreeNode("ALL");
+        DefaultMutableTreeNode level2;
+        DefaultMutableTreeNode level3;
+    
+        for (int i=0; i<tree.size(); i++) {
+            level2 = new DefaultMutableTreeNode(tree.get(i)[0]);
+            top.add(level2);
+            for (int j=1; j<tree.get(i).length; j++) {
+                level3 = new DefaultMutableTreeNode(tree.get(i)[j]);
+                level2.add(level3);
+            }
+        }
+        DefaultTreeModel treeModel = new DefaultTreeModel(top);
+        treeModel.setAsksAllowsChildren(true);
+        jTree1.setModel(treeModel);
+        
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -183,6 +206,7 @@ public class ProductTab extends javax.swing.JPanel {
         modifyButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        manageTreeButton = new javax.swing.JButton();
 
         /*
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -212,13 +236,22 @@ public class ProductTab extends javax.swing.JPanel {
 
         removeButton.setText("Remove");
 
+        manageTreeButton.setText("Manage category");
+        manageTreeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                manageTreeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(manageTreeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
@@ -236,17 +269,18 @@ public class ProductTab extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(addButton)
+                    .addComponent(modifyButton)
+                    .addComponent(removeButton)
+                    .addComponent(manageTreeButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(addButton)
-                            .addComponent(modifyButton)
-                            .addComponent(removeButton))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -256,6 +290,45 @@ public class ProductTab extends javax.swing.JPanel {
         NewProductW.setLocationRelativeTo(null);
         NewProductW.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed
+
+    
+    public ArrayList<String[]> getLevel() {
+        DefaultMutableTreeNode node=top.getNextNode();
+        String str="";
+        ArrayList<String[]> tree = new ArrayList<> (); 
+        boolean newLine = node.isNodeDescendant(node.getNextNode());
+        while (node!=null) {
+            if (newLine) {
+                str+=node.toString();
+                node=node.getNextNode();
+                newLine = node.isNodeDescendant(node.getNextNode());
+                while(!newLine) {
+                    str+="/"+node.toString();
+                    node=node.getNextNode();
+                    if (node==null) { newLine=true; } else {
+                        newLine = node.isNodeDescendant(node.getNextNode());
+                    }
+                    
+                }
+                String[] line = str.split("/");
+                tree.add(line);
+                str="";
+            } else {
+                JOptionPane.showMessageDialog(this, "Unexpected error retrieving the tree",
+                    "Warning", JOptionPane.ERROR_MESSAGE);  
+            }
+
+        }
+        return tree;
+    }
+    
+    private void manageTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTreeButtonActionPerformed
+        //essai pour changement d'un DefaultMutableTreeNode en ArrayList<String[]>
+        JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
+        ManageCat myManageCat = new ManageCat(ancestor,true,this);
+        myManageCat.setLocationRelativeTo(null);
+        myManageCat.setVisible(true);
+    }//GEN-LAST:event_manageTreeButtonActionPerformed
 
     private CachedRowSet getContentsOfTable() throws SQLException {
     CachedRowSet crs = null;
@@ -300,6 +373,7 @@ public class ProductTab extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JButton manageTreeButton;
     private javax.swing.JButton modifyButton;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
