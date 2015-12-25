@@ -1,7 +1,13 @@
 
+import java.awt.Component;
+import java.awt.Font;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 /*
@@ -20,15 +26,17 @@ public class SolveCatConflict extends javax.swing.JDialog {
      * Creates new form SolveCatConflict
      * @param parent
      * @param modal
-     * @param product
+     * @param myManageCat
      * @param id
      */
-    public SolveCatConflict(java.awt.Frame parent, boolean modal, ProductTab product, int id) {
+    public SolveCatConflict(java.awt.Frame parent, boolean modal, ManageCat myManageCat, int[] id) {
         super(parent, modal);
-        this.product=product;
-        this.id=id;
+        this.myManageCat=myManageCat;
+        this.treeString=myManageCat.getTreeString();
+        this.id= id;
         initComponents();
         initLabels();
+        initCombo();
         
     }
 
@@ -59,7 +67,9 @@ public class SolveCatConflict extends javax.swing.JDialog {
         brand = new javax.swing.JLabel();
         catCombo = new javax.swing.JComboBox<>();
         nbProd = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        labelProd = new javax.swing.JLabel();
+        okButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -67,6 +77,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
 
         jLabel2.setText("<html>Because you modified or removed a category, some of the products<br> in the data base do not have anymore a correct category.<br>Please choose a new category for these products.</html> ");
 
+        jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel3.setText("Category");
 
         jLabel4.setText("Brand");
@@ -85,60 +96,77 @@ public class SolveCatConflict extends javax.swing.JDialog {
 
         punit.setText("punit");
 
+        quantity.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
         quantity.setText("quantity");
 
+        qunit.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
         qunit.setText("qunit");
 
+        name.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
         name.setText("name");
 
+        brand.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
         brand.setText("brand");
 
         catCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         nbProd.setText("nbPb");
 
-        jLabel9.setText("products need to be checked");
+        labelProd.setText("products need to be checked");
+
+        okButton.setText("Ok");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jSeparator2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(nbProd)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(okButton)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel7)
                                     .addComponent(jLabel8)
+                                    .addComponent(jLabel7)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(quantity)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(qunit))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(price)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(punit))
                                     .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(quantity)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(qunit))
                                     .addComponent(name)
                                     .addComponent(brand)
-                                    .addComponent(catCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(catCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(130, 130, 130))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(nbProd)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelProd)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -154,8 +182,8 @@ public class SolveCatConflict extends javax.swing.JDialog {
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nbProd)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                    .addComponent(labelProd))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(catCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -181,19 +209,103 @@ public class SolveCatConflict extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(info, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(80, 80, 80))
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
+                .addComponent(okButton)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void initLabels() {
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        // modify the category in the data base
         Statement stmt=null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = myManageCat.getProductTab().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery="select category,brand,name,quantity,qunit,price,punit,infos from V_Products where pr_id="+id;
+            sqlQuery="update V_Products set category='"+catCombo.getSelectedItem()+"' where pr_id="+id[1];
+            stmt.executeUpdate(sqlQuery);
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                 stmt.close();
+            }catch(SQLException se2){   }// nothing we can do
+        }//end finally
+        this.dispose();
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    
+    private void initCombo() {
+        //we need the size for cat
+        int size=0;
+        for (int i=0; i<treeString.size(); i++) {
+            size =size + treeString.get(i).length;
+        }
+        String[] cat = new String[size];
+        
+        int k=0;
+        for (int i=0; i<treeString.size(); i++) {
+            for (int j=0; j<treeString.get(i).length; j++) {
+                if (j==0) {
+                    cat[k]="**"+treeString.get(i)[j]+"**";
+                } else {
+                    cat[k]=treeString.get(i)[0]+"/"+treeString.get(i)[j];
+                }
+                k++;
+            }
+        }
+        
+        catCombo.setModel(new MyComboModel(cat));
+        catCombo.setSelectedIndex(1);
+        
+        Font f1 = catCombo.getFont();
+        Font f2 = new Font("Tahoma", 0, 14);
+
+        catCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            if (value instanceof JComponent)
+                return (JComponent) value;
+
+            boolean itemEnabled = !value.toString().startsWith("**"); 
+
+            super.getListCellRendererComponent(list, value, index,
+                isSelected && itemEnabled, cellHasFocus);
+
+            // Render item as disabled and with different font:
+            setEnabled(itemEnabled);
+            setFont(itemEnabled ? f1 : f2);
+
+            return this;
+            }
+        });
+    }
+    
+    
+    private void initLabels() {
+        if (id[0]==1) {
+            nbProd.setText(Integer.toString(id[0]));
+            labelProd.setText("product need to be checked");
+        } else {
+            nbProd.setText(Integer.toString(id[0]));
+        }
+        
+        
+        Statement stmt=null;
+        try{
+            stmt = myManageCat.getProductTab().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="select category,brand,name,quantity,qunit,price,punit,infos from V_Products where pr_id="+Integer.toString(id[1]);
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { 
                 brand.setText(rs.getString("brand"));
@@ -219,8 +331,9 @@ public class SolveCatConflict extends javax.swing.JDialog {
         }//end finally
     }
 
-    private final ProductTab product;
-    private int id;
+    private final ManageCat myManageCat;
+    private ArrayList<String[]> treeString;
+    private int[] id;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel brand;
     private javax.swing.JComboBox<String> catCombo;
@@ -233,10 +346,12 @@ public class SolveCatConflict extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JLabel labelProd;
     private javax.swing.JLabel name;
     private javax.swing.JLabel nbProd;
+    private javax.swing.JButton okButton;
     private javax.swing.JLabel price;
     private javax.swing.JLabel punit;
     private javax.swing.JLabel quantity;

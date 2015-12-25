@@ -562,16 +562,14 @@ public class ManageCat extends javax.swing.JDialog {
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         // TODO manage the problems that can appear in the data base if categories were modified or removed
         ArrayList<Integer> pb = checkIntegrity();
-        System.out.println(pb);
-        System.out.println(pb.get(0));
         if (pb.get(0)!=0) {
             solveConflict(pb);
         }
-        
+        //here there is no more conflict
+        //we can write the new categories in the file
+        //and update the tree and table
 
         //register the change in the file
-        /*
-        
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
@@ -618,15 +616,19 @@ public class ManageCat extends javax.swing.JDialog {
                     "Warning", JOptionPane.ERROR_MESSAGE);
         } 
         
-        //update the combo
-        //dialog.updateCatCombo();
+        //update the table
+        try {
+            product.createNewTableModel();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
         
         //update the tree
-        //prodTab.updateTree(treeString);
+        product.updateTree(treeString);
         
         this.dispose();
         
-        */
     }//GEN-LAST:event_finishButtonActionPerformed
 
     
@@ -680,14 +682,26 @@ public class ManageCat extends javax.swing.JDialog {
     }
     
     private void solveConflict(ArrayList<Integer> pb) {
-        //for (int i=0; i<pb.size()-1; i++) {
-            JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-            SolveCatConflict solve = new SolveCatConflict(ancestor,true,product,pb.get(1));
+        //pb contains the number of problem in first position and the product id corresponding
+        //for all the problem we resolve them creating a SolveCatConflict custom dialog 
+        JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
+        int [] p= new int[2];
+        for (int i=0; i<pb.size()-1; i++) {
+            p[0]=pb.get(0)-i;
+            p[1]=pb.get(i+1);
+            SolveCatConflict solve = new SolveCatConflict(ancestor,true,this,p);
             solve.setLocationRelativeTo(null);
             solve.setVisible(true);
-       // }
-        
-        
+        }
+            
+    }
+    
+    public ProductTab getProductTab() {
+        return product;
+    }
+    
+    public ArrayList<String[]> getTreeString() {
+        return treeString;
     }
     
 

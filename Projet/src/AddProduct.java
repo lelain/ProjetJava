@@ -69,7 +69,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         
         quantCombo.setSelectedItem("mL");
         priceCombo.setSelectedItem("euros");
-        catCombo.setSelectedItem("Pharmacy/Skin care");
+        catCombo.setSelectedIndex(1);
         
         quantField.getDocument().addDocumentListener(this);
         priceField.getDocument().addDocumentListener(this);

@@ -59,6 +59,8 @@ public class ProductTab extends javax.swing.JPanel {
         createNodes(top);
              
         initComponents();
+        //add sorter on the table
+        jTable1.setAutoCreateRowSorter(true);
         
         DefaultTreeModel treeModel = (DefaultTreeModel) jTree1.getModel();        
         // Autoriser les feuilles du modele à s'afficher en tant que folder si getAllowsChildren() == true pour cette feuille
