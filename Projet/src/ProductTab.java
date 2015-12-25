@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class ProductTab extends javax.swing.JPanel {
     public ProductTab(Properties prop,Main_W myMainWin) throws SQLException {
         this.connectionProp=prop;
         this.mainWin=myMainWin;
+        this.conn=myMainWin.getConnection();
         CachedRowSet myRowSet = getContentsOfTable();
         myTableModel = new DataTableModel(myRowSet);
         
@@ -125,6 +127,10 @@ public class ProductTab extends javax.swing.JPanel {
         return crs;
     }
     
+    
+    public Connection getConnection() {
+        return conn;
+    }
     
     
     private void createNodes(DefaultMutableTreeNode top) {
@@ -363,6 +369,7 @@ public class ProductTab extends javax.swing.JPanel {
     
 
     private final Properties connectionProp; 
+    private Connection conn;
     private DataTableModel myTableModel;
     private final Main_W mainWin;
     private DefaultMutableTreeNode top;

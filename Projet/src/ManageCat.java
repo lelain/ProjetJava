@@ -1,7 +1,19 @@
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -42,11 +54,13 @@ public class ManageCat extends javax.swing.JDialog {
                     parentUp.setEnabled(false);
                     parentDown.setEnabled(false);
                     modifyParent.setEnabled(false);
+                    removeParent.setEnabled(false);
 
                     } else {
                     //Selection, enable the fire button.
                     addChildButton.setEnabled(true);   
                     modifyParent.setEnabled(true);
+                    removeParent.setEnabled(true);
                     if (jList1.getSelectedIndex()==0) { 
                         parentUp.setEnabled(false); 
                     } else {
@@ -76,10 +90,12 @@ public class ManageCat extends javax.swing.JDialog {
                     childUp.setEnabled(false);
                     childDown.setEnabled(false);
                     modifyChild.setEnabled(false);
+                    removeChild.setEnabled(false);
 
                     } else {
                         //Selection, enable the fire button.
                         modifyChild.setEnabled(true);
+                        removeChild.setEnabled(true);
                         //je sais pas pourquoi il commence a 1 ici
                         if (index2==1) { 
                             childUp.setEnabled(false); 
@@ -144,6 +160,8 @@ public class ManageCat extends javax.swing.JDialog {
         modifyChild = new javax.swing.JButton();
         childUp = new javax.swing.JButton();
         childDown = new javax.swing.JButton();
+        removeParent = new javax.swing.JButton();
+        removeChild = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -177,6 +195,11 @@ public class ManageCat extends javax.swing.JDialog {
         });
 
         finishButton.setText("Finish");
+        finishButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishButtonActionPerformed(evt);
+            }
+        });
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -233,6 +256,22 @@ public class ManageCat extends javax.swing.JDialog {
             }
         });
 
+        removeParent.setText("Remove");
+        removeParent.setEnabled(false);
+        removeParent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeParentActionPerformed(evt);
+            }
+        });
+
+        removeChild.setText("Remove");
+        removeChild.setEnabled(false);
+        removeChild.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeChildActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -260,7 +299,8 @@ public class ManageCat extends javax.swing.JDialog {
                                     .addComponent(addParentButton)
                                     .addComponent(modifyParent)
                                     .addComponent(parentDown)
-                                    .addComponent(parentUp))))
+                                    .addComponent(parentUp)
+                                    .addComponent(removeParent))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -272,7 +312,8 @@ public class ManageCat extends javax.swing.JDialog {
                                     .addComponent(addChildButton)
                                     .addComponent(modifyChild)
                                     .addComponent(childUp)
-                                    .addComponent(childDown))))
+                                    .addComponent(childDown)
+                                    .addComponent(removeChild))))
                         .addGap(78, 78, 78))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -312,6 +353,10 @@ public class ManageCat extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(parentDown)
                             .addComponent(childDown))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(removeParent)
+                            .addComponent(removeChild))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                     .addComponent(jScrollPane2))
@@ -469,8 +514,184 @@ public class ManageCat extends javax.swing.JDialog {
         jList2.setSelectedIndex(index2+1);
     }//GEN-LAST:event_childDownActionPerformed
 
+    private void removeParentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeParentActionPerformed
+        //remove a parent
+        int n = JOptionPane.showConfirmDialog(this,"Are you sure you want to remove this category? This will also remove the children "
+                + "of this category.", "Remove category", JOptionPane.YES_NO_OPTION);
+        if (n == JOptionPane.NO_OPTION) {
+            //we do nothing if we don't want to remove
+        } else {
+            int index = jList1.getSelectedIndex();
+            treeString.remove(index); //we remove the selected line
+            initializeList1(); 
+            String[] vide = { };
+            jList1.clearSelection();
+            jList2.setListData(vide);
+        }
+        
+    }//GEN-LAST:event_removeParentActionPerformed
 
-    private ProductTab product;
+    private void removeChildActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeChildActionPerformed
+        // We don't allow to remove the 'Other' subcategory
+        if ("Other".equals(jList2.getSelectedValue())) {
+            JOptionPane.showMessageDialog(this, "You are not allowed to remove this child",
+                    "Information", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int n = JOptionPane.showConfirmDialog(this,"Are you sure you want to remove this subcategory?", "Remove subcategory", JOptionPane.YES_NO_OPTION);
+        if (n == JOptionPane.NO_OPTION) {
+            //we do nothing if we don't want to remove
+        } else {
+            int index1 = jList1.getSelectedIndex();
+            int index2 = jList2.getSelectedIndex();
+            String[] subCat = new String[treeString.get(index1).length-1];      //one string less 
+            int j=0;
+            for (int i=0; i<treeString.get(index1).length; i++) {
+                if (i!=index2) {
+                    subCat[j]=treeString.get(index1)[i];
+                    j++;
+                } 
+            }
+            treeString.set(index1,subCat);
+            //refresh the list
+            initializeList2(index1);
+             
+        }
+    }//GEN-LAST:event_removeChildActionPerformed
+
+    private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
+        // TODO manage the problems that can appear in the data base if categories were modified or removed
+        ArrayList<Integer> pb = checkIntegrity();
+        System.out.println(pb);
+        System.out.println(pb.get(0));
+        if (pb.get(0)!=0) {
+            solveConflict(pb);
+        }
+        
+
+        //register the change in the file
+        /*
+        
+        String textBefore="";
+        String textAfter="";
+        Charset charset = Charset.forName("US-ASCII");
+        Path file = FileSystems.getDefault().getPath("Try", "products.txt"); 
+        try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+            String line=reader.readLine();
+            textBefore+=line+"\n";
+            while (!line.equals("$tree$")) {
+                line=reader.readLine();
+                textBefore+=line+"\n";
+            } 
+            //we read the lines until the end of the tree
+            line=reader.readLine();
+            while (!line.equals("$endtree$")) {
+                line=reader.readLine();
+            } 
+            //we stock the other lines of the files
+            textAfter+=line+"\n";
+            line=reader.readLine();
+            textAfter+=line+"\n";
+            while (line!=null) {
+                line=reader.readLine();
+                textAfter+=line+"\n";
+            } 
+            textAfter=textAfter.replace("null\n", "");
+            
+            //here we are in the right place in the file
+            try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
+                String newText=textBefore;
+                for (int i=0; i<treeString.size(); i++) {
+                    String newline = String.join("/", treeString.get(i));
+                    newText+=newline+"\n";
+                }
+                newText+=textAfter;
+                writer.write(newText, 0, newText.length());
+                writer.close();
+            } catch (IOException x) {
+                JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            reader.close();
+        } catch (IOException x) {
+            JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        } 
+        
+        //update the combo
+        //dialog.updateCatCombo();
+        
+        //update the tree
+        //prodTab.updateTree(treeString);
+        
+        this.dispose();
+        
+        */
+    }//GEN-LAST:event_finishButtonActionPerformed
+
+    
+    private ArrayList<Integer> checkIntegrity() {
+        //TODO check if there are problems in the data base category field
+        //return the number of problems, 0 if no problem, -1 if we have an error with the request
+        //build all the string we need to test
+        ArrayList<String> cat = new ArrayList<>();
+        for (int i=0; i<treeString.size(); i++) {
+           for (int j=0; j<treeString.get(i).length-1; j++) {
+                cat.add("'"+treeString.get(i)[0]+"/"+treeString.get(i)[j+1]+"'");
+            }
+        }
+        //build the where request part
+        String where="";
+        for (int i=0; i<cat.size(); i++) {
+            if (i!=cat.size()-1) {
+                where+="category<>"+cat.get(i)+" AND ";
+            } else {
+                where+="category<>"+cat.get(i);
+            }
+        }
+
+        ArrayList<Integer> result = new ArrayList<>();
+        Statement stmt=null;
+        try{
+            stmt = product.getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="select count(*) from V_Products where "+where+" union "+"select pr_id from V_Products where "+where;
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                result.add(rs.getInt("count(*)"));
+            } 
+            while (rs.next()) {
+                result.add(rs.getInt("count(*)"));
+            }
+            return result;
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+            return null;
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                 stmt.close();
+            }catch(SQLException se2){  return null; }// nothing we can do
+        }//end finally
+        
+    }
+    
+    private void solveConflict(ArrayList<Integer> pb) {
+        //for (int i=0; i<pb.size()-1; i++) {
+            JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
+            SolveCatConflict solve = new SolveCatConflict(ancestor,true,product,pb.get(1));
+            solve.setLocationRelativeTo(null);
+            solve.setVisible(true);
+       // }
+        
+        
+    }
+    
+
+    private final ProductTab product;
     private ArrayList<String[]> treeString;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;
@@ -492,5 +713,7 @@ public class ManageCat extends javax.swing.JDialog {
     private javax.swing.JButton modifyParent;
     private javax.swing.JButton parentDown;
     private javax.swing.JButton parentUp;
+    private javax.swing.JButton removeChild;
+    private javax.swing.JButton removeParent;
     // End of variables declaration//GEN-END:variables
 }
