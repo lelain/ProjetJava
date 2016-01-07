@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -38,6 +39,7 @@ public class NewCat extends javax.swing.JDialog {
     public NewCat(java.awt.Frame parent, boolean modal, AddProduct dialog) {
         super(parent, modal);
         this.dialog=dialog;
+        this.dialMod=null;
         this.treeString=dialog.getLevel();
         this.prodTab=dialog.getProductTab();
         
@@ -69,6 +71,46 @@ public class NewCat extends javax.swing.JDialog {
         });
           
     }
+    
+    
+    //pas joli, a voir pour faire mieux
+    public NewCat(java.awt.Frame parent, boolean modal, ModifyProduct dialog) {
+        super(parent, modal);
+        this.dialog=null;
+        this.dialMod=dialog;
+        this.treeString=dialog.getLevel();
+        this.prodTab=dialog.getProductTab();
+        
+        initComponents();
+        
+        initializeList1();
+        
+        jList2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        jList1.addListSelectionListener( new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (e.getValueIsAdjusting() == false) {
+
+                    if (jList1.getSelectedIndex() == -1) {
+                    //No selection, disable fire button.
+                    addChildButton.setEnabled(false);
+
+                    } else {
+                    //Selection, enable the fire button.
+                    addChildButton.setEnabled(true);
+                    //TODO fill the jList2 with the item corresponding to the level 1 selection
+                    initializeList2(jList1.getSelectedIndex());
+                    }
+                }
+            }
+
+        });
+          
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -332,6 +374,7 @@ public class NewCat extends javax.swing.JDialog {
     
     private ArrayList<String[]> treeString;
     private AddProduct dialog;
+    private ModifyProduct dialMod;  //pas joli, a voir
     private ProductTab prodTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;

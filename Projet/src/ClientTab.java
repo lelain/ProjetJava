@@ -152,6 +152,10 @@ public class ClientTab extends javax.swing.JPanel {
                 sqlQuery="SELECT cl_id FROM V_Clients WHERE name ='"+name+"'";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
                 if (rs.next()) { selectedRow=rs.getInt("cl_id"); }
+                else { //here the selection went wrong
+                    JOptionPane.showMessageDialog(this, "Something went wrong! request problem",
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+                }
                 
             } catch (SQLException se) {
                 //Handle errors for JDBC
@@ -182,7 +186,6 @@ public class ClientTab extends javax.swing.JPanel {
         //we look for all the values corresponding to the selected row, store them in a hashmap
         //and send them to the modifyClient constructor for proper dialog construction
         
-        System.out.println(selectedRow);
         HashMap<Integer, String> content = new HashMap<>();
         Statement stmt = null;
         try{
@@ -257,6 +260,9 @@ public class ClientTab extends javax.swing.JPanel {
                 name = rs.getString("name");
                 adress = rs.getString("adress");
                 deli_adress = rs.getString("delivery_adress");
+            } else { //here the selection went wrong
+                    JOptionPane.showMessageDialog(this, "Something went wrong! request problem",
+                    "Warning", JOptionPane.ERROR_MESSAGE);
             }
         } catch(SQLException se) {
                 //Handle errors for JDBC
