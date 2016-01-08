@@ -34,7 +34,7 @@ public class ManageCat extends javax.swing.JDialog {
      */
     public ManageCat(java.awt.Frame parent, boolean modal, ProductTab product) {
         super(parent, modal);
-        this.product=product;
+        this.prodTab=product;
         this.treeString=product.getLevel();
         initComponents();
         
@@ -658,14 +658,14 @@ public class ManageCat extends javax.swing.JDialog {
         
         //update the table
         try {
-            product.createNewTableModel();
+            prodTab.createNewTableModel();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         }
         
         //update the tree
-        product.updateTree(treeString);
+        prodTab.updateTree(treeString);
         
         this.dispose();
         
@@ -695,7 +695,7 @@ public class ManageCat extends javax.swing.JDialog {
         ArrayList<Integer> result = new ArrayList<>();
         Statement stmt=null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = prodTab.getConnection().createStatement();
             String sqlQuery;
             sqlQuery="select count(*) from V_Products where "+where+" union "+"select pr_id from V_Products where "+where;
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -737,7 +737,7 @@ public class ManageCat extends javax.swing.JDialog {
     }
     
     public ProductTab getProductTab() {
-        return product;
+        return prodTab;
     }
     
     public ArrayList<String[]> getTreeString() {
@@ -745,7 +745,7 @@ public class ManageCat extends javax.swing.JDialog {
     }
     
 
-    private final ProductTab product;
+    private final ProductTab prodTab;
     private ArrayList<String[]> treeString;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addChildButton;
