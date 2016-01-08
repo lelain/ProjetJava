@@ -400,7 +400,7 @@ public class ProductTab extends javax.swing.JPanel {
     private void manageTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTreeButtonActionPerformed
         //essai pour changement d'un DefaultMutableTreeNode en ArrayList<String[]>
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ManageCat myManageCat = new ManageCat(ancestor,true,this);
+        ManCat myManageCat = new ManCat(ancestor,true,this);
         myManageCat.setLocationRelativeTo(null);
         myManageCat.setVisible(true);
     }//GEN-LAST:event_manageTreeButtonActionPerformed

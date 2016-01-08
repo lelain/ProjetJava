@@ -573,7 +573,7 @@ public class ModifyProduct extends javax.swing.JDialog implements DocumentListen
     private void newCatActionPerformed(java.awt.event.ActionEvent evt) {                                       
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        NewCat addCat = new NewCat(ancestor,true,this);
+        AddCat addCat = new AddCat(ancestor,true,this);
         addCat.setLocationRelativeTo(null);
         addCat.setVisible(true);
         

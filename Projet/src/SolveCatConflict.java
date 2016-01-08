@@ -29,7 +29,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
      * @param myManageCat
      * @param id
      */
-    public SolveCatConflict(java.awt.Frame parent, boolean modal, ManageCat myManageCat, int[] id) {
+    public SolveCatConflict(java.awt.Frame parent, boolean modal, AbstractManageCat myManageCat, int[] id) {
         super(parent, modal);
         this.myManageCat=myManageCat;
         this.treeString=myManageCat.getTreeString();
@@ -331,7 +331,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
         }//end finally
     }
 
-    private final ManageCat myManageCat;
+    private final AbstractManageCat myManageCat;
     private ArrayList<String[]> treeString;
     private int[] id;
     // Variables declaration - do not modify//GEN-BEGIN:variables

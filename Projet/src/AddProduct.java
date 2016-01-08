@@ -558,7 +558,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
     private void newCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newCatActionPerformed
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        NewCat addCat = new NewCat(ancestor,true,this);
+        AddCat addCat = new AddCat(ancestor,true,this);
         addCat.setLocationRelativeTo(null);
         addCat.setVisible(true);
         
