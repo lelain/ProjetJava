@@ -464,27 +464,13 @@ public class ProductTab extends javax.swing.JPanel {
             
             //and we display the result on the table by creating a new tablemodel
             try {
-                String str = pathToString(jTree1.getSelectionPath());
-                if ("ALL".equals(str)) {
-                    myTableModel = new DataTableModel(getContentsOfTable());
-                } else {
-                    //we drop the ALL/ at the start of the string 
-                    str=str.replace("ALL/", "");
-                    myTableModel = new DataTableModel(getContentsOfTable(str));
-                }
-                    
+                createNewTableModel();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                JOptionPane.showMessageDialog(this, "Unexpected error, problem displaying the table \nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
-            }
-            jTable1.setModel(myTableModel);
-              
-            
+            }           
             
         }
-   
-        
-        
         
     }//GEN-LAST:event_removeButtonActionPerformed
 
@@ -573,9 +559,22 @@ public class ProductTab extends javax.swing.JPanel {
     
     //TODO a revoir
     public void createNewTableModel() throws SQLException {
-        myTableModel = new DataTableModel(getContentsOfTable());
-        //myTableModel.addEventHandlersToRowSet(this);
+        try {
+            String str = pathToString(jTree1.getSelectionPath());
+            if ("ALL".equals(str)) {
+                myTableModel = new DataTableModel(getContentsOfTable());
+            } else {
+                //we drop the ALL/ at the start of the string 
+                str=str.replace("ALL/", "");
+                myTableModel = new DataTableModel(getContentsOfTable(str));
+            }
+                    
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+        }
         jTable1.setModel(myTableModel);
+        
     }
 
     

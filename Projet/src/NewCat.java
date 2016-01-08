@@ -275,20 +275,40 @@ public class NewCat extends javax.swing.JDialog {
     
     private void addParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addParentButtonActionPerformed
         String answerCat = JOptionPane.showInputDialog (this, "New category :") ;
+        
+        //check the length
         if (answerCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
                     "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        //check if there is not already this entry
+        if (!parentIsAlone(answerCat)) {
+            JOptionPane.showMessageDialog(this, "This category already exists",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        
         if (answerCat.length() > 0) {
             String[] newLevel1 = {answerCat,"Other"};
             treeString.add(newLevel1);
             initializeList1();
         }
-        
-        
     }//GEN-LAST:event_addParentButtonActionPerformed
 
+    //return true if newStr is different from the parent categories
+    private boolean parentIsAlone(String newStr) {
+        for (int i=0; i<treeString.size(); i++) {
+            if (treeString.get(i)[0].equals(newStr)) return false;
+        }
+        
+        //if we are here, that's because we did not find a match
+        return true;
+    }
+    
+    
     private void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addChildButtonActionPerformed
         // add a child
         String answerCat = JOptionPane.showInputDialog (this, "New subcategory :") ;
@@ -297,6 +317,14 @@ public class NewCat extends javax.swing.JDialog {
                     "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        //check if there is not already this entry
+        if (!childIsAlone(answerCat)) {
+            JOptionPane.showMessageDialog(this, "This category already exists",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if (answerCat.length() > 0) {
             int index = jList1.getSelectedIndex();
             String[] subCat = new String[treeString.get(index).length+1];   //we copy what we already have
@@ -307,6 +335,17 @@ public class NewCat extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_addChildButtonActionPerformed
 
+    //return true if newStr is different from the child categories
+    private boolean childIsAlone(String newStr) {
+        int index = jList1.getSelectedIndex();
+        for (int i=1; i<treeString.get(index).length; i++) {
+            if (treeString.get(index)[i].equals(newStr)) return false;
+        }
+        
+        //if we are here, that's because we did not find a match
+        return true;
+    }
+    
     private void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finishButtonActionPerformed
         //register the change in the file
         String textBefore="";
@@ -366,7 +405,6 @@ public class NewCat extends javax.swing.JDialog {
     }//GEN-LAST:event_finishButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_cancelButtonActionPerformed
 
