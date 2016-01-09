@@ -16,10 +16,10 @@ import javax.swing.event.ListSelectionListener;
 public class AddCat extends AbstractManageCat {
 
 
-    public AddCat(java.awt.Frame parent, boolean modal, AddProduct dialog) {
+    public AddCat(java.awt.Frame parent, boolean modal, AbstractManageProduct dialog) {
         super(parent, modal);
         this.dialog=dialog;
-        this.dialMod=null;
+        //this.dialMod=null;
         this.treeString=dialog.getLevel();
         this.prodTab=dialog.getProductTab();
         
@@ -52,7 +52,7 @@ public class AddCat extends AbstractManageCat {
           
     }
     
-    
+    /*
     //pas joli, a voir pour faire mieux
     public AddCat(java.awt.Frame parent, boolean modal, ModifyProduct dialog) {
         super(parent, modal);
@@ -90,7 +90,7 @@ public class AddCat extends AbstractManageCat {
           
     }
     
-    
+    */
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,14 +243,14 @@ public class AddCat extends AbstractManageCat {
         
         //update the combo
         //if we use the addCat possibility from addProduct button
-        if (dialMod==null) {
-            dialog.updateCatCombo();
-        }
+        //if (dialMod==null) {
+            dialog.updateCatCombo(treeString);
+        //}
         
         //if we use the addCat from ModifyProduct
-        if (dialog==null) {
-            dialMod.updateCatCombo();
-        }
+        //if (dialog==null) {
+       //     dialMod.updateCatCombo();
+       // }
         
         //update the tree
         prodTab.updateTree(treeString);
@@ -261,8 +261,8 @@ public class AddCat extends AbstractManageCat {
 
     
     
-    private AddProduct dialog;
-    private ModifyProduct dialMod;  //pas joli, a voir
+    private AbstractManageProduct dialog;
+   // private ModifyProduct dialMod;  //pas joli, a voir
     
 }
 

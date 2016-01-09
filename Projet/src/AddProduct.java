@@ -43,7 +43,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author brendan
  */
-public class AddProduct extends javax.swing.JDialog implements DocumentListener {
+public class AddProduct extends AbstractManageProduct {
 
     /**
      * Creates new form AddProduct
@@ -725,82 +725,15 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         } 
     }//GEN-LAST:event_okButtonActionPerformed
 
-    private boolean fieldsRight() {
-        //verify that fiels are correctly filled
-        if (!verifyLenght(nameField,100,"Name too long, please make it shorter")) {
-            return false;
-        }
-        
-        if (!"".equals(quantField.getText())) {
-            if (!isDouble(quantField,"Quantity should be a number")) {
-                return false;
-            }
-        }
-        
-        if (!"".equals(priceField.getText())) {
-            if (!isDouble(priceField,"Price should be a number")) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
+
+
     
-    private boolean verifyLenght(JTextField text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    
-    private boolean isDouble(JTextField text,String message) {
-        String str = text.getText();
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        }
-    }
-    
+
     
     private void insertProduct () {
         //prepare the strings
-        String category,brand,name,quantity,qunit,price,punit,infos;
-        category="'"+(String)catCombo.getSelectedItem()+"'";
-        brand="'"+(String)brandCombo.getSelectedItem()+"'";
-        name="'"+nameField.getText()+"'";
-        if ("".equals(quantField.getText())) {
-            quantity="NULL";
-            qunit="NULL";
-        } else {
-            quantity="'"+quantField.getText()+"'";
-            qunit="'"+(String)quantCombo.getSelectedItem()+"'";
-        }
-        if ("".equals(priceField.getText())) {
-            price="NULL";
-            punit="NULL";
-        } else {
-            price="'"+priceField.getText()+"'";
-            punit="'"+(String)priceCombo.getSelectedItem()+"'";
-        }
-        if ("".equals(jTextArea1.getText())) {
-            infos="NULL";
-        } else {
-            infos="'"+jTextArea1.getText()+"'";
-        }
-      
+        String[] values = prepareString();
+        
        
         //do the request
         Statement stmt = null;
@@ -808,7 +741,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             stmt = conn.createStatement();
             String sqlQuery;
             sqlQuery = "INSERT INTO V_Products (category,brand,name,quantity,qunit,price,punit,infos)\n" +
-                       "VALUES ("+category+","+brand+","+name+","+quantity+","+qunit+","+price+","+punit+","+infos+")";
+                       "VALUES ("+values[0]+","+values[1]+","+values[2]+","+values[3]+","+values[4]+","+values[5]+","+values[6]+","+values[7]+")";
             
             int affectedRows = stmt.executeUpdate(sqlQuery); 
             //si 1 : normal, si 0 pas normal
@@ -842,7 +775,7 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
    
     
 
-
+/*
     
     private Connection conn;
     private ProductTab product;
@@ -887,8 +820,8 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
             okButton.setEnabled(false);
         }
     }
-    
-    
+  */  
+    /*
     @Override
     public void insertUpdate(DocumentEvent e) {
         
@@ -971,9 +904,10 @@ public class AddProduct extends javax.swing.JDialog implements DocumentListener 
         }
 
     }
+    */
 }
 
-
+/*
 class MyComboModel extends DefaultComboBoxModel<String> {
     public MyComboModel() {}
     public MyComboModel(String[] items) {
@@ -986,3 +920,4 @@ class MyComboModel extends DefaultComboBoxModel<String> {
         super.setSelectedItem(item);
     };
 }
+*/
