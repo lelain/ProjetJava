@@ -366,7 +366,7 @@ public class ProductTab extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        AddProduct NewProductW = new AddProduct(getMainWin(),this,true);       
+        AddProd NewProductW = new AddProd(getMainWin(),this,true);       
         NewProductW.setLocationRelativeTo(null);
         NewProductW.setVisible(true);
     }//GEN-LAST:event_addButtonActionPerformed

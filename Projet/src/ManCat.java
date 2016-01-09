@@ -412,6 +412,14 @@ public class ManCat extends AbstractManageCat {
                     "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+        //check if there is not already this entry
+        if (!parentIsAlone(modCat)) {
+            JOptionPane.showMessageDialog(this, "This category already exists",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if (modCat.length() > 0) {
             int index = jList1.getSelectedIndex();
             String[] subCat = new String[treeString.get(index).length];   //we copy what we already have
@@ -431,8 +439,16 @@ public class ManCat extends AbstractManageCat {
             return;
         }
 
-        // modify a child
         String modCat = JOptionPane.showInputDialog (this, "New subcategory :",jList2.getSelectedValue()) ;
+        
+        //check if there is not already this entry
+        if (!childIsAlone(modCat)) {
+            JOptionPane.showMessageDialog(this, "This category already exists",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // modify a child
         if (modCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
                     "Warning", JOptionPane.WARNING_MESSAGE);

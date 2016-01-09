@@ -49,7 +49,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
 //Methods
     
     //populate the list of parent categories
-    private void initializeList1() {
+    protected void initializeList1() {
         String[] level1=new String[treeString.size()];
         for (int i=0; i<level1.length; i++) {
             level1[i]=treeString.get(i)[0];
@@ -58,7 +58,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     }
     
     //populate the list of children categories
-    private void initializeList2(int index) {
+    protected void initializeList2(int index) {
         String[] level2=new String[treeString.get(index).length];
         System.arraycopy(treeString.get(index), 1, level2, 1, level2.length - 1);
         jList2.setListData(level2);

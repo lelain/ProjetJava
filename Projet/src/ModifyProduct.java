@@ -24,6 +24,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -68,10 +69,10 @@ public class ModifyProduct extends AbstractManageProduct {
     private void init() {
         catCombo.setSelectedItem(contents.get(1));
         brandCombo.setSelectedItem(contents.get(2));
-        nameField = new javax.swing.JTextField(contents.get(3));
-        quantField = new javax.swing.JTextField(contents.get(4));
-        priceField = new javax.swing.JTextField(contents.get(6));
-        jTextArea1 = new javax.swing.JTextArea(contents.get(8));
+        nameField.setText(contents.get(3));
+        quantField.setText(contents.get(4));
+        priceField.setText(contents.get(6));
+        jTextArea1.append(contents.get(8));
         
         if (contents.get(4)==null) { 
             quantCombo.setEnabled(false);
@@ -98,7 +99,8 @@ public class ModifyProduct extends AbstractManageProduct {
  
     
 
-    //TODO function updateCatCombo, and see for CatComboFont
+    
+    @Override
     public void updateCatCombo(ArrayList<String[]> treeString) {
         //level is the new tree
         level=treeString;
@@ -138,6 +140,44 @@ public class ModifyProduct extends AbstractManageProduct {
     }                                        
 
 
+    //return true if for a given category, a product with the same name already exists
+    protected boolean isDuplicateEntry(JTextField name, JComboBox<String> brand) {
+        String brandStr = "'"+(String) brand.getSelectedItem()+"'";
+        String nameStr = "'"+name.getText()+"'";
+        
+        Statement stmt=null;
+            try{
+                stmt = product.getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="select * from V_Products where brand="+brandStr+" and name="+nameStr+" and pr_id<>"+Integer.toString(row);
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                 
+                //if we have result, it's duplicate
+                if (rs.next()) { 
+                    //here we already have this name and brand in the database --> impossible
+                    JOptionPane.showMessageDialog(this, "This product is already in the database",
+                        "Warning", JOptionPane.WARNING_MESSAGE);
+                    
+                    return true;     
+                } 
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){   }// nothing we can do
+            }//end finally
+        
+        //if we are here, that means we are ok
+        return false;
+    }
+    
+    
+    
     private void modifyProduct () {
         //prepare the strings
         String[] values = prepareString();
