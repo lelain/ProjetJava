@@ -391,7 +391,6 @@ public class ModifyProduct extends javax.swing.JDialog implements DocumentListen
 
         jLabel5.setText("Quantity");
         
-        System.out.println(contents.get(4));
         if (contents.get(4)==null) { 
             quantCombo.setEnabled(false);
             quantCombo.setSelectedItem("mL");

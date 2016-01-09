@@ -177,6 +177,11 @@ public class ProductTab extends javax.swing.JPanel {
     
     
     private String pathToString(TreePath tree) {
+        //if tree is null, that means we did not select a tree entry
+        //so it's like ALL
+        if (tree==null) {return "ALL"; }
+        
+        //if we are here, that's because we did select an entry in the tree
         String str = tree.toString();
         str=str.replace(", ", "/");
         str=str.replace("[", "");

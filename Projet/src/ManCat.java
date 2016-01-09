@@ -424,6 +424,13 @@ public class ManCat extends AbstractManageCat {
     }                                            
 
     private void modifyChildActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // We don't allow to modify the 'Other' subcategory
+        if ("Other".equals(jList2.getSelectedValue())) {
+            JOptionPane.showMessageDialog(this, "You are not allowed to modify this child",
+                    "Information", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
         // modify a child
         String modCat = JOptionPane.showInputDialog (this, "New subcategory :",jList2.getSelectedValue()) ;
         if (modCat.length() > 80) {

@@ -242,7 +242,15 @@ public class AddCat extends AbstractManageCat {
         registerChanges();
         
         //update the combo
-        dialog.updateCatCombo();
+        //if we use the addCat possibility from addProduct button
+        if (dialMod==null) {
+            dialog.updateCatCombo();
+        }
+        
+        //if we use the addCat from ModifyProduct
+        if (dialog==null) {
+            dialMod.updateCatCombo();
+        }
         
         //update the tree
         prodTab.updateTree(treeString);
