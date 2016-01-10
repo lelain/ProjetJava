@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,9 +25,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is a jDialog base, it should be extended for adding or modifying a product to the database
  */
 
 /**
@@ -36,13 +33,14 @@ import javax.swing.event.DocumentListener;
  * @author brendan
  */
 abstract class AbstractManageProduct extends javax.swing.JDialog implements DocumentListener {
-  
-    protected ProductTab product;
-    protected String[] brands;
-    protected String[] unitString;
-    protected String[] priceUnitString;
-    protected String[] cat;
-    protected ArrayList<String[]> level;
+
+//variables shared by the extended classes
+    protected ProductTab product;   //the product tab we will display the dialog
+    protected String[] brands;      //array containing the brands to display in the combo box
+    protected String[] unitString;  //array containing the quantity unit to display in combo box
+    protected String[] priceUnitString;    //array containing the price unit to display in combo box
+    protected String[] cat;         //array containing the categories to display in combo box
+    protected ArrayList<String[]> level;    //the tree stored as a array of array of String
     
     
 //the components shared by extended classes
@@ -85,9 +83,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         
         //the productTab
         this.product=product;
-        
-
-              
+         
         initBrand();
         initQUnit();
         initPUnit();
@@ -103,9 +99,22 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         nameField.getDocument().addDocumentListener(this);
     }
     
+     
+     
+//declarations : these methods will be define in the herited classes
+    
+    //what to do when clicking on the ok button
+    abstract void okButtonActionPerformed(java.awt.event.ActionEvent evt);
+    
+    //update the category combo box
+    abstract void updateCatCombo(ArrayList<String[]> treeString);
+    
+    //check if the product we want to add or modify is not already in the database
+    abstract boolean isDuplicateEntry(JTextField name, JComboBox<String> brand);
     
     
-//Methods
+    
+//Private Methods for initialisation of the dialog
     
     //take the brands from the database and store them in a array of String brands
     private void initBrand() {
@@ -164,9 +173,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Arrays.sort(brands);
     }
     
-    
-    
-    
+
     //take the quantity unit from the database and store them in a array of String unitString
     private void initQUnit() {
         //we search the number of unit in the database and store it in size
@@ -227,9 +234,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Arrays.sort(unitString);
     }
     
-   
-    
-    
+      
     //take the price unit from the database and store them in a array of String priceUnitString
     private void initPUnit() {
         //we search the different price unit
@@ -399,8 +404,9 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 
         newCat.setText("+");
         newCat.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newCatActionPerformed(evt);
+                addCatActionPerformed(evt);
             }
         });
 
@@ -408,8 +414,9 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 
         newBrand.setText("+");
         newBrand.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newBrandActionPerformed(evt);
+                addBrandActionPerformed(evt);
             }
         });
 
@@ -428,6 +435,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         addQUnit.setText("+");
         addQUnit.setEnabled(false);
         addQUnit.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addQUnitActionPerformed(evt);
             }
@@ -436,6 +444,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         addPUnit.setText("+");
         addPUnit.setEnabled(false);
         addPUnit.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addPUnitActionPerformed(evt);
             }
@@ -443,6 +452,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 
         
         okButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
             }
@@ -450,6 +460,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 
         cancelButton.setText("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
             }
@@ -584,9 +595,22 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     }// </editor-fold>                        
 
     
+    //enable the ok button if the name field is not empty. If empty disable the button
+    //private because only use by this class (and not the herited class)
+    private void readyToValidate() {
+        if ((!"".equals(nameField.getText()))) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
+    
+
+    
+//Protected methods for the different events possible in the dialog. Protected means that the herited classes can use them
     
     //add a new category. We do this with a AddCat object 
-    protected void newCatActionPerformed(java.awt.event.ActionEvent evt) {                                       
+    protected void addCatActionPerformed(java.awt.event.ActionEvent evt) {                                       
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
         AddCat addCat = new AddCat(ancestor,true,this);
@@ -595,23 +619,8 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
  
     }       
     
-    
-    
-    //get the productTab
-    public ProductTab getProductTab() {
-        return product;
-    }
-    
-    //get the level of the tree
-    public ArrayList<String[]> getLevel() {
-        return level;
-    }
-    
-    
-    
-    
     //Add a new brand in the dialog
-    protected void newBrandActionPerformed(java.awt.event.ActionEvent evt) {                                         
+    protected void addBrandActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String answerBrand = JOptionPane.showInputDialog (this, "New brand :") ;
         
         //check the length
@@ -655,8 +664,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         }
     }                                        
 
-    
-    
     //add a new quantity unit in the dialog
     protected void addQUnitActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
@@ -706,7 +713,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         
     }      
     
-    
     //add a new price unit (currency) in the dialog
     protected void addPUnitActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
@@ -754,20 +760,10 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         }
     }   
     
-    
     //we just close the window if clicking the cancel button
     protected void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         this.dispose();
     }  
-    
-    
-    abstract void okButtonActionPerformed(java.awt.event.ActionEvent evt);
-    
-    abstract void updateCatCombo(ArrayList<String[]> treeString);
-    
-    abstract boolean isDuplicateEntry(JTextField name, JComboBox<String> brand);
-    
-    
     
     //we build an array of String from the different fiels of the dialog, they are the values we want to enter in the data base
     protected String[] prepareString() {
@@ -800,7 +796,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         return str;
     }
     
-    
     //check if the text in the jtextField is a double. Show a message if not
     protected boolean isDouble(JTextField text,String message) {
         String str = text.getText();
@@ -816,10 +811,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         }
     }
     
-    
-    
-     
-    
     //return true if the length of the text in the jTextField is less than length. if not, display a message
     protected boolean verifyLenght(JTextField text,int length,String message) {
         if (text.getText().length() > length) {
@@ -833,7 +824,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             return true;
         }
     }
-    
     
     //make sure that the fields are ok
     protected boolean fieldsRight() {
@@ -862,15 +852,20 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     }
     
     
-    private void readyToValidate() {
-        if ((!"".equals(nameField.getText()))) {
-            okButton.setEnabled(true);
-        } else {
-            okButton.setEnabled(false);
-        }
+//Public methods
+    
+    //get the productTab
+    public ProductTab getProductTab() {
+        return product;
+    }
+    
+    //get the level of the tree
+    public ArrayList<String[]> getLevel() {
+        return level;
     }
     
     
+//methods for implementation of Document Listener
     @Override
     public void insertUpdate(DocumentEvent e) {
         
@@ -956,7 +951,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 }
 
 
-
+//Combo box model for displaying the categories
 class MyComboModel extends DefaultComboBoxModel<String> {
     public MyComboModel() {}
     public MyComboModel(String[] items) {
@@ -964,8 +959,10 @@ class MyComboModel extends DefaultComboBoxModel<String> {
     }
     @Override
     public void setSelectedItem(Object item) {
+        //we don't allow the user to select an item begining with **
         if (item.toString().startsWith("**"))
             return;
+        
         super.setSelectedItem(item);
     };
 }

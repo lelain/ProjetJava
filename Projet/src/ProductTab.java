@@ -30,6 +30,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -80,6 +81,9 @@ public class ProductTab extends javax.swing.JPanel {
         
         //add sorter and selection listener on the table
         jTable1.setAutoCreateRowSorter(true);
+        
+        
+        
         //jTable1.setPreferredScrollableViewportSize(new Dimension(500, 70));
         //jTable1.setFillsViewportHeight(true);
         jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
@@ -168,7 +172,16 @@ public class ProductTab extends javax.swing.JPanel {
                     stmt.close();
                 }catch(SQLException se2){ }// nothing we can do
             }//end finally
-                
+               
+            //Set up tool tips for the sport cells.
+            DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+            int ligne = jTable1.getSelectedRow();//Si tu veut la cellule selectionnée, sinon une autre valeur
+            int colonne = jTable1.getSelectedColumn();//Si tu veut la cellule selectionnée, sinon une autre valeur
+            Object cell = jTable1.getValueAt(ligne,colonne);
+            renderer.setToolTipText((String)cell);
+            jTable1.getColumnModel().getColumn(7).setCellRenderer(renderer);
+            
+            
             modifyButton.setEnabled(true);
             removeButton.setEnabled(true);
         }
@@ -290,6 +303,7 @@ public class ProductTab extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.setToolTipText("");
         */
         jScrollPane1.setViewportView(jTable1);
 
