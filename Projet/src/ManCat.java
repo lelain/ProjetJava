@@ -42,12 +42,12 @@ public class ManCat extends AbstractManageCat {
     
 //Constructor
     public ManCat(java.awt.Frame parent, boolean modal, ProductTab product) {
-        super(parent, modal);
+        super(parent, modal,product);
         this.prodTab=product;
         this.treeString=product.getLevel();
         initComponents();
         
-        initializeList1();
+        initList1();
         
         jList2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jList1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -165,11 +165,13 @@ public class ManCat extends AbstractManageCat {
 
         jLabel2.setText("Parent");
 
+        /*
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        */
         jScrollPane1.setViewportView(jList1);
 
         addParentButton.setText("Add parent");

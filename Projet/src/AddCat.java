@@ -16,12 +16,12 @@ import javax.swing.event.ListSelectionListener;
 public class AddCat extends AbstractManageCat {
 
 
-    public AddCat(java.awt.Frame parent, boolean modal, AbstractManageProduct dialog) {
+    public AddCat(java.awt.Frame parent, boolean modal, ProductTab product, AbstractManageProduct dialog) {
         super(parent, modal);
         this.dialog=dialog;
         //this.dialMod=null;
-        this.treeString=dialog.getLevel();
-        this.prodTab=dialog.getProductTab();
+        this.treeString=product.getLevel();
+        this.prodTab=product;
         
         initComponents();
         
@@ -101,6 +101,7 @@ public class AddCat extends AbstractManageCat {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
     private void initComponents() {
 
+        /*
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -116,6 +117,7 @@ public class AddCat extends AbstractManageCat {
         cancelButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+*/
         setTitle("Add new category");
 
         jScrollPane1.setViewportView(jList1);

@@ -101,13 +101,13 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     
      
      
-//declarations : these methods will be define in the herited classes
+//Declarations : these methods will be defined in the extended classes
     
     //what to do when clicking on the ok button
     abstract void okButtonActionPerformed(java.awt.event.ActionEvent evt);
     
-    //update the category combo box
-    abstract void updateCatCombo(ArrayList<String[]> treeString);
+    //set the item in the category combo box after an update. Used in UpdateCatCombo
+    abstract void setCatCombo();
     
     //check if the product we want to add or modify is not already in the database
     abstract boolean isDuplicateEntry(JTextField name, JComboBox<String> brand);
@@ -173,7 +173,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Arrays.sort(brands);
     }
     
-
     //take the quantity unit from the database and store them in a array of String unitString
     private void initQUnit() {
         //we search the number of unit in the database and store it in size
@@ -233,8 +232,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //sort the array
         Arrays.sort(unitString);
     }
-    
-      
+     
     //take the price unit from the database and store them in a array of String priceUnitString
     private void initPUnit() {
         //we search the different price unit
@@ -289,7 +287,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         }//end finally 
         Arrays.sort(priceUnitString);
     }
-    
     
     //initialisation of the ComboBox from the configuration file
     private void initCatCombo() {
@@ -594,9 +591,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         pack();
     }// </editor-fold>                        
 
-    
-    //enable the ok button if the name field is not empty. If empty disable the button
-    //private because only use by this class (and not the herited class)
+    //enable the ok button if the name field is not empty. If empty disable the button. Private because only uses by this class (and not the herited class)
     private void readyToValidate() {
         if ((!"".equals(nameField.getText()))) {
             okButton.setEnabled(true);
@@ -606,7 +601,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     }
     
 
-    
 //Protected methods for the different events possible in the dialog. Protected means that the herited classes can use them
     
     //add a new category. We do this with a AddCat object 
@@ -864,6 +858,36 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         return level;
     }
     
+    //update the category combo box, given the tree of categories
+    public void updateCatCombo(ArrayList<String[]> treeString) {
+        //level is the new tree
+        level=treeString;
+
+        //we need the size for cat
+        int size=0;
+        for (int i=0; i<level.size(); i++) {
+            size =size + level.get(i).length;
+        }
+        
+        //we can now create the array of String cat, that will contain the list to display in the combo box
+        cat = new String[size];
+        
+        //we populate it
+        int k=0;
+        for (int i=0; i<level.size(); i++) {
+            for (int j=0; j<level.get(i).length; j++) {
+                if (j==0) {
+                    cat[k]="**"+level.get(i)[j]+"**";
+                } else {
+                    cat[k]=level.get(i)[0]+"/"+level.get(i)[j];
+                }
+                k++;
+            }
+        }
+        
+        catCombo.setModel(new MyComboModel(cat));
+        setCatCombo();
+    }
     
 //methods for implementation of Document Listener
     @Override

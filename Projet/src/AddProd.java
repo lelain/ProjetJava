@@ -2,7 +2,6 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -132,41 +131,14 @@ public class AddProd extends AbstractManageProduct {
         return false;
     }
     
-   
-//Public methods
-
-    //update the category combo box given the categories tree. Public because used outside this class
+    //set the category combo box to the first item. This function is used in updateCatCombo.
     @Override
-    public void updateCatCombo(ArrayList<String[]> treeString) {
-        //level is the new tree
-        level=treeString;
-
-        //we need the size for cat
-        int size=0;
-        for (int i=0; i<level.size(); i++) {
-            size =size + level.get(i).length;
-        }
-        
-        //we can now create the array of String cat, that will contain the list to display in the combo box
-        cat = new String[size];
-        
-        //we populate it
-        int k=0;
-        for (int i=0; i<level.size(); i++) {
-            for (int j=0; j<level.get(i).length; j++) {
-                if (j==0) {
-                    cat[k]="**"+level.get(i)[j]+"**";
-                } else {
-                    cat[k]=level.get(i)[0]+"/"+level.get(i)[j];
-                }
-                k++;
-            }
-        }
-        
-        catCombo.setModel(new MyComboModel(cat));
+    protected void setCatCombo() {
         catCombo.setSelectedIndex(1);
     }
-                                     
+   
+//No new public methods
+
 
 }
 

@@ -10,9 +10,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This abstract class is the base to add or manage categories dialog  
  */
 
 /**
@@ -20,11 +18,14 @@ import javax.swing.JOptionPane;
  * @author brendan
  */
 abstract class AbstractManageCat extends javax.swing.JDialog {
+
+//Variables 
     
-    protected ProductTab prodTab;
+    //Variables shared by the extended classes
+    protected ProductTab prodTab;   //the Product tab in which the dialog will be display
     protected ArrayList<String[]> treeString;
     
-    //the components shared by extended classes
+    //Components shared by extended classes
     protected javax.swing.JButton addChildButton;
     protected javax.swing.JButton addParentButton;
     protected javax.swing.JButton cancelButton;
@@ -38,18 +39,58 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     protected javax.swing.JScrollPane jScrollPane2;
     protected javax.swing.JSeparator jSeparator1;
     protected javax.swing.JSeparator jSeparator2;
+  
     
 //Constructor
     
-    protected AbstractManageCat(java.awt.Frame parent, boolean modal) {
+    //Only build the frame using the JDialog constructor
+    protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProductTab product) {
         super(parent, modal);
+        
+        this.treeString=product.getLevel();
+        this.prodTab=product;
+        
+        addChildButton = new javax.swing.JButton();
+        addParentButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        finishButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jList1 = new javax.swing.JList<>();
+        jList2 = new javax.swing.JList<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jLabel1.setText("Product categories");
+
+        jLabel2.setText("Parent");
+        
+        jScrollPane1.setViewportView(jList1);
+        
+        
     }
     
     
-//Methods
+//Private methods
     
-    //populate the list of parent categories
-    protected void initializeList1() {
+    //populate the list of parent categories. Private. Only used in constructor
+    protected void initList1() {
+        String[] level1=new String[treeString.size()];
+        for (int i=0; i<level1.length; i++) {
+            level1[i]=treeString.get(i)[0];
+        }
+        jList1.setListData(level1);
+    }
+    
+    
+//Protected methods
+    
+    //update the list of parent categories
+    protected void updateList1() {
         String[] level1=new String[treeString.size()];
         for (int i=0; i<level1.length; i++) {
             level1[i]=treeString.get(i)[0];
@@ -197,7 +238,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     }
     
     
-//Public Methods - getters
+//Public Methods 
     
     public ProductTab getProductTab() {
         return prodTab;

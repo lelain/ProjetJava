@@ -1,39 +1,11 @@
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Window;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Vector;
-import java.util.regex.Pattern;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 /*
  * This class extends AbstractManageProduct in order to make a dialog for modifying a product of the database
@@ -65,7 +37,7 @@ public class ModifyProduct extends AbstractManageProduct {
     }
 
     
-//Private method
+//Private methods. Only used in this class
     
     //initialisation of what need to be in the dialog
     private void init() {
@@ -143,7 +115,7 @@ public class ModifyProduct extends AbstractManageProduct {
         
     }
     
-//Protected method. Not public because they are used only inside this class or eventually in the extended classes   
+//Protected methods. Not public because they are used only inside this class or eventually in the extended classes   
         
     ////when clicking on the ok button, we first verify that the fields are right, then modify the product
     @Override
@@ -190,47 +162,15 @@ public class ModifyProduct extends AbstractManageProduct {
         return false;
     }
     
-    
-//Public methods
-    
-    
+    //set the category combo box to the item we selected. This function is used in updateCatCombo.
     @Override
-    public void updateCatCombo(ArrayList<String[]> treeString) {
-        //level is the new tree
-        level=treeString;
-
-        //we need the size for cat
-        int size=0;
-        for (int i=0; i<level.size(); i++) {
-            size =size + level.get(i).length;
-        }
-        
-        //we can now create the array of String cat, that will contain the list to display in the combo box
-        cat = new String[size];
-        
-        //we populate it
-        int k=0;
-        for (int i=0; i<level.size(); i++) {
-            for (int j=0; j<level.get(i).length; j++) {
-                if (j==0) {
-                    cat[k]="**"+level.get(i)[j]+"**";
-                } else {
-                    cat[k]=level.get(i)[0]+"/"+level.get(i)[j];
-                }
-                k++;
-            }
-        }
-        
-        catCombo.setModel(new MyComboModel(cat));
+    protected void setCatCombo() {
         catCombo.setSelectedItem(contents.get(1));
     }
     
    
-
+//No new public methods
     
-    
-
-
 
 }
 
