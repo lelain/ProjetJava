@@ -23,7 +23,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     
     //Variables shared by the extended classes
     protected ProductTab prodTab;   //the Product tab in which the dialog will be display
-    protected ArrayList<String[]> treeString;
+    protected ArrayList<String[]> treeString;   //the tree
     
     //Components shared by extended classes
     protected javax.swing.JButton addChildButton;
@@ -43,13 +43,15 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     
 //Constructor
     
-    //Only build the frame using the JDialog constructor
+    //Construction and initialisation of shared elements
     protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProductTab product) {
-        super(parent, modal);
+        super(parent, modal);   //Only build the frame using the JDialog constructor
         
+        //initialisation of variables 
         this.treeString=product.getLevel();
         this.prodTab=product;
         
+        //construct the components
         addChildButton = new javax.swing.JButton();
         addParentButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
@@ -64,30 +66,59 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         
+        //set some options and add listeners on buttons
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        
         jLabel1.setText("Product categories");
-
         jLabel2.setText("Parent");
+        jLabel3.setText("Child");
         
         jScrollPane1.setViewportView(jList1);
+        jScrollPane2.setViewportView(jList2);
+        
+        addParentButton.setText("Add parent");
+        addParentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addParentButtonActionPerformed(evt);
+            }
+        });
+        
+        addChildButton.setText("Add child");
+        addChildButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addChildButtonActionPerformed(evt);
+            }
+        });
+        
+        finishButton.setText("Finish");
+        finishButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
         
         
     }
     
+
+//Declarations : these methods will be defined in the extended classes
     
-//Private methods
-    
-    //populate the list of parent categories. Private. Only used in constructor
-    protected void initList1() {
-        String[] level1=new String[treeString.size()];
-        for (int i=0; i<level1.length; i++) {
-            level1[i]=treeString.get(i)[0];
-        }
-        jList1.setListData(level1);
-    }
+    //what we do when clicking the finish button 
+    abstract void finishButtonActionPerformed(java.awt.event.ActionEvent evt);
     
     
-//Protected methods
+//No private methods
+    
+    
+    
+//Protected methods. Used only by extended classes
     
     //update the list of parent categories
     protected void updateList1() {
@@ -98,8 +129,8 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         jList1.setListData(level1);
     }
     
-    //populate the list of children categories
-    protected void initializeList2(int index) {
+    //update the list of children categories
+    protected void updateList2(int index) {
         String[] level2=new String[treeString.get(index).length];
         System.arraycopy(treeString.get(index), 1, level2, 1, level2.length - 1);
         jList2.setListData(level2);
@@ -127,7 +158,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         if (answerCat.length() > 0) {
             String[] newLevel1 = {answerCat,"Other"};
             treeString.add(newLevel1);
-            initializeList1();
+            updateList1();
         }
     }                                               
 
@@ -165,7 +196,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
             System.arraycopy(treeString.get(index), 0, subCat, 0, subCat.length-1);
             subCat[subCat.length-1]=answerCat;  //and add the new one at the end
             treeString.set(index,subCat);
-            initializeList2(index);
+            updateList2(index);
         }
     }                                              
 
@@ -179,8 +210,6 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         //if we are here, that's because we did not find a match
         return true;
     }
-    
-    
     
     //close the window
     protected void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             

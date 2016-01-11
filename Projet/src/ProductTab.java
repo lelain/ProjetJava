@@ -566,7 +566,7 @@ public class ProductTab extends javax.swing.JPanel {
             crs.setPassword(connectionProp.getProperty("password"));
             crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
             crs.setCommand("select category,brand,name,quantity,qunit,price"
-              + ",punit,infos from V_Products where category LIKE '"+cat+"%'");
+              + ",punit,infos from V_Products where category LIKE '"+cat+"/%'");
             crs.execute();
 
         } catch (SQLException e) {

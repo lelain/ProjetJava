@@ -607,7 +607,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     protected void addCatActionPerformed(java.awt.event.ActionEvent evt) {                                       
         
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
-        AddCat addCat = new AddCat(ancestor,true,this);
+        AddCat addCat = new AddCat(ancestor,true,product,this);
         addCat.setLocationRelativeTo(null);
         addCat.setVisible(true);
  
