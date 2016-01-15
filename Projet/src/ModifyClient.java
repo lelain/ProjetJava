@@ -53,77 +53,19 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
                         
     private void initComponentsMod(HashMap<Integer,String> content) {
 
-        jLabel1 = new javax.swing.JLabel();
-        nameField = new javax.swing.JTextField(content.get(1));
-        jLabel2 = new javax.swing.JLabel();
-        phone1Field = new javax.swing.JTextField(content.get(2));
-        jLabel3 = new javax.swing.JLabel();
-        phone2Field = new javax.swing.JTextField(content.get(3));
-        jLabel4 = new javax.swing.JLabel();
-        emailField = new javax.swing.JTextField(content.get(4));
-        jLabel5 = new javax.swing.JLabel();
-        qqField = new javax.swing.JTextField(content.get(5));
-        jLabel6 = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel7 = new javax.swing.JLabel();
-        streetMAd = new javax.swing.JTextField(content.get(7));
-        jLabel8 = new javax.swing.JLabel();
-        cityMAd = new javax.swing.JTextField(content.get(8));
-        jLabel9 = new javax.swing.JLabel();
-        zipMAd = new javax.swing.JTextField(content.get(10));
-        jLabel10 = new javax.swing.JLabel();
-        countryMAd = new javax.swing.JTextField();
-        checkDAdress = new javax.swing.JCheckBox();
-        jLabel11 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        infosField = new javax.swing.JTextArea(content.get(6));
-        jSeparator2 = new javax.swing.JSeparator();
-        jLabel12 = new javax.swing.JLabel();
-        jSeparator3 = new javax.swing.JSeparator();
-        streetD = new javax.swing.JLabel();
-        streetDAd = new javax.swing.JTextField(content.get(11));
-        cityD = new javax.swing.JLabel();
-        cityDAd = new javax.swing.JTextField(content.get(12));
-        zipD = new javax.swing.JLabel();
-        zipDAd = new javax.swing.JTextField(content.get(14));
-        countryD = new javax.swing.JLabel();
-        countryDAd = new javax.swing.JTextField();
-        jLabel17 = new javax.swing.JLabel();
-        jSeparator4 = new javax.swing.JSeparator();
-        jSeparator5 = new javax.swing.JSeparator();
-        okButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jLabel1.setText("Name");
-
-        nameField.setBackground(new java.awt.Color(250, 225, 199));
-
-        jLabel2.setText("Phone");
-
-        jLabel3.setText("Other Phone");
-
-        jLabel4.setText("E-mail");
-
-        jLabel5.setText("qq");
-
-        jLabel6.setText("Adress");
-
-        jLabel7.setText("Street");
-
-        streetMAd.setBackground(new java.awt.Color(250, 225, 199));
-
-        jLabel8.setText("City");
-
-        cityMAd.setBackground(new java.awt.Color(250, 225, 199));
-
-        jLabel9.setText("Zip code");
-
-        zipMAd.setBackground(new java.awt.Color(250, 225, 199));
-
-        jLabel10.setText("Country");
-
+        
+        nameField.setText(content.get(1));
+        phone1Field.setText(content.get(2));
+        phone2Field.setText(content.get(3));
+        emailField.setText(content.get(4));
+        qqField.setText(content.get(5));
+        streetMAd.setText(content.get(7));
+        cityMAd.setText(content.get(8));
+        zipMAd.setText(content.get(10));
+        infosField.append(content.get(6));
+        streetDAd.setText(content.get(11));
+        cityDAd.setText(content.get(12));
+        zipDAd.setText(content.get(14));
         countryMAd.setText(content.get(9));
         
         if ("Y".equals(content.get(15))) {
@@ -148,12 +90,8 @@ public class ModifyClient extends javax.swing.JDialog implements DocumentListene
             countryDAd.setEnabled(true);
             
         }
-        checkDAdress.setText("Delivery adress same as principal adress");
-        checkDAdress.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                checkDAdressItemStateChanged(evt);
-            }
-        });
+        
+        
 
         jLabel11.setText("Other informations");
 

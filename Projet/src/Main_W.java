@@ -34,13 +34,17 @@ public class Main_W extends javax.swing.JFrame {
         tabbedPane.addTab("Clients",myClientTab);
         myProductTab = new ProductTab(prop,this);
         tabbedPane.addTab("Products",myProductTab);
-        
+        myOrderTab = new OrderTab(prop,this);
+        tabbedPane.addTab("Orders",myOrderTab);
     }
     
     public Connection getConnection() {
         return conn;
     }
-
+    
+    public ClientTab getClientTab() {
+        return myClientTab;
+    }
     
     
     /**
@@ -140,10 +144,11 @@ public class Main_W extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_MenuItemDisconnectActionPerformed
 
-    private Properties connectionProp;
-    private Connection conn;
-    private ClientTab myClientTab;
-    private ProductTab myProductTab;
+    private final Properties connectionProp;
+    private final Connection conn;
+    private final ClientTab myClientTab;
+    private final ProductTab myProductTab;
+    private final OrderTab myOrderTab;
     //private JTabbedPane jTabbedPane1;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuItemDisconnect;
