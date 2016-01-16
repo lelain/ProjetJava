@@ -176,7 +176,7 @@ public class ClientTab extends javax.swing.JPanel {
     
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AddClient NewClientW = new AddClient(getMainWin(),this,true);       
+        AddClient2 NewClientW = new AddClient2(getMainWin(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed

@@ -4,9 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -14,7 +11,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /*
- * This class makes a dialog for adding a client and his adresses
+ * This abstract class is the base to add or modify a client and his adresses
  * to the database
  */
 
@@ -27,50 +24,50 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
 //Variables 
     
     //Variables shared by the extended classes    
-    private Connection conn;
-    private ClientTab client;
+    protected Connection conn;      //the connection
+    protected ClientTab client;     //the tab dedicated to the clients
    
     //Components shared by extended classes
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JCheckBox checkDAdress;
-    private javax.swing.JLabel cityD;
-    private javax.swing.JTextField cityDAd;
-    private javax.swing.JTextField cityMAd;
-    private javax.swing.JLabel countryD;
-    private javax.swing.JTextField countryDAd;
-    private javax.swing.JTextField countryMAd;
-    private javax.swing.JTextField emailField;
-    private javax.swing.JTextArea infosField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JTextField nameField;
-    private javax.swing.JButton okButton;
-    private javax.swing.JTextField phone1Field;
-    private javax.swing.JTextField phone2Field;
-    private javax.swing.JTextField qqField;
-    private javax.swing.JLabel streetD;
-    private javax.swing.JTextField streetDAd;
-    private javax.swing.JTextField streetMAd;
-    private javax.swing.JLabel zipD;
-    private javax.swing.JTextField zipDAd;
-    private javax.swing.JTextField zipMAd;
+    protected javax.swing.JButton cancelButton;
+    protected javax.swing.JCheckBox checkDAdress;
+    protected javax.swing.JLabel cityD;
+    protected javax.swing.JTextField cityDAd;
+    protected javax.swing.JTextField cityMAd;
+    protected javax.swing.JLabel countryD;
+    protected javax.swing.JTextField countryDAd;
+    protected javax.swing.JTextField countryMAd;
+    protected javax.swing.JTextField emailField;
+    protected javax.swing.JTextArea infosField;
+    protected javax.swing.JLabel jLabel1;
+    protected javax.swing.JLabel jLabel10;
+    protected javax.swing.JLabel jLabel11;
+    protected javax.swing.JLabel jLabel12;
+    protected javax.swing.JLabel jLabel17;
+    protected javax.swing.JLabel jLabel2;
+    protected javax.swing.JLabel jLabel3;
+    protected javax.swing.JLabel jLabel4;
+    protected javax.swing.JLabel jLabel5;
+    protected javax.swing.JLabel jLabel6;
+    protected javax.swing.JLabel jLabel7;
+    protected javax.swing.JLabel jLabel8;
+    protected javax.swing.JLabel jLabel9;
+    protected javax.swing.JScrollPane jScrollPane1;
+    protected javax.swing.JSeparator jSeparator1;
+    protected javax.swing.JSeparator jSeparator2;
+    protected javax.swing.JSeparator jSeparator3;
+    protected javax.swing.JSeparator jSeparator4;
+    protected javax.swing.JSeparator jSeparator5;
+    protected javax.swing.JTextField nameField;
+    protected javax.swing.JButton okButton;
+    protected javax.swing.JTextField phone1Field;
+    protected javax.swing.JTextField phone2Field;
+    protected javax.swing.JTextField qqField;
+    protected javax.swing.JLabel streetD;
+    protected javax.swing.JTextField streetDAd;
+    protected javax.swing.JTextField streetMAd;
+    protected javax.swing.JLabel zipD;
+    protected javax.swing.JTextField zipDAd;
+    protected javax.swing.JTextField zipMAd;
 
 //Constructor
     
@@ -78,11 +75,14 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
     protected AbstractManageClient(Main_W parent, ClientTab client, boolean modal) {
         super(parent, modal);
         
+        //initialisation of variables 
         this.conn=parent.getConnection();
         this.client=client;
         
+        //construct the components
         initComponents();
         
+        //add listeners to the fields
         streetMAd.getDocument().addDocumentListener(this);
         cityMAd.getDocument().addDocumentListener(this);
         countryMAd.getDocument().addDocumentListener(this);
@@ -94,13 +94,15 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
 
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    
+//Declarations : methods to be defined in extended classes
+    
+    abstract void okButtonActionPerformed(java.awt.event.ActionEvent evt);
+
+  
+//Private methods
+
+    //construct and Initialize components
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
@@ -410,8 +412,12 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         pack();
     }// </editor-fold>                        
 
-   
-    
+    //close the window
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        this.dispose();
+    }                                            
+
+    //make the changes in the adresses fields if we selected or not the chec box
     private void checkDAdressItemStateChanged(java.awt.event.ItemEvent evt) {                                              
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             /*si on veut avoir la meme adresse de livraison, on ne peut plus la modifier
@@ -445,16 +451,110 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         }   
     }                                             
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
-        //before we send the request we make sure that the fields are correctly fill
-        if (fieldsRight()) {
-            insertClient();
-        } 
-        
-    }                                        
-
+    //if the main adress is the same than the delivery one, the fields of both are the same
+    private void mainAdressChange() {
+        if (checkDAdress.isSelected()) {
+            streetDAd.setText(streetMAd.getText());
+            zipDAd.setText(zipMAd.getText());
+            cityDAd.setText(cityMAd.getText());
+            countryDAd.setText(countryMAd.getText());
+        }
+    }
     
-    private boolean fieldsRight() {
+    //enabled the ok button if the mandatory fields are filled
+    private void readyToValidate() {
+        if ((!"".equals(nameField.getText())) && (!"".equals(streetMAd.getText())) && 
+               (!"".equals(zipMAd.getText())) && (!"".equals(cityMAd.getText())) &&
+                (!"".equals(streetDAd.getText())) && (!"".equals(zipDAd.getText())) &&
+                (!"".equals(cityDAd.getText()))) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
+      
+
+    //Test if the field is an Int, if not display message in dialog
+    private boolean isInt(JTextField text,String message) {
+        String str = text.getText();
+        if (!str.matches("^-?\\d+$")) {
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        }
+        return true;
+    }
+    
+    //Test if the length of the field is less than length, if not display message in dialog
+    private boolean verifyLenght(JTextField text,int length,String message) {
+        if (text.getText().length() > length) {
+            
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    //Test if the length of the text area is less than length, if not display message in dialog
+    private boolean verifyLenght(JTextArea text,int length,String message) {
+        if (text.getText().length() > length) {
+            
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    
+//Protected methods : can be used or extended by extended classes
+ 
+    //Test if the name field is not already in the db, if yes display message in dialog
+    protected boolean verifyName(JTextField text,String message) {
+        String str = text.getText();
+        Statement stmt=null;
+        try{
+            stmt = conn.createStatement();
+            String sqlQuery;
+            sqlQuery="select name from V_Clients where name='"+str+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                //here we already have this name in the database --> impossible
+                JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                text.requestFocus();
+                text.selectAll();
+                return false;   
+            } else {
+                //here everything is ok
+                return true;
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+            return false; 
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ return false;  }// nothing we can do
+        }//end finally
+    }
+    
+    
+    //Test if the fields are correctly filled
+    protected boolean fieldsRight() {
         if (!verifyLenght(nameField,40,"Name too long, please make it shorter")) {
             return false;
         }
@@ -509,281 +609,8 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
 
         return true;
     }
-    
-    
-    private boolean verifyName(JTextField text,String message) {
-        String str = text.getText();
-        Statement stmt=null;
-        try{
-            stmt = conn.createStatement();
-            String sqlQuery;
-            sqlQuery="select name from V_Clients where name='"+str+"'";
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { 
-                //here we already have this name in the database --> impossible
-                JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-                text.requestFocus();
-                text.selectAll();
-                return false;   
-            } else {
-                //here everything is ok
-                return true;
-            }
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                "Warning", JOptionPane.ERROR_MESSAGE);
-            return false; 
-        } finally {
-            //finally block used to close resources
-            try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ return false;  }// nothing we can do
-        }//end finally
-    }
-    
-    private boolean isInt(JTextField text,String message) {
-        String str = text.getText();
-        if (!str.matches("^-?\\d+$")) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        }
-        return true;
-    }
-    
-    
-    private boolean verifyLenght(JTextField text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    private boolean verifyLenght(JTextArea text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    
-    private void insertClient() {
-        
-        Statement stmt = null;
-        //we prepare the values to be added
-        //for the Adresses table
-        String street,city,zip_code,country;
-        street=streetMAd.getText();
-        city=cityMAd.getText();
-        zip_code=zipMAd.getText();
-        if ("".equals(countryMAd.getText())) {
-            country="NULL";
-        } else {
-            country="'"+countryMAd.getText()+"'";
-        }
-        
-        //for the Clients table        
-        String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
-        name=nameField.getText();
-        if ("".equals(phone1Field.getText())) {
-            phone1="NULL";
-        } else {
-            phone1="'"+phone1Field.getText()+"'";
-        }
-        if ("".equals(phone2Field.getText())) {
-            phone2="NULL";
-        } else {
-            phone2="'"+phone2Field.getText()+"'";
-        }
-        if ("".equals(emailField.getText())) {
-            email="NULL";
-        } else {
-            email="'"+emailField.getText()+"'";
-        }
-        if ("".equals(qqField.getText())) {
-            qq="NULL";
-        } else {
-            qq="'"+qqField.getText()+"'";
-        }
-        if (!"".equals(infosField.getText())) {
-            infos="'"+infosField.getText()+"'";
-        } else {
-            infos="NULL";
-        }
-        
-        //if delivery adress same as main adress
-        if (checkDAdress.isSelected()) {
-            try{
-            stmt = conn.createStatement();
-            String sqlQuery;
-            sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
-                       "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+");";
-            
-            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
-            
-            if (affectedRows == 0) {
-                throw new SQLException("Creating adress failed, no rows affected.");
-            }
-            
-            long key=-1L;
-            
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                key = generatedKeys.getLong(1);
-            }
-            else {
-                throw new SQLException("Creating adress failed, no ID obtained.");
-            }
-            }
-            
-            adress = Long.toString(key);  //adress est l'id de l'adresse inseree
-            delivery_adress=Long.toString(key);
-            
-            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
-                       "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
-                                email+","+qq+","+infos+");";
-            int affecRows = stmt.executeUpdate(sqlQuery); 
-            
-            if (affecRows == 0) {
-                throw new SQLException("Creating adress failed, no rows affected.");
-            }
-            
-            stmt.close();
-            
-            } catch(SQLException se) {
-                //Handle errors for JDBC
-                System.out.println("Error Code: " + ((SQLException)se).getErrorCode());
-                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //finally block used to close resources
-                try{
-                    if(stmt!=null)
-                    stmt.close();
-                }catch(SQLException se2){ }// nothing we can do
-            }//end finally
-            
-        } else {
-            //here we have a delivery adress different from the main one
-            //first we prepare the delivery adress strings
-            String streetD,cityD,zip_codeD,countryD;
-            streetD=streetDAd.getText();
-            cityD=cityDAd.getText();
-            zip_codeD=zipDAd.getText();
-            if ("".equals(countryDAd.getText())) {
-                countryD="NULL";
-            } else {
-                countryD="'"+countryDAd.getText()+"'";
-            }
-            
-            try{
-            stmt = conn.createStatement();
-            String sqlQuery;
-            sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
-                       "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+")" +
-                              ",('"+streetD+"','"+cityD+"',"+zip_codeD+","+countryD+");";
-            
-            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
-            
-            if (affectedRows == 0) {
-                throw new SQLException("Creating adress failed, no rows affected.");
-            }
-            
-            long key1=-1L;
-            long key2=-1L;
-            
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-            if (generatedKeys.next()) {
-                key1 = generatedKeys.getLong(1);     
-            }
-            if (generatedKeys.next()) {
-                key2 = generatedKeys.getLong(1);     
-            }
-            else {
-                throw new SQLException("Creating adress failed, no ID obtained.");
-            }
-            }
-            
-            adress = Long.toString(key1);  //adress est l'id de l'adresse inseree la premiere
-            delivery_adress=Long.toString(key2);
-            
-            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
-                       "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
-                                email+","+qq+","+infos+");";
-            int affecRows = stmt.executeUpdate(sqlQuery); 
-            
-            if (affecRows == 0) {
-                throw new SQLException("Creating adress failed, no rows affected.");
-            }
-            
-            stmt.close();
-            
-            } catch(SQLException se) {
-                //Handle errors for JDBC
-                JOptionPane.showMessageDialog(this, "Unexpected error\nDetails : "+se.getMessage(),
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //finally block used to close resources
-                try{
-                    if(stmt!=null)
-                    stmt.close();
-                }catch(SQLException se2){ }// nothing we can do
-            }//end finally
-        }
-        
-        try {
-            client.createNewTableModel();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-        this.dispose();
-    }
-    
-    
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        this.dispose();
-    }                                            
-
-                 
-
-    private void mainAdressChange() {
-        if (checkDAdress.isSelected()) {
-            streetDAd.setText(streetMAd.getText());
-            zipDAd.setText(zipMAd.getText());
-            cityDAd.setText(cityMAd.getText());
-            countryDAd.setText(countryMAd.getText());
-        }
-    }
-    
-    private void readyToValidate() {
-        if ((!"".equals(nameField.getText())) && (!"".equals(streetMAd.getText())) && 
-               (!"".equals(zipMAd.getText())) && (!"".equals(cityMAd.getText())) &&
-                (!"".equals(streetDAd.getText())) && (!"".equals(zipDAd.getText())) &&
-                (!"".equals(cityDAd.getText()))) {
-            okButton.setEnabled(true);
-        } else {
-            okButton.setEnabled(false);
-        }
-    }
-    
+       
+//methods for implementation of Document Listener    
     @Override
     public void insertUpdate(DocumentEvent e) {
         if ((e.getDocument() == streetMAd.getDocument()) || (e.getDocument() == cityMAd.getDocument()) ||

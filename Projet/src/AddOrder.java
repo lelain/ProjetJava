@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -168,7 +169,7 @@ public class AddOrder extends javax.swing.JDialog {
 
     private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
         // TODO add a client, using the addClient dialog
-        AddClient NewClientW = new AddClient(order.getMainWin(),order.getMainWin().getClientTab(),true);       
+        AddClientFromOrder NewClientW = new AddClientFromOrder(order.getMainWin(),order.getMainWin().getClientTab(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_addClientActionPerformed
@@ -211,7 +212,7 @@ public class AddOrder extends javax.swing.JDialog {
     }
     
     public void updateClients() {
-        
+             
         //we search the number of clients in the database and store it in size
         Statement stmt = null;
         int size=0;
@@ -222,6 +223,7 @@ public class AddOrder extends javax.swing.JDialog {
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { size = rs.getInt("col"); }
             //now I can create my String tab
+            System.out.println("size : " +size);
             clients = new String[size];
             for (int i=0; i<size; i++) {
                 rs.next();
@@ -239,9 +241,14 @@ public class AddOrder extends javax.swing.JDialog {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
+        String newClient = clients[size-1];
+        
         //sort the array
         Arrays.sort(clients);
-        clientsCombo = new javax.swing.JComboBox<>(clients);
+        
+        //update the combo
+        clientsCombo.setModel(new DefaultComboBoxModel(clients));
+        clientsCombo.setSelectedItem(newClient);
     }
     
     
