@@ -521,6 +521,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
     //Test if the name field is not already in the db, if yes display message in dialog
     protected boolean verifyName(JTextField text,String message) {
         String str = text.getText();
+        str=str.replaceAll("'","\\\\'");    //in case there is apostrophe in the string, we replace ' by \' 
         Statement stmt=null;
         try{
             stmt = conn.createStatement();

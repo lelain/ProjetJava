@@ -61,6 +61,7 @@ public class AddClient2 extends AbstractManageClient {
         //for the Clients table        
         String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
         name=nameField.getText();
+        name=name.replaceAll("'","\\\\'");    //in case there is apostrophe in the string, we replace ' by \' 
         if ("".equals(phone1Field.getText())) {
             phone1="NULL";
         } else {
@@ -129,7 +130,7 @@ public class AddClient2 extends AbstractManageClient {
             } catch(SQLException se) {
                 //Handle errors for JDBC
                 System.out.println("Error Code: " + ((SQLException)se).getErrorCode());
-                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                JOptionPane.showMessageDialog(this, "Unexpected error - " + name +" - , Request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {
                 //finally block used to close resources

@@ -30,7 +30,7 @@ public class Main_W extends javax.swing.JFrame {
         
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
         
-        myClientTab = new ClientTab(prop,this);
+        myClientTab = new ClientTab(this);
         tabbedPane.addTab("Clients",myClientTab);
         myProductTab = new ProductTab(prop,this);
         tabbedPane.addTab("Products",myProductTab);

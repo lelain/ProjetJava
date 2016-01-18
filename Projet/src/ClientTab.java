@@ -23,7 +23,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author brendan
  */
-public class ClientTab extends javax.swing.JPanel {
+public class ClientTab extends AbstractTab {
 
     /**
      * Creates new form ClientTab
@@ -31,16 +31,10 @@ public class ClientTab extends javax.swing.JPanel {
      * @param parent
      * @throws java.sql.SQLException
      */
-    public ClientTab(Properties prop,Main_W parent) throws SQLException {
-        this.connectionProp=prop;
-        this.parent=parent;
-        this.selectedRow=0;
-
-        CachedRowSet myRowSet = getContentsOfTable();
-        myTableModel = new DataTableModel(myRowSet);
+    public ClientTab(Main_W mainWin) throws SQLException {
+        super(mainWin);
        
-        clientTable = new JTable(); // Displays the table
-        clientTable.setModel(myTableModel);
+        clientTable = new JTable(buildTableModel(getContentsOfTable())); // Displays the table
         clientTable.setAutoCreateRowSorter(true);
         clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
         clientTable.setFillsViewportHeight(true);
@@ -144,7 +138,7 @@ public class ClientTab extends javax.swing.JPanel {
             selectedRow = clientTable.convertRowIndexToModel(viewRow);
             
             Statement stmt=null;
-            String name=(String)myTableModel.getValueAt(selectedRow,0);
+            String name=(String)clientTable.getValueAt(selectedRow,0);
             try{
                 Connection conn=getMainWin().getConnection();
                 stmt = conn.createStatement();
@@ -319,47 +313,34 @@ public class ClientTab extends javax.swing.JPanel {
    
     }//GEN-LAST:event_removeButtonActionPerformed
 
-    private CachedRowSet getContentsOfTable() throws SQLException {
-    CachedRowSet crs = null;
-    try {
-      crs = new CachedRowSetImpl();
-      crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-      crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-      crs.setUsername(connectionProp.getProperty("user"));
-      crs.setPassword(connectionProp.getProperty("password"));
-      crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
-      crs.setCommand("select V_Clients.name, V_Clients.phone1, V_Clients.phone2, V_Clients.email, V_Clients.qq, "
+    private ResultSet getContentsOfTable() throws SQLException {
+        ResultSet rs = null;
+        try{
+            Connection conn=getMainWin().getConnection();
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery("select V_Clients.name, V_Clients.phone1, V_Clients.phone2, V_Clients.email, V_Clients.qq, "
               + "V_Adresses.street, V_Adresses.city, V_Adresses.zip_code, V_Adresses.country, V_Clients.infos from V_Clients"
               + " inner join V_Adresses on V_Clients.adress=V_Adresses.ad_id");
-      crs.execute();
-
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Unexpected error dans getContents\nDetails : "+e.getMessage(),
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
-    }
-    return crs;
+        } 
+        return rs;
     }
     
     
     public void createNewTableModel() throws SQLException {
-        myTableModel = new DataTableModel(getContentsOfTable());
-        //myTableModel.addEventHandlersToRowSet(this);
-        clientTable.setModel(myTableModel);
+        clientTable.setModel(buildTableModel(getContentsOfTable()));
     }
     
     
     
-    public Main_W getMainWin() {
-        return parent;
-    }
     
 
 
-    private final Main_W parent;
-    private final Properties connectionProp; 
-    private DataTableModel myTableModel;
     private final JTable clientTable;
-    private int selectedRow;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JSeparator jSeparator1;
