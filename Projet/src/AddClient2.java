@@ -209,7 +209,7 @@ public class AddClient2 extends AbstractManageClient {
         }
         
         try {
-            client.createNewTableModel();
+            client.updateClientTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);

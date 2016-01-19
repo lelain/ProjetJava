@@ -9,9 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is the base implementation for the tabs to be displayed in the main window
  */
 
 /**
@@ -19,21 +17,28 @@ import javax.swing.table.DefaultTableModel;
  * @author brendan
  */
 abstract class AbstractTab extends JPanel {
-    
-    protected final Main_W mainWin;
-    protected int selectedRow;
-    
+ 
+//Variables shared by all the tabs
+    protected final Main_W mainWin;     //the main window
+    protected int selectedRow;      //the row selected in the table of the tab 
+ 
+
+//Constructor
+    //We just initialise the 2 variables
     public AbstractTab(Main_W mainWin) {
         this.mainWin = mainWin; 
         this.selectedRow=0;
     }
     
-    
+
+//Public methods
+
+    //get the main window
     public Main_W getMainWin() {
         return mainWin;
     }
     
-    
+    //build the table model, given a ResultSet. Static so can be used without constructing a tab object
     public static DefaultTableModel buildTableModel(ResultSet rs) throws SQLException {
 
         ResultSetMetaData metaData = rs.getMetaData();
@@ -56,7 +61,6 @@ abstract class AbstractTab extends JPanel {
         }
 
         return new DefaultTableModel(data, columnNames);
-
     }
     
     

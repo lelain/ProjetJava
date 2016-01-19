@@ -20,7 +20,7 @@ public class AddCat extends AbstractManageCat {
 //Constructor
     
     //use the AbstractManageCat constructor then initialises the components
-    public AddCat(java.awt.Frame parent, boolean modal, ProductTab product, AbstractManageProduct dialog) {
+    public AddCat(java.awt.Frame parent, boolean modal, ProdTab product, AbstractManageProduct dialog) {
         super(parent,modal,product);
         
         this.dialog=dialog;

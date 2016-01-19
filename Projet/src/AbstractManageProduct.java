@@ -35,7 +35,7 @@ import javax.swing.event.DocumentListener;
 abstract class AbstractManageProduct extends javax.swing.JDialog implements DocumentListener {
 
 //variables shared by the extended classes
-    protected ProductTab product;   //the product tab we will display the dialog
+    protected ProdTab product;   //the product tab we will display the dialog
     protected String[] brands;      //array containing the brands to display in the combo box
     protected String[] unitString;  //array containing the quantity unit to display in combo box
     protected String[] priceUnitString;    //array containing the price unit to display in combo box
@@ -73,7 +73,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     
 //Constructor
     
-     public AbstractManageProduct(Main_W parent, ProductTab product, boolean modal) {
+     public AbstractManageProduct(Main_W parent, ProdTab product, boolean modal) {
         super(parent, modal);
         
         //To have English in my dialog
@@ -123,7 +123,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Statement stmt = null;
         int size=0;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="SELECT COUNT(DISTINCT brand) from V_Products WHERE brand<>'Unknown'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -147,7 +147,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we populate it with the other brands in the data base
         stmt = null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery = "SELECT DISTINCT brand FROM V_Products WHERE brand<>'Unknown'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -179,7 +179,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Statement stmt = null;
         int size=0;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             
             sqlQuery="SELECT COUNT(DISTINCT qunit) from V_Products WHERE qunit<>'mL' AND qunit<>'L' AND "
@@ -206,7 +206,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we populate it with the other unit in the database
         stmt = null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery = "SELECT DISTINCT qunit FROM V_Products WHERE qunit<>'mL' AND qunit<>'L' AND "
                     + "qunit<>'mg' AND qunit<>'g' AND qunit<>'kg' AND qunit<>''";
@@ -239,7 +239,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         Statement stmt = null;
         int size=0;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             //number of brand different from 'Unknown'
             sqlQuery="SELECT COUNT(DISTINCT punit) from V_Products WHERE punit<>'euros' AND punit<>'RMB'";
@@ -264,7 +264,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we populate it
         stmt = null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery = "SELECT DISTINCT punit FROM V_Products WHERE punit<>'euros' AND punit<>'RMB'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -294,7 +294,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we take them from the file
         level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
-        Path file = FileSystems.getDefault().getPath("Try", "products.txt");   
+        Path file = FileSystems.getDefault().getPath("Tree", "products.txt");   
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -629,7 +629,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             //first we verify that it doesn't already exist
             Statement stmt=null;
             try{
-                stmt = product.getConnection().createStatement();
+                stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
                 sqlQuery="select brand from V_Products where brand='"+answerBrand+"'";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -675,7 +675,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             //first we verify that it doesn't already exist
             Statement stmt=null;
             try{
-                stmt = product.getConnection().createStatement();
+                stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
                 sqlQuery="select qunit from V_Products where qunit='"+answerUnit+"'";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -724,7 +724,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             //first we verify that it doesn't already exist
             Statement stmt=null;
             try{
-                stmt = product.getConnection().createStatement();
+                stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
                 sqlQuery="select punit from V_Products where punit='"+answerUnit+"'";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -849,7 +849,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 //Public methods
     
     //get the productTab
-    public ProductTab getProductTab() {
+    public ProdTab getProductTab() {
         return product;
     }
     

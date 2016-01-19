@@ -26,7 +26,7 @@ public class ModifyProduct extends AbstractManageProduct {
 //Constructor
     
     //construct the dialog, using mainly the AbstractManageProduct constructor, and initialise the fields or combo with the contents of the selected row
-    public ModifyProduct(Main_W parent, ProductTab product, boolean modal,HashMap contents, int row) {
+    public ModifyProduct(Main_W parent, ProdTab product, boolean modal,HashMap contents, int row) {
         super(parent, product, modal);
         
         this.row=row;
@@ -79,7 +79,7 @@ public class ModifyProduct extends AbstractManageProduct {
         //do the request
         Statement stmt = null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery = "UPDATE V_Products \n" +
                         "SET category="+values[0]+",brand="+values[1]+",name="+values[2]+",quantity="+values[3]+
@@ -106,7 +106,7 @@ public class ModifyProduct extends AbstractManageProduct {
         
         
         try {
-            product.createNewTableModel();
+            product.updateProdTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -133,7 +133,7 @@ public class ModifyProduct extends AbstractManageProduct {
         
         Statement stmt=null;
             try{
-                stmt = product.getConnection().createStatement();
+                stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
                 sqlQuery="select * from V_Products where brand="+brandStr+" and name="+nameStr+" and pr_id<>"+Integer.toString(row);
                 ResultSet rs = stmt.executeQuery(sqlQuery);

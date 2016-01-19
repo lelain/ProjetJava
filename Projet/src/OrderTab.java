@@ -25,7 +25,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  *
  * @author brendan
  */
-public class OrderTab extends javax.swing.JPanel {
+public class OrderTab extends AbstractTab {
 
     /**
      * Creates new form OrderTab
@@ -33,19 +33,13 @@ public class OrderTab extends javax.swing.JPanel {
      * @param myMainWin
      * @throws java.sql.SQLException
      */
-    public OrderTab(Properties prop,Main_W myMainWin) throws SQLException  {
+    public OrderTab(Main_W myMainWin) throws SQLException  {
+        super(myMainWin);
+
         //To have English in my dialog
         java.util.Locale.setDefault ( java.util.Locale.ENGLISH ) ;
         javax.swing.UIManager.getDefaults().setDefaultLocale ( java.util.Locale.ENGLISH ) ;
         javax.swing.JComponent.setDefaultLocale ( java.util.Locale.ENGLISH ) ;
-        
-        this.connectionProp=prop;
-        this.mainWin=myMainWin;
-        this.conn=myMainWin.getConnection();
-        this.selectedRow=0;
-        CachedRowSet myRowSet = getContentsOfTable();
-        myTableModel = new DataTableModel(myRowSet);
-        
         
         initComponents();
         
@@ -75,19 +69,23 @@ public class OrderTab extends javax.swing.JPanel {
         addOrder = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(myTableModel);
-        jLabel1 = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        try {
+            jTable1 = new javax.swing.JTable(buildTableModel(getContentsOfTable()));
+            jLabel1 = new javax.swing.JLabel();
+            jSeparator2 = new javax.swing.JSeparator();
+            jScrollPane2 = new javax.swing.JScrollPane();
+            jTable2 = new javax.swing.JTable();
 
-        addOrder.setText("Add order");
-        addOrder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addOrderActionPerformed(evt);
-            }
-        });
+            addOrder.setText("Add order");
+            addOrder.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    addOrderActionPerformed(evt);
+                }
+            });
 
+        } catch (SQLException ex) {
+            Logger.getLogger(ProdTab.class.getName()).log(Level.SEVERE, null, ex);
+        }
         jScrollPane1.setViewportView(jTable1);
 
         jLabel1.setText("Order details");
@@ -168,20 +166,16 @@ public class OrderTab extends javax.swing.JPanel {
             //and we enable the details of the order
             
             int viewRow = jTable1.getSelectedRow();
-            selectedRow = Integer.parseInt((String) jTable1.getValueAt(viewRow,0));
+            long idRow = (long) jTable1.getValueAt(viewRow,0);
                    
-            CachedRowSet myRowSet;
+            ResultSet myRowSet;
             try {
-                myRowSet = getDetailsOfOrder(selectedRow);
-                DataTableModel detailsTableModel = new DataTableModel(myRowSet);
-                jTable2.setModel(detailsTableModel);
+                myRowSet = getDetailsOfOrder(idRow);
+                jTable2.setModel(buildTableModel(myRowSet));
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Unexpected error getting the order details \nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
             }
-            
-            
-            
             
             jLabel1.setEnabled(true);
             jSeparator1.setEnabled(true);
@@ -189,62 +183,42 @@ public class OrderTab extends javax.swing.JPanel {
         }
     }
     
-    
-    public Main_W getMainWin() {
-        return mainWin;
-    } 
-       
-    public Connection getConnection() {
-        return conn;
-    }
-    
-    
-     private CachedRowSet getContentsOfTable() throws SQLException {
-        CachedRowSet crs = null;
-        try {
-            crs = new CachedRowSetImpl();
-            crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-            crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-            crs.setUsername(connectionProp.getProperty("user"));
-            crs.setPassword(connectionProp.getProperty("password"));
-            crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
-            crs.setCommand("select or_id,date,V_Clients.name,Tselling_price,sp_unit,Tbuying_price,bp_unit,margin"
-                  + ",paid,state from V_Orders inner join V_Clients on V_Orders.clients=V_Clients.cl_id");
-            crs.execute();
 
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Unexpected error dans getContents\nDetails : "+e.getMessage(),
+    
+    
+    private ResultSet getContentsOfTable() throws SQLException {
+        ResultSet rs = null;
+        try{
+            Connection conn=mainWin.getConnection();
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery("select or_id,date,V_Clients.name,Tselling_price,sp_unit,Tbuying_price,bp_unit,margin"
+                  + ",paid,state from V_Orders inner join V_Clients on V_Orders.clients=V_Clients.cl_id");
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-        return crs;
+        } 
+        return rs;
+       
     }
     
      
-    private CachedRowSet getDetailsOfOrder(int or_id) throws SQLException {
-        CachedRowSet crs = null;
-        try {
-            crs = new CachedRowSetImpl();
-            crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
-            crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-            crs.setUsername(connectionProp.getProperty("user"));
-            crs.setPassword(connectionProp.getProperty("password"));
-            crs.setUrl("jdbc:mysql://localhost:3306/bdd_appli"+"?relaxAutoCommit=true");
-            crs.setCommand("select prod.brand,prod.name,prod.infos,ord.quantity,selling_price,sp_unit,buying_price,bp_unit"
-                  + ",change_rate,margin,ord.infos from V_Ord_Articles AS ord inner join V_Products AS prod on ord.article=prod.pr_id");
-            crs.execute();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Unexpected error dans getContents\nDetails : "+e.getMessage(),
+    private ResultSet getDetailsOfOrder(long or_id) throws SQLException {
+        ResultSet rs = null;
+        try{
+            Connection conn=mainWin.getConnection();
+            Statement stmt = conn.createStatement();
+            rs = stmt.executeQuery("select prod.brand,prod.name,prod.infos,ord.quantity,ord.selling_price,ord.sp_unit,ord.buying_price,ord.bp_unit"
+                    + ",ord.change_rate,ord.margin,ord.infos from V_Ord_Articles AS ord inner join V_Products AS prod "
+                    + "on ord.article=prod.pr_id inner join V_Orders on V_Orders.or_id=ord.ord where V_Orders.or_id="+Long.toString(or_id));
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-        return crs;
+        } 
+        return rs;
     }
 
-    private final Properties connectionProp; 
-    private Connection conn;
-    private DataTableModel myTableModel;
-    private final Main_W mainWin;
-    private int selectedRow;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addOrder;
     private javax.swing.JLabel jLabel1;

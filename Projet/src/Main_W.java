@@ -32,9 +32,9 @@ public class Main_W extends javax.swing.JFrame {
         
         myClientTab = new ClientTab(this);
         tabbedPane.addTab("Clients",myClientTab);
-        myProductTab = new ProductTab(prop,this);
+        myProductTab = new ProdTab(this);
         tabbedPane.addTab("Products",myProductTab);
-        myOrderTab = new OrderTab(prop,this);
+        myOrderTab = new OrderTab(this);
         tabbedPane.addTab("Orders",myOrderTab);
     }
     
@@ -147,7 +147,7 @@ public class Main_W extends javax.swing.JFrame {
     private final Properties connectionProp;
     private final Connection conn;
     private final ClientTab myClientTab;
-    private final ProductTab myProductTab;
+    private final ProdTab myProductTab;
     private final OrderTab myOrderTab;
     //private JTabbedPane jTabbedPane1;
     // Variables declaration - do not modify//GEN-BEGIN:variables

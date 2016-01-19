@@ -22,7 +22,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
 //Variables 
     
     //Variables shared by the extended classes
-    protected ProductTab prodTab;   //the Product tab in which the dialog will be display
+    protected ProdTab prodTab;   //the Product tab in which the dialog will be display
     protected ArrayList<String[]> treeString;   //the tree
     
     //Components shared by extended classes
@@ -44,7 +44,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
 //Constructor
     
     //Construction and initialisation of shared elements
-    protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProductTab product) {
+    protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProdTab product) {
         super(parent, modal);   //Only build the frame using the JDialog constructor
         
         //initialisation of variables 
@@ -222,7 +222,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
-        Path file = FileSystems.getDefault().getPath("Try", "products.txt"); 
+        Path file = FileSystems.getDefault().getPath("Tree", "products.txt"); 
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
             textBefore+=line+"\n";
@@ -269,7 +269,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     
 //Public Methods 
     
-    public ProductTab getProductTab() {
+    public ProdTab getProductTab() {
         return prodTab;
     }
     

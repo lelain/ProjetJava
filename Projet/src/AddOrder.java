@@ -54,8 +54,6 @@ public class AddOrder extends javax.swing.JDialog {
         jLabel4 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         addLign = new javax.swing.JButton();
-        lignUp = new javax.swing.JButton();
-        lignDown = new javax.swing.JButton();
         removeLign = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable(model);
@@ -74,11 +72,8 @@ public class AddOrder extends javax.swing.JDialog {
 
         addLign.setText("Add lign");
 
-        lignUp.setText("up");
-
-        lignDown.setText("down");
-
         removeLign.setText("Remove");
+        removeLign.setEnabled(false);
 
         jScrollPane1.setViewportView(jTable1);
 
@@ -109,15 +104,11 @@ public class AddOrder extends javax.swing.JDialog {
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(301, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addLign)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lignUp)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lignDown)
-                        .addGap(18, 18, 18)
+                        .addGap(112, 112, 112)
                         .addComponent(removeLign)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -156,8 +147,6 @@ public class AddOrder extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addLign)
-                    .addComponent(lignUp)
-                    .addComponent(lignDown)
                     .addComponent(removeLign))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -184,7 +173,7 @@ public class AddOrder extends javax.swing.JDialog {
         Statement stmt = null;
         int size=0;
         try{
-            stmt = order.getConnection().createStatement();
+            stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="SELECT COUNT(*) as col from V_Clients UNION SELECT name from V_Clients";
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -211,13 +200,14 @@ public class AddOrder extends javax.swing.JDialog {
         Arrays.sort(clients);
     }
     
+    
     public void updateClients() {
              
         //we search the number of clients in the database and store it in size
         Statement stmt = null;
         int size=0;
         try{
-            stmt = order.getConnection().createStatement();
+            stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="SELECT COUNT(*) as col from V_Clients UNION SELECT name from V_Clients";
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -269,8 +259,6 @@ public class AddOrder extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JButton lignDown;
-    private javax.swing.JButton lignUp;
     private javax.swing.JButton removeLign;
     // End of variables declaration//GEN-END:variables
 }

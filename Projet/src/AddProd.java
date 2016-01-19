@@ -22,7 +22,7 @@ public class AddProd extends AbstractManageProduct {
 //Constructor
     
     //construct the dialog, using mainly the AbstractManageProduct constructor 
-    public AddProd(Main_W parent, ProductTab product, boolean modal) {
+    public AddProd(Main_W parent, ProdTab product, boolean modal) {
         super(parent, product, modal);
         
         //initialisation of the what need to be
@@ -49,7 +49,7 @@ public class AddProd extends AbstractManageProduct {
         //do the request
         Statement stmt = null;
         try{
-            stmt = product.getConnection().createStatement();
+            stmt = product.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery = "INSERT INTO V_Products (category,brand,name,quantity,qunit,price,punit,infos)\n" +
                        "VALUES ("+values[0]+","+values[1]+","+values[2]+","+values[3]+","+values[4]+","+values[5]+","+values[6]+","+values[7]+")";
@@ -74,7 +74,7 @@ public class AddProd extends AbstractManageProduct {
         
         
         try {
-            product.createNewTableModel();
+            product.updateProdTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -102,7 +102,7 @@ public class AddProd extends AbstractManageProduct {
         
         Statement stmt=null;
             try{
-                stmt = product.getConnection().createStatement();
+                stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
                 sqlQuery="select * from V_Products where brand="+brandStr+" and name="+nameStr;
                 ResultSet rs = stmt.executeQuery(sqlQuery);

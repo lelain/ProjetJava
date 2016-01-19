@@ -223,7 +223,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
         // modify the category in the data base
         Statement stmt=null;
         try{
-            stmt = myManageCat.getProductTab().getConnection().createStatement();
+            stmt = myManageCat.getProductTab().getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="update V_Products set category='"+catCombo.getSelectedItem()+"' where pr_id="+id[1];
             stmt.executeUpdate(sqlQuery);
@@ -303,7 +303,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
         
         Statement stmt=null;
         try{
-            stmt = myManageCat.getProductTab().getConnection().createStatement();
+            stmt = myManageCat.getProductTab().getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="select category,brand,name,quantity,qunit,price,punit,infos from V_Products where pr_id="+Integer.toString(id[1]);
             ResultSet rs = stmt.executeQuery(sqlQuery);

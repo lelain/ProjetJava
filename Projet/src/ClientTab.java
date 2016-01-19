@@ -1,13 +1,10 @@
 
-import com.sun.rowset.CachedRowSetImpl;
 import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Properties;
-import javax.sql.rowset.CachedRowSet;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -15,7 +12,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 /*
- * This class is a tab for viewing the information about clients
+ * This class extends AbstractTab. It is a tab for viewing the information about clients
  * It is aimed to be added to the tabbedPane of the main window
  */
 
@@ -25,20 +22,25 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ClientTab extends AbstractTab {
 
-    /**
-     * Creates new form ClientTab
-     * @param prop
-     * @param parent
-     * @throws java.sql.SQLException
-     */
+//Constructor 
+    
+    //first use the AbstractTab constructor to build the mainWin and selectedRow fields. Then create the components
     public ClientTab(Main_W mainWin) throws SQLException {
         super(mainWin);
        
+        //creation of the table
         clientTable = new JTable(buildTableModel(getContentsOfTable())); // Displays the table
+        
+        //Add sorter on the table
         clientTable.setAutoCreateRowSorter(true);
-        clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        clientTable.setFillsViewportHeight(true);
+        
+        //clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        //clientTable.setFillsViewportHeight(true);
+        
+        //we only want a single selection for this table
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
+        
+        //add listener on row selection
         ListSelectionModel rowSM = clientTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
@@ -61,16 +63,16 @@ public class ClientTab extends AbstractTab {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        addClient = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         paneForTable = new javax.swing.JScrollPane();
         modifButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addClient.setText("Add");
+        addClient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addClientActionPerformed(evt);
             }
         });
 
@@ -100,7 +102,7 @@ public class ClientTab extends AbstractTab {
                     .addComponent(paneForTable)
                     .addComponent(jSeparator1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(addClient)
                         .addGap(18, 18, 18)
                         .addComponent(modifButton)
                         .addGap(18, 18, 18)
@@ -113,7 +115,7 @@ public class ClientTab extends AbstractTab {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(addClient)
                     .addComponent(modifButton)
                     .addComponent(removeButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -124,6 +126,11 @@ public class ClientTab extends AbstractTab {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
+//Private methods
+    
+    //fonction called when selecting a row in the table
+    //We enable the modif and remove buttons, and update selectedRo to the id of the client selected
     private void tableValueChangedEvent(ListSelectionEvent e) {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         if (lsm.isSelectionEmpty()) {
@@ -135,16 +142,14 @@ public class ClientTab extends AbstractTab {
             //and we enable the modif and remove buttons
             
             int viewRow = clientTable.getSelectedRow();
-            selectedRow = clientTable.convertRowIndexToModel(viewRow);
             
             Statement stmt=null;
-            String name=(String)clientTable.getValueAt(selectedRow,0);
+            String name=(String)clientTable.getValueAt(viewRow,0);
             try{
-                Connection conn=getMainWin().getConnection();
+                Connection conn=mainWin.getConnection();
                 stmt = conn.createStatement();
-                String sqlQuery;
-                sqlQuery="SELECT cl_id FROM V_Clients WHERE name ='"+name+"'";
-                ResultSet rs = stmt.executeQuery(sqlQuery);
+                ResultSet rs = stmt.executeQuery("SELECT cl_id FROM V_Clients WHERE name ='"+name+"'");
+                //SelectedRow taes the id of the selected client
                 if (rs.next()) { selectedRow=rs.getInt("cl_id"); }
                 else { //here the selection went wrong
                     JOptionPane.showMessageDialog(this, "Something went wrong! request problem",
@@ -168,34 +173,28 @@ public class ClientTab extends AbstractTab {
         }
     }
     
-    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        AddClient2 NewClientW = new AddClient2(getMainWin(),this,true);       
+    //When clicking the add button, we build and show a AddClient2 dialog
+    private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
+        AddClient2 NewClientW = new AddClient2(mainWin,this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
+    }//GEN-LAST:event_addClientActionPerformed
+    
+    //When clicking the modif button, we first put all the needed information in an hashmap, 
+    //then we build and show a ModifyClient dialog
     private void modifButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifButtonActionPerformed
-        
-        //we look for all the values corresponding to the selected row, store them in a hashmap
-        //and send them to the modifyClient constructor for proper dialog construction
-        
         HashMap<Integer, String> content = new HashMap<>();
         Statement stmt = null;
         try{
-            Connection conn=getMainWin().getConnection();
+            Connection conn=mainWin.getConnection();
             stmt = conn.createStatement();
             String sqlQuery;
-            //we need the adress id and deliver adress id
-            int rowAd=0;
-            int rowDAd=0;
             sqlQuery = "SELECT V_Clients.name,V_Clients.phone1,V_Clients.phone2,V_Clients.adress,V_Clients.delivery_adress,V_Clients.email,V_Clients.qq,V_Clients.infos,"
                     + "main.street,main.city,main.country,main.zip_code,"
                     + "dev.street,dev.city,dev.country,dev.zip_code "
                     + "from V_Clients inner join V_Adresses as main on V_Clients.adress=main.ad_id "
                     +  "inner join V_Adresses as dev on V_Clients.delivery_adress=dev.ad_id "
                     + "where cl_id="+Integer.toString(selectedRow);
-            
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
                 content.put(1,rs.getString("V_Clients.name"));
@@ -219,8 +218,6 @@ public class ClientTab extends AbstractTab {
                 } else {
                     content.put(15, "N");
                 }
-                
-                
             }
         }catch(SQLException se) {
                 //Handle errors for JDBC
@@ -234,18 +231,20 @@ public class ClientTab extends AbstractTab {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
-        ModifyClient ModClientW = new ModifyClient(getMainWin(),this,true,content,selectedRow);       
+        ModifyClient ModClientW = new ModifyClient(mainWin,this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);
 
     }//GEN-LAST:event_modifButtonActionPerformed
 
+    //When clicking the remove button, we look for the needed id, and then make the delete request
+    //and finally update the table content
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
         //we get the client name, adress and delivery adress
         String name="",adress="",deli_adress="";
         Statement stmt = null;
         try{
-            Connection conn=getMainWin().getConnection();
+            Connection conn=mainWin.getConnection();
             stmt = conn.createStatement();
             String sqlQuery;           
             sqlQuery="SELECT name,adress,delivery_adress FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
@@ -272,16 +271,14 @@ public class ClientTab extends AbstractTab {
 
         
         //little dialog before making the delete requests
-        
-        Object[] options = {"Yes","No"};
-                
+        Object[] options = {"Yes","No"};    
         int n = JOptionPane.showOptionDialog(this,"Are you sure you want to remove this client : "+name+" ?","Removing client",
                 JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
         if (n==JOptionPane.YES_OPTION) {
             // here we are sure we want to remove the client
             stmt = null;
             try{
-                Connection conn=getMainWin().getConnection();
+                Connection conn=mainWin.getConnection();
                 stmt = conn.createStatement();
                 String sqlQuery;
                 sqlQuery="DELETE FROM V_Clients WHERE cl_id="+Integer.toString(selectedRow);
@@ -301,9 +298,9 @@ public class ClientTab extends AbstractTab {
             } catch(SQLException se2){ }// nothing we can do
             }//end finally
             
-            //and we display the result on the table by creating a new tablemodel
+            //and we update the table
             try {
-                createNewTableModel();
+                updateClientTable();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -313,10 +310,11 @@ public class ClientTab extends AbstractTab {
    
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    //Function used to get the contents we want to display in the table
     private ResultSet getContentsOfTable() throws SQLException {
         ResultSet rs = null;
         try{
-            Connection conn=getMainWin().getConnection();
+            Connection conn=mainWin.getConnection();
             Statement stmt = conn.createStatement();
             rs = stmt.executeQuery("select V_Clients.name, V_Clients.phone1, V_Clients.phone2, V_Clients.email, V_Clients.qq, "
               + "V_Adresses.street, V_Adresses.city, V_Adresses.zip_code, V_Adresses.country, V_Clients.infos from V_Clients"
@@ -329,23 +327,27 @@ public class ClientTab extends AbstractTab {
         return rs;
     }
     
-    
-    public void createNewTableModel() throws SQLException {
+
+//Public methods
+
+    //update the content of the table
+    public void updateClientTable() throws SQLException {
         clientTable.setModel(buildTableModel(getContentsOfTable()));
     }
     
     
+//Components of the tab
     
-    
-
-
-    private final JTable clientTable;
-
+    private JTable clientTable;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton addClient;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton modifButton;
     private javax.swing.JScrollPane paneForTable;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
+
+
+
+
 }

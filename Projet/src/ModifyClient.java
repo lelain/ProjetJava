@@ -270,7 +270,7 @@ public class ModifyClient extends AbstractManageClient {
             
         
         try {
-            client.createNewTableModel();
+            client.updateClientTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error,problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -282,6 +282,7 @@ public class ModifyClient extends AbstractManageClient {
 //Protected methods
     
     //Test if the name field is not already in the db, if yes display message in dialog
+    @Override
     protected boolean verifyName(JTextField text,String message) {
         String str = text.getText();
         Statement stmt=null;

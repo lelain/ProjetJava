@@ -34,7 +34,7 @@ public class ManCat extends AbstractManageCat {
 //Constructor
     
     //uses the AbstractManageCat constructor, intialises the new components and place them in the dialog 
-    public ManCat(java.awt.Frame parent, boolean modal, ProductTab product) {
+    public ManCat(java.awt.Frame parent, boolean modal, ProdTab product) {
         super(parent, modal,product);
         
         //construction and initialisation of the components
@@ -510,7 +510,7 @@ public class ManCat extends AbstractManageCat {
         ArrayList<Integer> result = new ArrayList<>();
         Statement stmt=null;
         try{
-            stmt = prodTab.getConnection().createStatement();
+            stmt = prodTab.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="select count(*) from V_Products where "+where+" union "+"select pr_id from V_Products where "+where;
             ResultSet rs = stmt.executeQuery(sqlQuery);
@@ -573,7 +573,7 @@ public class ManCat extends AbstractManageCat {
         
         //update the table
         try {
-            prodTab.createNewTableModel();
+            prodTab.updateProdTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
