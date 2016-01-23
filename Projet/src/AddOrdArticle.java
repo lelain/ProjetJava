@@ -1,3 +1,12 @@
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JSpinner.DefaultEditor;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,10 +21,23 @@ public class AddOrdArticle extends javax.swing.JDialog {
 
     /**
      * Creates new form AddOrdArticle
+     * @param parent
+     * @param modal
      */
-    public AddOrdArticle(java.awt.Frame parent, boolean modal) {
+    public AddOrdArticle(java.awt.Frame parent, OrderTab orderTab, boolean modal) {
         super(parent, modal);
+        
+        this.orderTab=orderTab;
+        
+        initBrandCombo();
+        initNameCombo();
         initComponents();
+        initInfos();
+        
+        ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
+   
+        
+        
     }
 
     /**
@@ -30,15 +52,13 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        brandCombo = new javax.swing.JComboBox<>(brands);
+        nameCombo = new javax.swing.JComboBox<>(names);
         jButton1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
@@ -59,6 +79,13 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
+        categoryLab = new javax.swing.JLabel();
+        quantityLab = new javax.swing.JLabel();
+        priceLab = new javax.swing.JLabel();
+        qunitLab = new javax.swing.JLabel();
+        punitLab = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        infosText = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -68,27 +95,43 @@ public class AddOrdArticle extends javax.swing.JDialog {
 
         jLabel3.setText("Name");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        brandCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                brandComboItemStateChanged(evt);
+            }
+        });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        nameCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                nameComboItemStateChanged(evt);
+            }
+        });
 
-        jButton1.setText("New product");
+        jButton1.setText("Add product");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Article information");
 
-        jLabel5.setText("Category");
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLabel5.setText("Category : ");
 
-        jLabel6.setText("Quantity");
+        jLabel6.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLabel6.setText("Quantity : ");
 
-        jLabel7.setText("quantity unit");
+        jLabel8.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLabel8.setText("Observed price : ");
 
-        jLabel8.setText("Observed price");
-
-        jLabel9.setText("price unit");
-
-        jLabel10.setText("Infos");
+        jLabel10.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
+        jLabel10.setText("Infos : ");
 
         jLabel11.setText("Quantity");
+
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 50, 1));
+        jSpinner1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         jLabel12.setText("Selling price");
 
@@ -115,6 +158,20 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
+
+        categoryLab.setText("jLabel7");
+
+        quantityLab.setText("jLabel7");
+
+        priceLab.setText("jLabel7");
+
+        qunitLab.setText("jLabel7");
+
+        punitLab.setText("jLabel7");
+
+        infosText.setColumns(20);
+        infosText.setRows(5);
+        jScrollPane2.setViewportView(infosText);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -157,45 +214,61 @@ public class AddOrdArticle extends javax.swing.JDialog {
                                         .addComponent(jLabel11)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(0, 330, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel2)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(12, 12, 12)
                                         .addComponent(jButton1)
-                                        .addGap(67, 67, 67)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel5)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel6)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel7))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel8)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel9))
-                                            .addComponent(jLabel10))
-                                        .addGap(0, 133, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(158, 158, 158)
+                                        .addGap(146, 146, 146)
                                         .addComponent(jSeparator4))))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator2)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel5)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(categoryLab))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel6)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(quantityLab)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(qunitLab))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel8)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(priceLab)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(punitLab)))
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane2)))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -210,39 +283,41 @@ public class AddOrdArticle extends javax.swing.JDialog {
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel6)
-                                    .addComponent(jLabel7))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel8)
-                                    .addComponent(jLabel9)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jButton1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
+                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(categoryLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(quantityLab)
+                            .addComponent(qunitLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(priceLab)
+                            .addComponent(punitLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -265,60 +340,351 @@ public class AddOrdArticle extends javax.swing.JDialog {
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddOrdArticle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddOrdArticle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddOrdArticle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddOrdArticle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    private void brandComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_brandComboItemStateChanged
+        // TODO when we choose an other brand, we update the nameCombo
+        updateNameCombo();
+        updateInfos();
+        
+        
+        
+        
+    }//GEN-LAST:event_brandComboItemStateChanged
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                AddOrdArticle dialog = new AddOrdArticle(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+    private void nameComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_nameComboItemStateChanged
+        // TODO add your handling code here:
+        updateInfos();
+    }//GEN-LAST:event_nameComboItemStateChanged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        AddProdFromNewOrder NewProdW = new AddProdFromNewOrder(orderTab.getMainWin(),orderTab.getMainWin().getProdTab(),this,true);       
+        NewProdW.setLocationRelativeTo(null);
+        NewProdW.setVisible(true);
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void initBrandCombo() {
+        //we search the number of brand in the database and store it in size
+        Statement stmt = null;
+        int size=0;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT COUNT(DISTINCT brand) from V_Products";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(DISTINCT brand)"); }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        brands = new String[size];
+        
+        //we populate it with the brands in the data base
+        stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT DISTINCT brand FROM V_Products";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=0;
+            while (rs.next()) { 
+                brands[i]=rs.getString("brand");  
+                i++; 
             }
-        });
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        //sort the array
+        Arrays.sort(brands);
     }
-
+    
+    private void initNameCombo() {
+        //we search the number of brand in the database and store it in size
+        Statement stmt = null;
+        int size=0;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT COUNT(name) from V_Products where brand='"+brands[0]+"'";  //When initialize brandCombo, we set the first item in the brands array string
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(name)"); }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        names = new String[size];
+        
+        //we populate it with the brands in the data base
+        stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT name FROM V_Products where brand='"+brands[0]+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=0;
+            while (rs.next()) { 
+                names[i]=rs.getString("name");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        //sort the array
+        Arrays.sort(names);
+    }
+    
+    private void initInfos() {
+        String brandStr, nameStr;
+        brandStr = brands[0];
+        nameStr = names[0];
+        
+        String category="",quantity="",qunit="",price="",punit="",infos="";
+        Statement stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT category,quantity,qunit,price,punit,infos from V_Products where brand='"+brandStr+"' and name='"+nameStr+"'"; 
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                category = rs.getString("category");
+                quantity = rs.getString("quantity");
+                qunit = rs.getString("qunit");
+                price = rs.getString("price");
+                punit = rs.getString("punit");
+                infos = rs.getString("infos");    
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        categoryLab.setText(category);
+        quantityLab.setText(quantity);
+        qunitLab.setText(qunit);
+        priceLab.setText(price);
+        punitLab.setText(punit);
+        infosText.setText(infos);
+        
+    }
+    
+    //update the brand combo and select item
+    public void updateBrandCombo(String item) {
+        //we search the number of brand in the database and store it in size
+        Statement stmt = null;
+        int size=0;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT COUNT(DISTINCT brand) from V_Products";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(DISTINCT brand)"); }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        brands = new String[size];
+        
+        //we populate it with the brands in the data base
+        stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT DISTINCT brand FROM V_Products";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=0;
+            while (rs.next()) { 
+                brands[i]=rs.getString("brand");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        //sort the array
+        Arrays.sort(brands);
+        brandCombo.setModel(new DefaultComboBoxModel(brands));
+        brandCombo.setSelectedItem(item);
+    }
+    
+    public void updateNameCombo() {
+        //we search the number of brand in the database and store it in size
+        String brand = (String) brandCombo.getSelectedItem();
+        Statement stmt = null;
+        int size=0;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT COUNT(name) from V_Products where brand='"+brand+"'"; 
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { size = rs.getInt("COUNT(name)"); }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        //now I can create my String tab
+        names = new String[size];
+        
+        //we populate it with the brands in the data base
+        stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "SELECT name FROM V_Products where brand='"+brand+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int i=0;
+            while (rs.next()) { 
+                names[i]=rs.getString("name");  
+                i++; 
+            }
+                        
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally 
+        
+        //sort the array
+        Arrays.sort(names);
+        nameCombo.setModel(new DefaultComboBoxModel(names));
+    }
+    
+    public void updateInfos() {
+        String brandStr, nameStr;
+        brandStr = (String) brandCombo.getSelectedItem();
+        nameStr = (String) nameCombo.getSelectedItem();
+        
+        String category="",quantity="",qunit="",price="",punit="",infos="";
+        Statement stmt = null;
+        try{
+            stmt = orderTab.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT category,quantity,qunit,price,punit,infos from V_Products where brand='"+brandStr+"' and name='"+nameStr+"'"; 
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                category = rs.getString("category");
+                quantity = rs.getString("quantity");
+                qunit = rs.getString("qunit");
+                price = rs.getString("price");
+                punit = rs.getString("punit");
+                infos = rs.getString("infos");    
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        categoryLab.setText(category);
+        quantityLab.setText(quantity);
+        qunitLab.setText(qunit);
+        priceLab.setText(price);
+        punitLab.setText(punit);
+        infosText.setText(infos);
+        
+        
+    }
+    
+    
+    private OrderTab orderTab;
+    private String[] brands;
+    private String[] names;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> brandCombo;
+    private javax.swing.JLabel categoryLab;
+    private javax.swing.JTextArea infosText;
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JLabel jLabel1;
@@ -333,10 +699,9 @@ public class AddOrdArticle extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
@@ -346,5 +711,10 @@ public class AddOrdArticle extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox<String> nameCombo;
+    private javax.swing.JLabel priceLab;
+    private javax.swing.JLabel punitLab;
+    private javax.swing.JLabel quantityLab;
+    private javax.swing.JLabel qunitLab;
     // End of variables declaration//GEN-END:variables
 }

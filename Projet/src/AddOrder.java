@@ -71,6 +71,11 @@ public class AddOrder extends javax.swing.JDialog {
         jLabel4.setText("Articles details");
 
         addLign.setText("Add lign");
+        addLign.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addLignActionPerformed(evt);
+            }
+        });
 
         removeLign.setText("Remove");
         removeLign.setEnabled(false);
@@ -162,6 +167,13 @@ public class AddOrder extends javax.swing.JDialog {
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
     }//GEN-LAST:event_addClientActionPerformed
+
+    private void addLignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLignActionPerformed
+        
+        AddOrdArticle NewOrdArticleW = new AddOrdArticle(order.getMainWin(),order,true);       
+        NewOrdArticleW.setLocationRelativeTo(null);
+        NewOrdArticleW.setVisible(true);
+    }//GEN-LAST:event_addLignActionPerformed
 
     /**
      * @param args the command line arguments

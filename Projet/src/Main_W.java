@@ -46,6 +46,14 @@ public class Main_W extends javax.swing.JFrame {
         return myClientTab;
     }
     
+    public ProdTab getProdTab() {
+        return myProductTab;
+    }
+    
+    public OrderTab getOrderTab() {
+        return myOrderTab;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.

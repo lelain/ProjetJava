@@ -42,7 +42,7 @@ public class AddProd extends AbstractManageProduct {
 //Private methods, only use in this class
     
     //make the insert request to add the product in the db. Function used when clicking on the ok button
-    private void insertProduct () {
+    protected void insertProduct () {
         //prepare the strings
         String[] values = prepareString();
         
