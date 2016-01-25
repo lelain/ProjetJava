@@ -417,7 +417,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         this.dispose();
     }                                            
 
-    //make the changes in the adresses fields if we selected or not the chec box
+    //make the changes in the adresses fields if we selected or not the check box
     private void checkDAdressItemStateChanged(java.awt.event.ItemEvent evt) {                                              
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             /*si on veut avoir la meme adresse de livraison, on ne peut plus la modifier

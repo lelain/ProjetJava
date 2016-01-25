@@ -1,4 +1,5 @@
 
+import java.awt.event.ItemEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -6,6 +7,9 @@ import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner.DefaultEditor;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,26 +21,40 @@ import javax.swing.JSpinner.DefaultEditor;
  *
  * @author brendan
  */
-public class AddOrdArticle extends javax.swing.JDialog {
+public class AddOrdArticle extends javax.swing.JDialog implements DocumentListener {
 
     /**
      * Creates new form AddOrdArticle
      * @param parent
+     * @param addOrder
      * @param modal
      */
-    public AddOrdArticle(java.awt.Frame parent, OrderTab orderTab, boolean modal) {
+    public AddOrdArticle(java.awt.Frame parent, AddOrder addOrder, boolean modal) {
         super(parent, modal);
         
-        this.orderTab=orderTab;
-        
+        this.orderTab=addOrder.getOrderTab();
+        this.addOrder=addOrder;
+
         initBrandCombo();
         initNameCombo();
         initComponents();
         initInfos();
+        initLab();
         
-        ((DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
+        bPriceLab.setEnabled(false);
+        bpriceField.setEnabled(false);
+        bpUnitCombo.setEnabled(false);
+        rateLab.setEnabled(false);
+        rateSUnitLab.setEnabled(false);
+        equalLab.setEnabled(false);
+        changeRateField.setEnabled(false);
+        rateBUnitLab.setEnabled(false);
+        
+        ((DefaultEditor) quant.getEditor()).getTextField().setEditable(false);
    
-        
+        spriceField.getDocument().addDocumentListener(this);
+        bpriceField.getDocument().addDocumentListener(this);
+        changeRateField.getDocument().addDocumentListener(this);
         
     }
 
@@ -61,20 +79,20 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jLabel12 = new javax.swing.JLabel();
+        quant = new javax.swing.JSpinner();
+        sPriceLab = new javax.swing.JLabel();
         spriceField = new javax.swing.JTextField();
         spUnitCombo = new javax.swing.JComboBox<>();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel13 = new javax.swing.JLabel();
+        priceFixedCheck = new javax.swing.JCheckBox();
+        bPriceLab = new javax.swing.JLabel();
         bpriceField = new javax.swing.JTextField();
         bpUnitCombo = new javax.swing.JComboBox<>();
-        jLabel14 = new javax.swing.JLabel();
-        ChangeRateField = new javax.swing.JTextField();
+        rateLab = new javax.swing.JLabel();
+        changeRateField = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        infosArea = new javax.swing.JTextArea();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
         jSeparator4 = new javax.swing.JSeparator();
@@ -86,19 +104,21 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jScrollPane2 = new javax.swing.JScrollPane();
         infosText = new javax.swing.JTextArea();
         jLabel7 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel9 = new javax.swing.JLabel();
-        marginLab = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        stateOrdCombo = new javax.swing.JComboBox<>();
+        rateSUnitLab = new javax.swing.JLabel();
+        rateBUnitLab = new javax.swing.JLabel();
+        equalLab = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        okButton = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Article");
 
-        jLabel2.setText("Brand");
+        jLabel2.setText("Brand : ");
 
-        jLabel3.setText("Name");
+        jLabel3.setText("Name : ");
 
         brandCombo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -112,7 +132,7 @@ public class AddOrdArticle extends javax.swing.JDialog {
             }
         });
 
-        jButton1.setText("Add product");
+        jButton1.setText("New product");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -134,28 +154,45 @@ public class AddOrdArticle extends javax.swing.JDialog {
         jLabel10.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         jLabel10.setText("Infos : ");
 
-        jLabel11.setText("Quantity");
+        jLabel11.setText("Quantity : ");
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 50, 1));
-        jSpinner1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        quant.setModel(new javax.swing.SpinnerNumberModel(1, 1, 50, 1));
+        quant.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jLabel12.setText("Selling price");
+        sPriceLab.setText("Selling price (per unit) : ");
 
+        spUnitCombo.setEditable(true);
         spUnitCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RMB", "Euros" }));
+        spUnitCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                spUnitComboItemStateChanged(evt);
+            }
+        });
 
-        jCheckBox1.setText("Price yet to be fixed");
+        priceFixedCheck.setText("Price yet to be fixed");
+        priceFixedCheck.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                priceFixedCheckItemStateChanged(evt);
+            }
+        });
 
-        jLabel13.setText("Buying price");
+        bPriceLab.setText("Buying price : ");
 
+        bpUnitCombo.setEditable(true);
         bpUnitCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Euros", "RMB" }));
+        bpUnitCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                bpUnitComboItemStateChanged(evt);
+            }
+        });
 
-        jLabel14.setText("Change rate (the date of purchase) :");
+        rateLab.setText("Change rate (the date of purchase) :  1");
 
         jLabel15.setText("Other information");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        infosArea.setColumns(20);
+        infosArea.setRows(5);
+        jScrollPane1.setViewportView(infosArea);
 
         categoryLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         categoryLab.setText("jLabel7");
@@ -179,114 +216,139 @@ public class AddOrdArticle extends javax.swing.JDialog {
         infosText.setRows(5);
         jScrollPane2.setViewportView(infosText);
 
-        jLabel7.setText("State of order :");
+        jLabel7.setText("Order's state :");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not purchased", "purchased", "Sent to China", "Received in China", "Sent to client", "Received by client" }));
+        stateOrdCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not purchased", "Purchased", "Sent to China", "Received in China", "Sent to client", "Received by client" }));
+        stateOrdCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                stateOrdComboItemStateChanged(evt);
+            }
+        });
 
-        jLabel9.setText("Margin :");
+        rateSUnitLab.setText("sellingUnit");
 
-        marginLab.setText("jLabel16");
+        rateBUnitLab.setText("buying unit");
 
-        jLabel16.setText("1 RMB =");
+        equalLab.setText("=");
 
-        jLabel17.setText("Euros");
+        okButton.setText("Finish");
+        okButton.setEnabled(false);
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Cancel");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(bpriceField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bpUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator1)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(39, 39, 39)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel13)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel14)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel16)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(ChangeRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel9)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(marginLab)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel17))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spriceField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox1))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(19, 19, 19)
-                                        .addComponent(jButton1))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(categoryLab))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel6)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(quantityLab)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(qunitLab))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel8)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(priceLab)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(punitLab))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel10)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSeparator3)))
+                        .addComponent(jSeparator3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1))
+                    .addComponent(jSeparator5)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(18, 18, 18)
+                        .addComponent(okButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(138, 138, 138)
+                                .addComponent(bpriceField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(bpUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(stateOrdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(39, 39, 39)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(bPriceLab)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(rateLab)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(rateSUnitLab)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(equalLab)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(changeRateField, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(rateBUnitLab))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(quant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(sPriceLab)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spriceField, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(priceFixedCheck))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jSeparator4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel4)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel5)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(categoryLab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel6)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(quantityLab)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(qunitLab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel8)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(priceLab)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(punitLab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel10)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(57, 57, 57)
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jButton1)))))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -297,14 +359,13 @@ public class AddOrdArticle extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3)
-                        .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3)
+                    .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -331,39 +392,42 @@ public class AddOrdArticle extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(quant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
+                    .addComponent(sPriceLab)
                     .addComponent(spriceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(spUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jCheckBox1))
+                    .addComponent(priceFixedCheck))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stateOrdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel13)
+                    .addComponent(bPriceLab)
                     .addComponent(bpriceField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(bpUnitCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel16)
-                    .addComponent(ChangeRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(marginLab))
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rateLab)
+                    .addComponent(rateSUnitLab)
+                    .addComponent(changeRateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rateBUnitLab)
+                    .addComponent(equalLab))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel15)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(jButton3))
+                .addGap(11, 11, 11))
         );
 
         pack();
@@ -373,10 +437,6 @@ public class AddOrdArticle extends javax.swing.JDialog {
         // TODO when we choose an other brand, we update the nameCombo
         updateNameCombo();
         updateInfos();
-        
-        
-        
-        
     }//GEN-LAST:event_brandComboItemStateChanged
 
     private void nameComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_nameComboItemStateChanged
@@ -393,6 +453,203 @@ public class AddOrdArticle extends javax.swing.JDialog {
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void priceFixedCheckItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_priceFixedCheckItemStateChanged
+        // TODO add your handling code here:
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            sPriceLab.setEnabled(false);
+            spriceField.setEnabled(false);
+            spriceField.setText("");
+            spUnitCombo.setEnabled(false);  
+        } else {
+            sPriceLab.setEnabled(true);
+            spriceField.setEnabled(true);
+            spUnitCombo.setEnabled(true);
+        }
+        
+        readyToValidate();
+    }//GEN-LAST:event_priceFixedCheckItemStateChanged
+
+    private void stateOrdComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_stateOrdComboItemStateChanged
+        // TODO add your handling code here:
+        int stateInd = stateOrdCombo.getSelectedIndex();
+        //If the product is not purchased, we disabled the components
+        if (stateInd == 0) {
+            bPriceLab.setEnabled(false);
+            bpriceField.setEnabled(false);
+            bpriceField.setText("");
+            bpUnitCombo.setEnabled(false);
+            rateLab.setEnabled(false);
+            rateSUnitLab.setEnabled(false);
+            equalLab.setEnabled(false);
+            changeRateField.setEnabled(false);
+            changeRateField.setText("");
+            rateBUnitLab.setEnabled(false);
+            
+        } else {
+            bPriceLab.setEnabled(true);
+            bpriceField.setEnabled(true);
+            bpUnitCombo.setEnabled(true);
+            rateLab.setEnabled(true);
+            rateSUnitLab.setEnabled(true);
+            equalLab.setEnabled(true);
+            changeRateField.setEnabled(true);
+            rateBUnitLab.setEnabled(true);
+        }
+        
+        readyToValidate();
+    }//GEN-LAST:event_stateOrdComboItemStateChanged
+
+    private void spUnitComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_spUnitComboItemStateChanged
+
+        rateSUnitLab.setText((String)spUnitCombo.getSelectedItem());
+    }//GEN-LAST:event_spUnitComboItemStateChanged
+
+    private void bpUnitComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_bpUnitComboItemStateChanged
+
+        rateBUnitLab.setText((String)bpUnitCombo.getSelectedItem());
+    }//GEN-LAST:event_bpUnitComboItemStateChanged
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        this.dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        //TODO Add the article order in the data base and update the addOrder dialog
+        //prepare the string for the request
+        
+        if (verified()) {
+            //First we stock all we have from the dialog
+            String brand = "'" + brandCombo.getSelectedItem() + "'";
+            String name = "'" + nameCombo.getSelectedItem() + "'";
+            String quantity = quant.getValue().toString();
+            
+            String sellingPr,spUnit;
+            if (!priceFixedCheck.isSelected()) {
+                sellingPr = spriceField.getText();
+                spUnit = "'" + spUnitCombo.getSelectedItem() + "'";
+            } else { 
+                sellingPr = "NULL";
+                spUnit = "NULL";
+            }
+        
+            String state = Integer.toString(stateOrdCombo.getSelectedIndex());
+        
+            String buyingPr,bpUnit,rate;
+            if ("0".equals(state)) {
+                buyingPr = "NULL";
+                bpUnit = "NULL";
+                rate = "NULL";
+            } else {
+                buyingPr = bpriceField.getText();
+                bpUnit = "'" + bpUnitCombo.getSelectedItem() + "'";
+                rate = changeRateField.getText();
+            }
+        
+            String infos = "'" + infosArea.getText() + "'";
+        
+            //we should search the article id
+            String articleId=null;
+            Statement stmt = null;
+            try{
+                stmt = orderTab.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT pr_id from V_Products where brand="+brand+" and name="+name;
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { articleId = rs.getString("pr_id"); }
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        
+            //We put the wanted datas in an array of String
+            String[] data = new String[12];
+            data[0] = articleId;
+            data[1] = name;
+            data[2] = brand;
+            data[3] = quantity;
+            data[4] = sellingPr;
+            data[5] = spUnit;
+            data[6] = buyingPr;
+            data[7] = bpUnit;
+            data[8] = rate;
+            data[9] = "0";     //not paid
+            data[10] = state;
+            data[11] = infos;
+        
+            for (int i=0 ; i<12 ; i++ ) {
+                System.out.println(data[i]);
+            }
+ 
+        
+            addOrder.addOrdArt(data);
+            addOrder.updateTable();
+        
+            this.dispose();
+        }
+        
+        
+    }//GEN-LAST:event_okButtonActionPerformed
+
+    
+    private boolean verified() {
+        if (priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() == 0) {
+            return  true;    
+    
+        }
+        
+        if (priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() != 0) {
+            return ( isDouble(bpriceField,"The price should be a float") &&
+                isDouble(changeRateField,"The change rate should be a float") );     
+        }
+
+        if (!priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() == 0) {
+            return  isDouble(spriceField,"The price should be a float");    
+        }
+        
+     
+        
+        if (!priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() != 0) {
+            return  ( isDouble(spriceField,"The price should be a float") && 
+                isDouble(bpriceField,"The price should be a float") &&
+                isDouble(changeRateField,"The change rate should be a float") );     
+        }
+        
+        //normally we should not go here 
+        JOptionPane.showMessageDialog(this, "Problem somewhere in checking the fields",
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+        return false;
+    }
+
+
+        //check if the text in the jtextField is a double. Show a message if not
+    protected boolean isDouble(JTextField text,String message) {
+        String str = text.getText();
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, message,
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+            text.requestFocus();
+            text.selectAll();
+            return false;
+        }
+    }
+    
+    private void initLab() {
+        rateSUnitLab.setText((String)spUnitCombo.getSelectedItem());
+        rateBUnitLab.setText((String)bpUnitCombo.getSelectedItem());
+       
+    }
+    
     private void initBrandCombo() {
         //we search the number of brand in the database and store it in size
         Statement stmt = null;
@@ -698,28 +955,36 @@ public class AddOrdArticle extends javax.swing.JDialog {
     }
     
     
+    private void readyToValidate() {
+        if ((priceFixedCheck.isSelected() || !"".equals(spriceField.getText())) && 
+                (stateOrdCombo.getSelectedIndex() == 0 || (!"".equals(bpriceField.getText()) && !"".equals(changeRateField.getText())))) {
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
+    }
+    
+    
     private OrderTab orderTab;
+    private AddOrder addOrder;
     private String[] brands;
     private String[] names;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField ChangeRateField;
+    private javax.swing.JLabel bPriceLab;
     private javax.swing.JComboBox<String> bpUnitCombo;
     private javax.swing.JTextField bpriceField;
     private javax.swing.JComboBox<String> brandCombo;
     private javax.swing.JLabel categoryLab;
+    private javax.swing.JTextField changeRateField;
+    private javax.swing.JLabel equalLab;
+    private javax.swing.JTextArea infosArea;
     private javax.swing.JTextArea infosText;
     private javax.swing.JButton jButton1;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -727,22 +992,42 @@ public class AddOrdArticle extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JLabel marginLab;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JComboBox<String> nameCombo;
+    private javax.swing.JButton okButton;
+    private javax.swing.JCheckBox priceFixedCheck;
     private javax.swing.JLabel priceLab;
     private javax.swing.JLabel punitLab;
+    private javax.swing.JSpinner quant;
     private javax.swing.JLabel quantityLab;
     private javax.swing.JLabel qunitLab;
+    private javax.swing.JLabel rateBUnitLab;
+    private javax.swing.JLabel rateLab;
+    private javax.swing.JLabel rateSUnitLab;
+    private javax.swing.JLabel sPriceLab;
     private javax.swing.JComboBox<String> spUnitCombo;
     private javax.swing.JTextField spriceField;
+    private javax.swing.JComboBox<String> stateOrdCombo;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        readyToValidate();
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        readyToValidate();
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        readyToValidate();
+    }
 }

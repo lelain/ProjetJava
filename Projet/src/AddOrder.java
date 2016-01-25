@@ -3,6 +3,7 @@ import com.toedter.calendar.JDateChooser;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -27,6 +28,7 @@ public class AddOrder extends javax.swing.JDialog {
         super(parent, modal);
         
         this.order=order;
+        this.ordArt= new ArrayList<> ();
         
         String[] columnNames = { "Article", "Price" };
         model = new DefaultTableModel( null, columnNames );
@@ -170,14 +172,14 @@ public class AddOrder extends javax.swing.JDialog {
 
     private void addLignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLignActionPerformed
         
-        AddOrdArticle NewOrdArticleW = new AddOrdArticle(order.getMainWin(),order,true);       
+        AddOrdArticle NewOrdArticleW = new AddOrdArticle(order.getMainWin(),this,true);       
         NewOrdArticleW.setLocationRelativeTo(null);
         NewOrdArticleW.setVisible(true);
     }//GEN-LAST:event_addLignActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    public void addOrdArt(String[] data) {
+        ordArt.add(data);
+    }
     
     private void initClients() {
         
@@ -254,7 +256,28 @@ public class AddOrder extends javax.swing.JDialog {
     }
     
     
+    public void updateTable() {
+        String[] colNames = { "Product", "Brand", "Quantity" };
+        
+        Object[][] donnees = new Object[ordArt.size()][3];
+        for (int i=0; i<ordArt.size(); i++) {
+            donnees[i][0] = ordArt.get(i)[1].substring(1,ordArt.get(i)[1].length()-1);  //pour enlever les apostrophe en debut et fin 
+            donnees[i][1] = ordArt.get(i)[2].substring(1,ordArt.get(i)[2].length()-1);
+            donnees[i][2] = ordArt.get(i)[3];
+        }
+
+        jTable1.setModel(new DefaultTableModel(donnees,colNames));
+
+    }
     
+    
+    
+    public OrderTab getOrderTab() {
+        return order;
+    }
+    
+    
+    private ArrayList<String[]> ordArt;
     private DefaultTableModel model; 
     private String[] clients;
     private OrderTab order;
