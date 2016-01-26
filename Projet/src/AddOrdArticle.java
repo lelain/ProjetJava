@@ -591,6 +591,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         
             addOrder.addOrdArt(data);
             addOrder.updateTable();
+            addOrder.updateTotal();
         
             this.dispose();
         }

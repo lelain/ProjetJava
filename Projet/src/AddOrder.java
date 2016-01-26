@@ -1,12 +1,18 @@
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -30,11 +36,33 @@ public class AddOrder extends javax.swing.JDialog {
         this.order=order;
         this.ordArt= new ArrayList<> ();
         
-        String[] columnNames = { "Article", "Price" };
+        String[] columnNames = { "Product", "Brand", "Quantity" };
         model = new DefaultTableModel( null, columnNames );
         
         initClients();       
         initComponents();
+        
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
+        ListSelectionModel rowSM = jTable1.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                tableValueChangedEvent(e);  
+            }
+        });
+        
+        spriceLab.setText("");
+        spriceUnitLab.setText("");
+        stateLab.setText("");
+        bpriceLab.setText("");
+        bpriceUnitLab.setText("");
+        changeRateLab.setText("");
+        infosLab.setText("");
+        
+        nbArtLab.setText("0");
+        spTotLab.setText("-");
+        bpTotLab.setText("-");
+        
+        initLab();
         
     }
 
@@ -60,6 +88,48 @@ public class AddOrder extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable(model);
         addClient = new javax.swing.JButton();
+        okButton = new javax.swing.JButton();
+        cancelButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        infosLab = new javax.swing.JTextArea();
+        spriceLab = new javax.swing.JLabel();
+        spriceUnitLab = new javax.swing.JLabel();
+        stateLab = new javax.swing.JLabel();
+        bpriceLab = new javax.swing.JLabel();
+        bpriceUnitLab = new javax.swing.JLabel();
+        changeRateLab = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        nbArtLab = new javax.swing.JLabel();
+        spTotLab = new javax.swing.JLabel();
+        bpTotLab = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        phone1Lab = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        phone2Lab = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        emailLab = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        qqLab = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        adressLab = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        clientInfosLab = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Enter new client order");
@@ -68,9 +138,15 @@ public class AddOrder extends javax.swing.JDialog {
 
         jLabel2.setText("Date");
 
-        jLabel3.setText("Client");
+        jLabel3.setText("Client : ");
 
-        jLabel4.setText("Articles details");
+        clientsCombo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                clientsComboItemStateChanged(evt);
+            }
+        });
+
+        jLabel4.setText("Articles");
 
         addLign.setText("Add lign");
         addLign.addActionListener(new java.awt.event.ActionListener() {
@@ -81,6 +157,11 @@ public class AddOrder extends javax.swing.JDialog {
 
         removeLign.setText("Remove");
         removeLign.setEnabled(false);
+        removeLign.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLignActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setViewportView(jTable1);
 
@@ -91,6 +172,124 @@ public class AddOrder extends javax.swing.JDialog {
             }
         });
 
+        okButton.setText("Finish");
+        okButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                okButtonActionPerformed(evt);
+            }
+        });
+
+        cancelButton.setText("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        jLabel5.setText("Details : ");
+
+        jLabel6.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel6.setText("Selling price : ");
+
+        jLabel7.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel7.setText("Order's state : ");
+
+        jLabel8.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel8.setText("Buying price : ");
+
+        jLabel9.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel9.setText("Change rate : ");
+
+        jLabel10.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel10.setText("Infos : ");
+
+        infosLab.setEditable(false);
+        infosLab.setBackground(new java.awt.Color(229, 227, 224));
+        infosLab.setColumns(20);
+        infosLab.setRows(5);
+        jScrollPane2.setViewportView(infosLab);
+
+        spriceLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        spriceLab.setText("jLabel11");
+
+        spriceUnitLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        spriceUnitLab.setText("jLabel11");
+
+        stateLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        stateLab.setText("stateLab");
+
+        bpriceLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        bpriceLab.setText("jLabel12");
+
+        bpriceUnitLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        bpriceUnitLab.setText("jLabel12");
+
+        changeRateLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        changeRateLab.setText("changeRateLab");
+
+        jLabel11.setText("TOTAL : ");
+
+        jLabel12.setText("Number of articles : ");
+
+        jLabel13.setText("Selling price : ");
+
+        jLabel14.setText("Buying price : ");
+
+        nbArtLab.setText("jLabel15");
+
+        spTotLab.setText("jLabel15");
+
+        bpTotLab.setText("jLabel15");
+
+        jLabel15.setText("Other information");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        jLabel16.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        jLabel16.setText("Client details : ");
+
+        jLabel17.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel17.setText("Phone 1 : ");
+
+        phone1Lab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        phone1Lab.setText("phone1Lab");
+
+        jLabel18.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel18.setText("Phone 2 :");
+
+        phone2Lab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        phone2Lab.setText("phone2Lab");
+
+        jLabel19.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel19.setText("Email : ");
+
+        emailLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        emailLab.setText("emailLab");
+
+        jLabel20.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel20.setText("QQ : ");
+
+        qqLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        qqLab.setText("qqLab");
+
+        jLabel21.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel21.setText("Address : ");
+
+        adressLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        adressLab.setText("adressLab");
+
+        jLabel22.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
+        jLabel22.setText("Infos : ");
+
+        clientInfosLab.setBackground(new java.awt.Color(229, 227, 224));
+        clientInfosLab.setColumns(20);
+        clientInfosLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        clientInfosLab.setRows(5);
+        jScrollPane4.setViewportView(clientInfosLab);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -99,37 +298,136 @@ public class AddOrder extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(clientsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addClient))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(301, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(addLign)
-                        .addGap(112, 112, 112)
-                        .addComponent(removeLign)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(12, 12, 12)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spriceLab)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spriceUnitLab))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(stateLab))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel9)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(changeRateLab))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel8)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(bpriceLab)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(bpriceUnitLab))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jScrollPane2)))))
+                        .addGap(12, 12, 12))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+                            .addComponent(jSeparator4)
+                            .addComponent(jScrollPane3)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSeparator1))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(cancelButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(okButton))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator2)))
-                        .addContainerGap())))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(clientsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(addClient)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jSeparator2))))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bpTotLab)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel13)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(spTotLab))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel12)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(nbArtLab)))
+                                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(30, 30, 30)
+                                        .addComponent(jLabel16)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel22)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jScrollPane4))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel17)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(phone1Lab)
+                                                        .addGap(18, 18, 18)
+                                                        .addComponent(jLabel18)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(phone2Lab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel20)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(qqLab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel19)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(emailLab))
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jLabel21)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(adressLab)))
+                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(addLign)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(removeLign))
+                                    .addComponent(jLabel3))
+                                .addContainerGap())))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,31 +436,217 @@ public class AddOrder extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(clientsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addClient)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel17)
+                            .addComponent(phone1Lab)
+                            .addComponent(jLabel18)
+                            .addComponent(phone2Lab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel20)
+                            .addComponent(qqLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel19)
+                            .addComponent(emailLab))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(clientsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addClient))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(jLabel21)
+                    .addComponent(adressLab))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel22)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel4)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addLign)
-                    .addComponent(removeLign))
+                    .addComponent(removeLign)
+                    .addComponent(jLabel5))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(spriceLab)
+                                    .addComponent(spriceUnitLab))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel7)
+                                    .addComponent(stateLab))
+                                .addGap(29, 29, 29)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel9)
+                                    .addComponent(changeRateLab))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)
+                            .addComponent(nbArtLab)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(bpriceLab)
+                            .addComponent(bpriceUnitLab))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(spTotLab))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(bpTotLab))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel15)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(okButton)
+                    .addComponent(cancelButton))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private void initLab() {
+        String phone1="";
+        String phone2="";
+        String qq="";
+        String email="";
+        String address="";
+        String infos="";
+        
+        Statement stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,qq,infos from V_Clients as cl"
+                   + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clients[0]+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                phone1 = rs.getString("phone1");
+                phone2 = rs.getString("phone2");
+                qq = rs.getString("qq");
+                email = rs.getString("email");
+                address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
+                infos = rs.getString("infos");
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        phone1Lab.setText(phone1);
+        phone2Lab.setText(phone2);
+        qqLab.setText(qq);
+        emailLab.setText(email);
+        adressLab.setText(address);
+        clientInfosLab.setText(infos);
+        
+    }
+    
+    
+    private void tableValueChangedEvent(ListSelectionEvent e) {
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        if (lsm.isSelectionEmpty()) {
+            spriceLab.setText("");
+            spriceUnitLab.setText("");
+            stateLab.setText("");
+            bpriceLab.setText("");
+            bpriceUnitLab.setText("");
+            changeRateLab.setText("");
+            infosLab.setText("");
+            
+            removeLign.setEnabled(false);
+        } else {
+            //if a row is selected
+            removeLign.setEnabled(true);
+            
+            int row = jTable1.getSelectedRow() ;
+            if ("NULL".equals(ordArt.get(row)[4])) {
+                spriceLab.setText("-");
+                spriceUnitLab.setText("");
+            } else {
+                spriceLab.setText(ordArt.get(row)[4]);
+                spriceUnitLab.setText(ordArt.get(row)[5].substring(1,ordArt.get(row)[5].length()-1));
+            }
+            if ("0".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article not purchased yet");
+                bpriceLab.setText("-");
+                bpriceUnitLab.setText("");
+                changeRateLab.setText("-");
+            } else {
+                bpriceLab.setText(ordArt.get(row)[6]);
+                bpriceUnitLab.setText(ordArt.get(row)[7].substring(1,ordArt.get(row)[7].length()-1));
+                changeRateLab.setText(ordArt.get(row)[8]);
+            }
+            if ("1".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article purchased");
+            }
+            if ("2".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article sent to China");
+            }
+            if ("3".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article received in China");
+            }
+            if ("4".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article sent to client");
+            }
+            if ("5".equals(ordArt.get(row)[10])) {
+                stateLab.setText("article received by client");
+            }
+            
+            infosLab.setText(ordArt.get(row)[11].substring(1,ordArt.get(row)[11].length()-1));
+        }
+        
+        
+        
+    }
+    
+    private static double arrondi(double x, int n) {
+        double pow = Math.pow(10, n);
+	return (Math.floor(x * pow)) / pow;
+    }
+    
+    
     private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
         // TODO add a client, using the addClient dialog
         AddClientFromOrder NewClientW = new AddClientFromOrder(order.getMainWin(),order.getMainWin().getClientTab(),this,true);       
@@ -176,6 +660,111 @@ public class AddOrder extends javax.swing.JDialog {
         NewOrdArticleW.setLocationRelativeTo(null);
         NewOrdArticleW.setVisible(true);
     }//GEN-LAST:event_addLignActionPerformed
+
+    private void removeLignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLignActionPerformed
+        int row = jTable1.getSelectedRow() ;
+        ordArt.remove(row);
+        updateTable();
+        updateTotal();
+    }//GEN-LAST:event_removeLignActionPerformed
+
+    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelButtonActionPerformed
+
+    private void clientsComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clientsComboItemStateChanged
+        // TODO add your handling code here:
+        String phone1="";
+        String phone2="";
+        String qq="";
+        String email="";
+        String address="";
+        String infos="";
+        
+        Statement stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,qq,infos from V_Clients as cl"
+                   + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clientsCombo.getSelectedItem()+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                phone1 = rs.getString("phone1");
+                phone2 = rs.getString("phone2");
+                qq = rs.getString("qq");
+                email = rs.getString("email");
+                address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
+                infos = rs.getString("infos");
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        phone1Lab.setText(phone1);
+        phone2Lab.setText(phone2);
+        qqLab.setText(qq);
+        emailLab.setText(email);
+        adressLab.setText(address);
+        clientInfosLab.setText(infos);
+        
+        
+        
+    }//GEN-LAST:event_clientsComboItemStateChanged
+
+    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+        // TODO add your handling code here:
+        // first the insert in the Orders table
+        Date date = jDateChooser1.getDate();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        
+        String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH)) ;
+        String month = Integer.toString(cal.get(Calendar.MONTH) + 1) ;
+        String year = Integer.toString(cal.get(Calendar.YEAR)) ;
+        
+        System.out.println("day : " + day + ", month : " + month + ", year : " + year);
+        
+        //do the request
+        /*
+        Statement stmt = null;
+        try{
+            stmt = product.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "INSERT INTO V_Products (category,brand,name,quantity,qunit,price,punit,infos)\n" +
+                       "VALUES ("+values[0]+","+values[1]+","+values[2]+","+values[3]+","+values[4]+","+values[5]+","+values[6]+","+values[7]+")";
+            
+            int affectedRows = stmt.executeUpdate(sqlQuery); 
+            //si 1 : normal, si 0 pas normal
+            if (affectedRows == 0) {
+                JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+
+*/
+        
+        
+        
+    }//GEN-LAST:event_okButtonActionPerformed
 
     public void addOrdArt(String[] data) {
         ordArt.add(data);
@@ -270,7 +859,77 @@ public class AddOrder extends javax.swing.JDialog {
 
     }
     
-    
+    public void updateTotal() {
+        int nbArt=0;
+        for (int i=0; i<ordArt.size(); i++) {
+            nbArt+=Integer.parseInt(ordArt.get(i)[3]);
+        }
+        nbArtLab.setText(Integer.toString(nbArt));
+        
+        ArrayList<Double> selPrice = new ArrayList<> ();
+        ArrayList<String> spUnit = new ArrayList<> ();
+        String incompl="";
+        for (int i=0; i<ordArt.size(); i++) {
+            if (!"NULL".equals(ordArt.get(i)[5])) {
+                int index = spUnit.indexOf(ordArt.get(i)[5].substring(1,ordArt.get(i)[5].length()-1));
+                //if we have a match
+                if ( index != -1) {
+                    Double oldVal = selPrice.get(index);
+                    Double x = Double.parseDouble(ordArt.get(i)[4]) * Double.parseDouble(ordArt.get(i)[3]);
+                    selPrice.set(index,arrondi(oldVal + x , 3));
+                } else {
+                    Double x = Double.parseDouble(ordArt.get(i)[4]) * Double.parseDouble(ordArt.get(i)[3]);
+                    selPrice.add(arrondi(x,3));
+                    spUnit.add(ordArt.get(i)[5].substring(1,ordArt.get(i)[5].length()-1));
+                }
+            } else {
+                incompl = " (incomplete information)";
+            }
+            
+        }
+        String str="";
+        for (int i=0; i<selPrice.size(); i++) {
+            if (i!=0) { str+=" + "; }
+            str+=selPrice.get(i)+" " + spUnit.get(i);
+        }
+        str+=incompl;
+        
+        spTotLab.setText(str);
+        
+        
+        ArrayList<Double> buyPrice = new ArrayList<> ();
+        ArrayList<String> bpUnit = new ArrayList<> ();
+        incompl = "";
+        for (int i=0; i<ordArt.size(); i++) {        
+            if (!"NULL".equals(ordArt.get(i)[7])) {
+                int index = bpUnit.indexOf(ordArt.get(i)[7].substring(1,ordArt.get(i)[7].length()-1));
+                //if we have a match
+                if ( index != -1) {
+                    Double oldVal = buyPrice.get(index);
+                    Double x = Double.parseDouble(ordArt.get(i)[6]) * Double.parseDouble(ordArt.get(i)[3]);
+                    buyPrice.set(index,arrondi(oldVal + x , 3));
+                } else {
+                    Double x = Double.parseDouble(ordArt.get(i)[6]) * Double.parseDouble(ordArt.get(i)[3]);
+                    buyPrice.add(arrondi(x,3));
+                    bpUnit.add(ordArt.get(i)[7].substring(1,ordArt.get(i)[7].length()-1));
+                }
+            } else {
+                incompl = " (incomplete information)";
+            }
+            
+            
+        }
+        str="";
+        for (int i=0; i<buyPrice.size(); i++) {
+            if (i!=0) { str+=" + "; }
+            str+=buyPrice.get(i)+" " + bpUnit.get(i);
+        }
+        str+=incompl;
+        
+        bpTotLab.setText(str);
+        
+        
+    }
     
     public OrderTab getOrderTab() {
         return order;
@@ -284,16 +943,58 @@ public class AddOrder extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addClient;
     private javax.swing.JButton addLign;
+    private javax.swing.JLabel adressLab;
+    private javax.swing.JLabel bpTotLab;
+    private javax.swing.JLabel bpriceLab;
+    private javax.swing.JLabel bpriceUnitLab;
+    private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel changeRateLab;
+    private javax.swing.JTextArea clientInfosLab;
     private javax.swing.JComboBox<String> clientsCombo;
+    private javax.swing.JLabel emailLab;
+    private javax.swing.JTextArea infosLab;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel nbArtLab;
+    private javax.swing.JButton okButton;
+    private javax.swing.JLabel phone1Lab;
+    private javax.swing.JLabel phone2Lab;
+    private javax.swing.JLabel qqLab;
     private javax.swing.JButton removeLign;
+    private javax.swing.JLabel spTotLab;
+    private javax.swing.JLabel spriceLab;
+    private javax.swing.JLabel spriceUnitLab;
+    private javax.swing.JLabel stateLab;
     // End of variables declaration//GEN-END:variables
 }

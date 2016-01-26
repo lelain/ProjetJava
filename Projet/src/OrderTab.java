@@ -191,8 +191,8 @@ public class OrderTab extends AbstractTab {
         try{
             Connection conn=mainWin.getConnection();
             Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery("select or_id,date,V_Clients.name,Tselling_price,sp_unit,Tbuying_price,bp_unit,margin"
-                  + ",paid,state from V_Orders inner join V_Clients on V_Orders.clients=V_Clients.cl_id");
+            rs = stmt.executeQuery("select or_id,date,V_Clients.name,send_cost"
+                  + " from V_Orders inner join V_Clients on V_Orders.clients=V_Clients.cl_id");
         } catch(SQLException se) {
                 //Handle errors for JDBC
                 JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
@@ -208,8 +208,8 @@ public class OrderTab extends AbstractTab {
         try{
             Connection conn=mainWin.getConnection();
             Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery("select prod.brand,prod.name,prod.infos,ord.quantity,ord.selling_price,ord.sp_unit,ord.buying_price,ord.bp_unit"
-                    + ",ord.change_rate,ord.margin,ord.infos from V_Ord_Articles AS ord inner join V_Products AS prod "
+            rs = stmt.executeQuery("select prod.brand,prod.name,prod.infos,"
+                    + "ord.infos from V_Ord_Articles AS ord inner join V_Products AS prod "
                     + "on ord.article=prod.pr_id inner join V_Orders on V_Orders.or_id=ord.ord where V_Orders.or_id="+Long.toString(or_id));
         } catch(SQLException se) {
                 //Handle errors for JDBC
