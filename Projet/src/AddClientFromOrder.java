@@ -16,7 +16,7 @@ public class AddClientFromOrder extends AddClient2 {
 //Constructor
     
     //we mainly use the AbstractManageClient constructor
-    public AddClientFromOrder(Main_W parent, ClientTab client, AddOrder order, boolean modal) {
+    public AddClientFromOrder(AppWindow parent, ClientTab client, AddOrder order, boolean modal) {
         super(parent, client, modal);
         
         this.order=order;

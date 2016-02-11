@@ -23,7 +23,7 @@ public class ModifyClient extends AbstractManageClient {
 //Constructor
     
     //Mainly based on the AbstractManageClient constructor
-    public ModifyClient(Main_W parent, ClientTab client, boolean modal, HashMap contents, int row) {
+    public ModifyClient(AppWindow parent, ClientTab client, boolean modal, HashMap contents, int row) {
         super(parent,client,modal);
 
         this.row=row;

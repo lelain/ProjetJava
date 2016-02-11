@@ -19,13 +19,13 @@ import javax.swing.table.DefaultTableModel;
 abstract class AbstractTab extends JPanel {
  
 //Variables shared by all the tabs
-    protected final Main_W mainWin;     //the main window
+    protected final AppWindow mainWin;     //the main window
     protected int selectedRow;      //the row selected in the table of the tab 
  
 
 //Constructor
     //We just initialise the 2 variables
-    public AbstractTab(Main_W mainWin) {
+    public AbstractTab(AppWindow mainWin) {
         this.mainWin = mainWin; 
         this.selectedRow=0;
     }
@@ -34,7 +34,7 @@ abstract class AbstractTab extends JPanel {
 //Public methods
 
     //get the main window
-    public Main_W getMainWin() {
+    public AppWindow getMainWin() {
         return mainWin;
     }
     

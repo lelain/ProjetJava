@@ -73,7 +73,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     
 //Constructor
     
-     public AbstractManageProduct(Main_W parent, ProdTab product, boolean modal) {
+     public AbstractManageProduct(AppWindow parent, ProdTab product, boolean modal) {
         super(parent, modal);
         
         //To have English in my dialog

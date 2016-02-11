@@ -25,7 +25,7 @@ public class ClientTab extends AbstractTab {
 //Constructor 
     
     //first use the AbstractTab constructor to build the mainWin and selectedRow fields. Then create the components
-    public ClientTab(Main_W mainWin) throws SQLException {
+    public ClientTab(AppWindow mainWin) throws SQLException {
         super(mainWin);
        
         //creation of the table

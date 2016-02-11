@@ -3,32 +3,29 @@ import java.awt.event.ItemEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is the 'main' class of the project. It displays the dialog for connection to the database 
  */
 
-/**
- *
- * @author p1513678
- */
+
 public class SignIn_W extends javax.swing.JFrame {
 
+//Constructor
     public SignIn_W() {
+        //create and organize the components
         initComponents();
-        point = jPasswordField1.getEchoChar();
-        getRootPane().setDefaultButton(jButton1);  //ne semble pas marcher pas, à voir
-        
+        //point is the echo caracter (final) 
+        point = jPasswordField1.getEchoChar();       
     }
 
+    
+//Private methods
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,6 +58,7 @@ public class SignIn_W extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+        getRootPane().setDefaultButton(jButton1);
 
         jCheckBox1.setText("show password");
         jCheckBox1.addItemListener(new java.awt.event.ItemListener() {
@@ -109,29 +107,18 @@ public class SignIn_W extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    //show password if checked
+    private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            jPasswordField1.setEchoChar((char)0);   //show the text
+        } else {
+            jPasswordField1.setEchoChar(point);     //hide it
+        }        
+    }//GEN-LAST:event_jCheckBox1ItemStateChanged
 
-    private Connection makeConnection(String userName, String password) throws SQLException {
-        Connection conn = null;
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", userName);
-        connectionProps.put("password", password);
-    
-        String currentUrlString = "jdbc:mysql://localhost:3306/bdd_appli";
-        try
-        {
-            conn = DriverManager.getConnection(currentUrlString,connectionProps);
-        }
-        catch(SQLException e)
-        {
-            JOptionPane.showMessageDialog(this, "Unable to make connection, verify user name and password\nDetails : "+e.getMessage(),
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-        }
-        return conn;
-        
-    }
-    
-    //try to make connection with the database with user name and password
-    private void sendConnectAction() throws SQLException {
+    //when pressing enter key we try to make connection with the database with user name and password
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String userName = jTextField1.getText();
         char[] pw = jPasswordField1.getPassword();
         String password = String.valueOf(pw);
@@ -149,43 +136,42 @@ public class SignIn_W extends javax.swing.JFrame {
         
         if (connect!=null)      //si on parvient a se connecter
         {
-            this.dispose();
-            Main_W MainWindow = new Main_W(connectionProps,connect);
-            MainWindow.setExtendedState(Main_W.MAXIMIZED_BOTH);
-            MainWindow.setVisible(true);
+            try {
+                this.dispose();
+                AppWindow MainWindow = new AppWindow(connect);
+                MainWindow.setExtendedState(AppWindow.MAXIMIZED_BOTH);
+                MainWindow.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } 
-    }
-    
-    
-    //show password if checked
-    private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBox1ItemStateChanged
-        if (evt.getStateChange() == ItemEvent.SELECTED) {
-            jPasswordField1.setEchoChar((char)0);
-        } else {
-            jPasswordField1.setEchoChar(point);
-        }        
-    }//GEN-LAST:event_jCheckBox1ItemStateChanged
-
-    //when pressing enter key
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            sendConnectAction();
-        } catch (SQLException ex) {
-            Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    //make the connection with the database, return the Connection. Fonction called by jButton1ActionPerformed
+    private Connection makeConnection(String userName, String password) throws SQLException {
+        Connection conn = null;
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", userName);
+        connectionProps.put("password", password);
+        connectionProps.put("characterEncoding","UTF-8");
     
+        String currentUrlString = "jdbc:mysql://localhost:3306/bdd_appli";
+        try
+        {
+            conn = DriverManager.getConnection(currentUrlString,connectionProps);
+        }
+        catch(SQLException e)
+        {
+            JOptionPane.showMessageDialog(this, "Unable to make connection, verify user name and password\nDetails : "+e.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        return conn;
         
+    }
+    
+
+//Public method : the main function    
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-    
-    
-    
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -193,21 +179,11 @@ public class SignIn_W extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SignIn_W.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SignIn_W.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SignIn_W.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(SignIn_W.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-
+        
         /* Create and display the form */
-    
-    
-    
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 SignIn_W connect_W = new SignIn_W();
@@ -218,8 +194,9 @@ public class SignIn_W extends javax.swing.JFrame {
     }
     
     
-    
-    private char point; //the default caracter used to display the password
+//Variables
+
+    private final char point; //the default caracter used to display the password
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
@@ -229,3 +206,5 @@ public class SignIn_W extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
+
+

@@ -1,5 +1,6 @@
 
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,6 +65,10 @@ public class AddOrder extends javax.swing.JDialog {
         
         initLab();
         
+        jDateChooser1.setDate(new Date());
+        JTextFieldDateEditor editor = (JTextFieldDateEditor) jDateChooser1.getDateEditor();
+        editor.setEditable(false);
+        
     }
 
     /**
@@ -114,7 +119,7 @@ public class AddOrder extends javax.swing.JDialog {
         bpTotLab = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        infosOrderArea = new javax.swing.JTextArea();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -173,6 +178,7 @@ public class AddOrder extends javax.swing.JDialog {
         });
 
         okButton.setText("Finish");
+        okButton.setEnabled(false);
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -244,9 +250,9 @@ public class AddOrder extends javax.swing.JDialog {
 
         jLabel15.setText("Other information");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        infosOrderArea.setColumns(20);
+        infosOrderArea.setRows(5);
+        jScrollPane3.setViewportView(infosOrderArea);
 
         jLabel16.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         jLabel16.setText("Client details : ");
@@ -627,12 +633,7 @@ public class AddOrder extends javax.swing.JDialog {
             if ("3".equals(ordArt.get(row)[10])) {
                 stateLab.setText("article received in China");
             }
-            if ("4".equals(ordArt.get(row)[10])) {
-                stateLab.setText("article sent to client");
-            }
-            if ("5".equals(ordArt.get(row)[10])) {
-                stateLab.setText("article received by client");
-            }
+            
             
             infosLab.setText(ordArt.get(row)[11].substring(1,ordArt.get(row)[11].length()-1));
         }
@@ -648,7 +649,7 @@ public class AddOrder extends javax.swing.JDialog {
     
     
     private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
-        // TODO add a client, using the addClient dialog
+        // add a client, using the addClient dialog
         AddClientFromOrder NewClientW = new AddClientFromOrder(order.getMainWin(),order.getMainWin().getClientTab(),this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
@@ -673,7 +674,7 @@ public class AddOrder extends javax.swing.JDialog {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void clientsComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_clientsComboItemStateChanged
-        // TODO add your handling code here:
+        //when selecting client, update the information about him
         String phone1="";
         String phone2="";
         String qq="";
@@ -720,34 +721,27 @@ public class AddOrder extends javax.swing.JDialog {
     }//GEN-LAST:event_clientsComboItemStateChanged
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // TODO add your handling code here:
+        // make the insert requests and update the orderTab
         // first the insert in the Orders table
-        Date date = jDateChooser1.getDate();
         
+        //the date
         Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
+        cal.setTime(jDateChooser1.getDate());
         
         String day = Integer.toString(cal.get(Calendar.DAY_OF_MONTH)) ;
         String month = Integer.toString(cal.get(Calendar.MONTH) + 1) ;
         String year = Integer.toString(cal.get(Calendar.YEAR)) ;
+        String date = "'" + year + "-" + month + "-" + day + "'";
         
-        System.out.println("day : " + day + ", month : " + month + ", year : " + year);
-        
-        //do the request
-        /*
+        //the client id
+        String client = "";
         Statement stmt = null;
         try{
-            stmt = product.getMainWin().getConnection().createStatement();
+            stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery = "INSERT INTO V_Products (category,brand,name,quantity,qunit,price,punit,infos)\n" +
-                       "VALUES ("+values[0]+","+values[1]+","+values[2]+","+values[3]+","+values[4]+","+values[5]+","+values[6]+","+values[7]+")";
-            
-            int affectedRows = stmt.executeUpdate(sqlQuery); 
-            //si 1 : normal, si 0 pas normal
-            if (affectedRows == 0) {
-                JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
-                  "Warning", JOptionPane.ERROR_MESSAGE);
-            }
+            sqlQuery = "SELECT cl_id FROM V_Clients WHERE name='"+clientsCombo.getSelectedItem()+"'";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { client = rs.getString("cl_id"); }
         } catch(SQLException se) {
             //Handle errors for JDBC
             JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
@@ -760,10 +754,70 @@ public class AddOrder extends javax.swing.JDialog {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
 
-*/
+        //the info
+        String infos="NULL";
+        if (!"".equals(infosOrderArea.getText())) {
+            infos = "'" + infosOrderArea.getText() + "'";
+        }
         
+        //now the request for the Orders table
+        //and orderId is the id of the order we insert
+        //when we insert, state is alays 0 : that means not sent
+        String orderId;
+        stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery = "INSERT INTO V_Orders (date,clients,infos,state) VALUES ("+date+","+client+","+infos+",0)";
+            
+            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
+            
+            if (affectedRows == 0) {
+                JOptionPane.showMessageDialog(this, "Insert request failed, no row affected" ,
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            
+            long key=-1L;
+            
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    key = generatedKeys.getLong(1);
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Creating adress failed, no ID obtained." ,
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            
+            orderId = Long.toString(key);  //adress est l'id de l'adresse inseree
+            
+            //Now the inserts in the ord_Article table
+            for (int i=0; i<ordArt.size(); i++) {
+                sqlQuery = "INSERT INTO V_Ord_Articles (ord,article,quantity,selling_price,sp_unit,buying_price,bp_unit,change_rate,paid,state,infos) "
+                    + "VALUES ("+orderId+","+ordArt.get(i)[0]+","+ordArt.get(i)[3]+","+ordArt.get(i)[4]+","
+                        +ordArt.get(i)[5]+","+ordArt.get(i)[6]+","+ordArt.get(i)[7]+","+ordArt.get(i)[8]+","+ordArt.get(i)[9]+","+ordArt.get(i)[10]+","+ordArt.get(i)[11]+")";
+                int affecRows = stmt.executeUpdate(sqlQuery); 
+                if (affecRows == 0) {
+                    JOptionPane.showMessageDialog(this, "Insert request failed, no row affected" ,
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+   
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
         
+        //TODO update the orderTab
         
+        this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
     public void addOrdArt(String[] data) {
@@ -856,6 +910,12 @@ public class AddOrder extends javax.swing.JDialog {
         }
 
         jTable1.setModel(new DefaultTableModel(donnees,colNames));
+        
+        if (!ordArt.isEmpty()) { 
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
 
     }
     
@@ -953,6 +1013,7 @@ public class AddOrder extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> clientsCombo;
     private javax.swing.JLabel emailLab;
     private javax.swing.JTextArea infosLab;
+    private javax.swing.JTextArea infosOrderArea;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -985,7 +1046,6 @@ public class AddOrder extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel nbArtLab;
     private javax.swing.JButton okButton;
     private javax.swing.JLabel phone1Lab;

@@ -1,6 +1,4 @@
 
-import com.sun.rowset.CachedRowSetImpl;
-import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,18 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-import javax.sql.rowset.CachedRowSet;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -65,7 +54,7 @@ public class ProdTab extends AbstractTab {
 
     
 //Constructor
-    public ProdTab(Main_W myMainWin) throws SQLException {
+    public ProdTab(AppWindow myMainWin) throws SQLException {
         super(myMainWin);
         
         //To have English in my dialog

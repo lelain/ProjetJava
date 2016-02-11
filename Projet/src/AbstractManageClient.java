@@ -72,7 +72,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
 //Constructor
     
     //Construction and initialisation of shared elements   
-    protected AbstractManageClient(Main_W parent, ClientTab client, boolean modal) {
+    protected AbstractManageClient(AppWindow parent, ClientTab client, boolean modal) {
         super(parent, modal);
         
         //initialisation of variables 

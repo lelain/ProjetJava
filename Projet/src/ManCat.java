@@ -326,7 +326,6 @@ public class ManCat extends AbstractManageCat {
 
     //when clicking the button
     private void parentDownActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        // TODO add your handling code here:
          int index = jList1.getSelectedIndex();
         //if we are on the top of the list we do nothing
         if (index==treeString.size()) {return;}
@@ -560,7 +559,7 @@ public class ManCat extends AbstractManageCat {
     //when clicking the button
     @Override
     protected void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
-        // TODO manage the problems that can appear in the data base if categories were modified or removed
+        // manage the problems that can appear in the data base if categories were modified or removed
         ArrayList<Integer> pb = checkIntegrity();
         if (pb.get(0)!=0) {
             solveConflict(pb);

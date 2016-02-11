@@ -113,6 +113,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Add article to the order");
 
         jLabel1.setText("Article");
 
@@ -218,7 +219,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
 
         jLabel7.setText("Order's state :");
 
-        stateOrdCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not purchased", "Purchased", "Sent to China", "Received in China", "Sent to client", "Received by client" }));
+        stateOrdCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not purchased", "Purchased", "Sent to China", "Received in China" }));
         stateOrdCombo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 stateOrdComboItemStateChanged(evt);
@@ -434,18 +435,18 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }// </editor-fold>//GEN-END:initComponents
 
     private void brandComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_brandComboItemStateChanged
-        // TODO when we choose an other brand, we update the nameCombo
+        // when we choose an other brand, we update the nameCombo
         updateNameCombo();
         updateInfos();
     }//GEN-LAST:event_brandComboItemStateChanged
 
     private void nameComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_nameComboItemStateChanged
-        // TODO add your handling code here:
+        //when we choose an other product we update the information about the newly selected one
         updateInfos();
     }//GEN-LAST:event_nameComboItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // add a new product
         AddProdFromNewOrder NewProdW = new AddProdFromNewOrder(orderTab.getMainWin(),orderTab.getMainWin().getProdTab(),this,true);       
         NewProdW.setLocationRelativeTo(null);
         NewProdW.setVisible(true);
@@ -454,7 +455,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void priceFixedCheckItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_priceFixedCheckItemStateChanged
-        // TODO add your handling code here:
+        // when the check box is or not checked
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             sPriceLab.setEnabled(false);
             spriceField.setEnabled(false);
@@ -470,7 +471,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }//GEN-LAST:event_priceFixedCheckItemStateChanged
 
     private void stateOrdComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_stateOrdComboItemStateChanged
-        // TODO add your handling code here:
+        // depending of the order's state, we enabled or not the fields and labels
         int stateInd = stateOrdCombo.getSelectedIndex();
         //If the product is not purchased, we disabled the components
         if (stateInd == 0) {
@@ -515,7 +516,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        //TODO Add the article order in the data base and update the addOrder dialog
+        //Add the article order in the data base and update the addOrder dialog
         //prepare the string for the request
         
         if (verified()) {
@@ -545,8 +546,12 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
                 bpUnit = "'" + bpUnitCombo.getSelectedItem() + "'";
                 rate = changeRateField.getText();
             }
-        
-            String infos = "'" + infosArea.getText() + "'";
+            
+            String infos="NULL";
+            if (!"".equals(infosArea.getText())) {
+                infos = infosArea.getText().replaceAll("'","\\\\'") ;
+                infos = "'" + infos + "'";
+            }
         
             //we should search the article id
             String articleId=null;

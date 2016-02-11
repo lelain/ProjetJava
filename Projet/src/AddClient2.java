@@ -23,7 +23,7 @@ public class AddClient2 extends AbstractManageClient {
 //Constructor
     
     //we mainly use the AbstractManageClient constructor
-    public AddClient2(Main_W parent, ClientTab client, boolean modal) {
+    public AddClient2(AppWindow parent, ClientTab client, boolean modal) {
         super(parent, client, modal);
 
         setComponents();
