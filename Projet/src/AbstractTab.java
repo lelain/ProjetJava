@@ -57,8 +57,17 @@ abstract class AbstractTab extends JPanel {
             }
             data.add(vector);
         }
+        
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
 
-        return new DefaultTableModel(data, columnNames);
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+
+        return tableModel;
     }
     
     

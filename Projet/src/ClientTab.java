@@ -1,5 +1,3 @@
-
-import java.awt.Dimension;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,25 +77,27 @@ public class ClientTab extends AbstractTab {
 
         addClient = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        paneForTable = new javax.swing.JScrollPane();
         modifButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
         clientLab = new javax.swing.JLabel();
         pLab = new javax.swing.JLabel();
-        phone2Lab = new javax.swing.JLabel();
         mLab = new javax.swing.JLabel();
+        dLab = new javax.swing.JLabel();
+        iLab = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tLab = new javax.swing.JTextArea();
+        phone2Lab = new javax.swing.JLabel();
+        countryLab = new javax.swing.JLabel();
         streetLab = new javax.swing.JLabel();
         cityLab = new javax.swing.JLabel();
         zipLab = new javax.swing.JLabel();
-        countryLab = new javax.swing.JLabel();
-        dLab = new javax.swing.JLabel();
         dCountryLab = new javax.swing.JLabel();
         dCityLab = new javax.swing.JLabel();
         dStreetLab = new javax.swing.JLabel();
         dZipLab = new javax.swing.JLabel();
-        iLab = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tLab = new javax.swing.JTextArea();
+        paneForTable = new javax.swing.JScrollPane();
 
         addClient.setText("Add");
         addClient.addActionListener(new java.awt.event.ActionListener() {
@@ -122,6 +122,11 @@ public class ClientTab extends AbstractTab {
             }
         });
 
+        jSplitPane1.setDividerLocation(650);
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(250, 70));
+
+        jPanel1.setMinimumSize(new java.awt.Dimension(200, 70));
+
         clientLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         clientLab.setText("Client details :");
         clientLab.setEnabled(false);
@@ -130,40 +135,13 @@ public class ClientTab extends AbstractTab {
         pLab.setText("Phone 2 : ");
         pLab.setEnabled(false);
 
-        phone2Lab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        phone2Lab.setEnabled(false);
-
         mLab.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         mLab.setText("Main address : ");
         mLab.setEnabled(false);
 
-        streetLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        streetLab.setEnabled(false);
-
-        cityLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        cityLab.setEnabled(false);
-
-        zipLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        zipLab.setEnabled(false);
-
-        countryLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        countryLab.setEnabled(false);
-
         dLab.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         dLab.setText("Delivery Address : ");
         dLab.setEnabled(false);
-
-        dCountryLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        dCountryLab.setEnabled(false);
-
-        dCityLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        dCityLab.setEnabled(false);
-
-        dStreetLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        dStreetLab.setEnabled(false);
-
-        dZipLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        dZipLab.setEnabled(false);
 
         iLab.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         iLab.setText("Infos : ");
@@ -175,33 +153,64 @@ public class ClientTab extends AbstractTab {
         tLab.setEnabled(false);
         jScrollPane1.setViewportView(tLab);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        phone2Lab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        phone2Lab.setText("as");
+        phone2Lab.setEnabled(false);
+
+        countryLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        countryLab.setText("as");
+        countryLab.setEnabled(false);
+
+        streetLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        streetLab.setText("as");
+        streetLab.setEnabled(false);
+
+        cityLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        cityLab.setText("as");
+        cityLab.setEnabled(false);
+
+        zipLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        zipLab.setText("as");
+        zipLab.setEnabled(false);
+
+        dCountryLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        dCountryLab.setText("as");
+        dCountryLab.setEnabled(false);
+
+        dCityLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        dCityLab.setText("as");
+        dCityLab.setEnabled(false);
+
+        dStreetLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        dStreetLab.setText("as");
+        dStreetLab.setEnabled(false);
+
+        dZipLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        dZipLab.setText("as");
+        dZipLab.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jSeparator1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(addClient)
-                        .addGap(18, 18, 18)
-                        .addComponent(modifButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(removeButton))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(paneForTable, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(clientLab)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(clientLab)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(iLab)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(pLab)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(phone2Lab))
-                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(phone2Lab, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(mLab)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(countryLab)
@@ -211,7 +220,7 @@ public class ClientTab extends AbstractTab {
                                         .addComponent(streetLab)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(zipLab))
-                                    .addGroup(layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(dLab)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(dCountryLab)
@@ -220,12 +229,62 @@ public class ClientTab extends AbstractTab {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(dStreetLab)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(dZipLab))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(iLab)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane1)))))))
-                .addContainerGap())
+                                        .addComponent(dZipLab)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
+                .addGap(0, 0, 0))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(clientLab)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pLab)
+                    .addComponent(phone2Lab, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mLab)
+                    .addComponent(countryLab)
+                    .addComponent(streetLab)
+                    .addComponent(cityLab)
+                    .addComponent(zipLab))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dLab)
+                    .addComponent(dCountryLab)
+                    .addComponent(dCityLab)
+                    .addComponent(dStreetLab)
+                    .addComponent(dZipLab))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(iLab)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(313, Short.MAX_VALUE))
+        );
+
+        jSplitPane1.setRightComponent(jPanel1);
+        jSplitPane1.setLeftComponent(paneForTable);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addClient)
+                        .addGap(18, 18, 18)
+                        .addComponent(modifButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeButton)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 681, Short.MAX_VALUE))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -238,46 +297,22 @@ public class ClientTab extends AbstractTab {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paneForTable, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(clientLab)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(pLab)
-                            .addComponent(phone2Lab))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(mLab)
-                            .addComponent(streetLab)
-                            .addComponent(cityLab)
-                            .addComponent(zipLab)
-                            .addComponent(countryLab))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(dLab)
-                            .addComponent(dCountryLab)
-                            .addComponent(dCityLab)
-                            .addComponent(dStreetLab)
-                            .addComponent(dZipLab))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(iLab)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
-    
     //fonction called when selecting a row in the table
-    //We enable the modif and remove buttons, and update selectedRo to the id of the client selected
+    //We enable the modif and remove buttons, and update selectedRow to the id of the client selected
+    //Also update the labs containing the client details
     private void tableValueChangedEvent(ListSelectionEvent e) {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         if (lsm.isSelectionEmpty()) {
             modifButton.setEnabled(false);
             removeButton.setEnabled(false);
+            
+            //labs on the right side
             clientLab.setEnabled(false);
             cityLab.setEnabled(false);
             cityLab.setText("");
@@ -307,9 +342,7 @@ public class ClientTab extends AbstractTab {
             
             //if a line is selected, selectedRow take the client id 
             //and we enable the modif and remove buttons
-            
             int viewRow = clientTable.getSelectedRow();
-            
             Statement stmt=null;
             String name=(String)clientTable.getValueAt(viewRow,0);
             try{
@@ -322,7 +355,6 @@ public class ClientTab extends AbstractTab {
                     JOptionPane.showMessageDialog(this, "Something went wrong! request problem",
                     "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-                
             } catch (SQLException se) {
                 //Handle errors for JDBC
                 JOptionPane.showMessageDialog(this, "Unexpected error, request problem\nDetails : "+se.getMessage(),
@@ -338,6 +370,7 @@ public class ClientTab extends AbstractTab {
             modifButton.setEnabled(true);
             removeButton.setEnabled(true);
             
+            //we look for the informations to put in the labels
             stmt=null;
             String phone2="";
             String country="";
@@ -573,7 +606,7 @@ public class ClientTab extends AbstractTab {
         try{
             Connection conn=mainWin.getConnection();
             Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery("select name as Name, phone1 as Phone, email, qq "
+            rs = stmt.executeQuery("select name as Name, phone1 as Phone, email as Email, qq as Weixin "
               + "from V_Clients");
         } catch(SQLException se) {
                 //Handle errors for JDBC
@@ -606,8 +639,10 @@ public class ClientTab extends AbstractTab {
     private javax.swing.JLabel dStreetLab;
     private javax.swing.JLabel dZipLab;
     private javax.swing.JLabel iLab;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel mLab;
     private javax.swing.JButton modifButton;
     private javax.swing.JLabel pLab;
@@ -618,8 +653,5 @@ public class ClientTab extends AbstractTab {
     private javax.swing.JTextArea tLab;
     private javax.swing.JLabel zipLab;
     // End of variables declaration//GEN-END:variables
-
-
-
 
 }
