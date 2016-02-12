@@ -31,6 +31,9 @@ public class AppWindow extends javax.swing.JFrame {
         tabbedPane.addTab("Orders",myOrderTab);
     }
 
+    
+//Private methods
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,7 +46,7 @@ public class AppWindow extends javax.swing.JFrame {
         tabbedPane = new javax.swing.JTabbedPane();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        saveAsMenuItem = new javax.swing.JMenuItem();
+        signOutMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         cutMenuItem = new javax.swing.JMenuItem();
@@ -61,15 +64,15 @@ public class AppWindow extends javax.swing.JFrame {
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
 
-        saveAsMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Sign out");
-        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        signOutMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        signOutMenuItem.setMnemonic('a');
+        signOutMenuItem.setText("Sign out");
+        signOutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveAsMenuItemActionPerformed(evt);
+                signOutMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(saveAsMenuItem);
+        fileMenu.add(signOutMenuItem);
 
         exitMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         exitMenuItem.setMnemonic('x');
@@ -133,11 +136,13 @@ public class AppWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //exit with menu
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
-    private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
+    //sign out : close main window and display the sign in window
+    private void signOutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signOutMenuItemActionPerformed
         Object[] options = {"Yes","No"};
         int n = JOptionPane.showOptionDialog(this,"Are you sure you want to sign out?","Disconnecting",
                 JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
@@ -147,9 +152,7 @@ public class AppWindow extends javax.swing.JFrame {
             SignW.setLocationRelativeTo(null);
             SignW.setVisible(true);
         }
-    }//GEN-LAST:event_saveAsMenuItemActionPerformed
-
-
+    }//GEN-LAST:event_signOutMenuItemActionPerformed
 
     
 //Public methods. Get the connection and the different tabs
@@ -189,7 +192,7 @@ public class AppWindow extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JMenuItem signOutMenuItem;
     private javax.swing.JTabbedPane tabbedPane;
     // End of variables declaration//GEN-END:variables
 

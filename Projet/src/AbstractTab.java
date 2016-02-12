@@ -1,9 +1,7 @@
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -47,7 +45,7 @@ abstract class AbstractTab extends JPanel {
         Vector<String> columnNames = new Vector<String>();
         int columnCount = metaData.getColumnCount();
         for (int column = 1; column <= columnCount; column++) {
-            columnNames.add(metaData.getColumnName(column));
+            columnNames.add(metaData.getColumnLabel(column));
         }
 
         // data of the table
