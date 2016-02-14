@@ -59,6 +59,11 @@ public class AppWindow extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tabbedPane.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
@@ -139,6 +144,7 @@ public class AppWindow extends javax.swing.JFrame {
 
     //exit with menu
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
+        closeConnection();
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
@@ -148,6 +154,7 @@ public class AppWindow extends javax.swing.JFrame {
         int n = JOptionPane.showOptionDialog(this,"Are you sure you want to sign out?","Disconnecting",
                 JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
         if (n==JOptionPane.YES_OPTION) {
+            closeConnection();
             this.dispose();  //we close the main window
             SignIn_W SignW = new SignIn_W();    //and we create a new connection window
             SignW.setLocationRelativeTo(null);
@@ -155,6 +162,22 @@ public class AppWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_signOutMenuItemActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        closeConnection();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void closeConnection() {
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException sqle) {
+            JOptionPane.showMessageDialog(this, "Error closing connection\nDetails : "+sqle.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
     
 //Public methods. Get the connection and the different tabs
 

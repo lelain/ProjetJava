@@ -346,6 +346,7 @@ public class ClientTab extends AbstractTab {
             int viewRow = clientTable.getSelectedRow();
             Statement stmt=null;
             String name=(String)clientTable.getValueAt(viewRow,0);
+            name=name.replaceAll("'","\\\\'");
             try{
                 Connection conn=mainWin.getConnection();
                 stmt = conn.createStatement();

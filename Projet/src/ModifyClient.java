@@ -87,8 +87,8 @@ public class ModifyClient extends AbstractManageClient {
         //we prepare the values to be added
         //for the Adresses table
         String street,city,zip_code,country;
-        street=streetMAd.getText();
-        city=cityMAd.getText();
+        street=streetMAd.getText().replaceAll("'","\\\\'");
+        city=cityMAd.getText().replaceAll("'","\\\\'");
         zip_code=zipMAd.getText();
         if ("".equals(countryMAd.getText())) {
             country="NULL";
@@ -98,7 +98,7 @@ public class ModifyClient extends AbstractManageClient {
         
         //for the Clients table        
         String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
-        name=nameField.getText();
+        name=nameField.getText().replaceAll("'","\\\\'");
         if ("".equals(phone1Field.getText())) {
             phone1="NULL";
         } else {
@@ -120,7 +120,7 @@ public class ModifyClient extends AbstractManageClient {
             qq="'"+qqField.getText()+"'";
         }
         if (!"".equals(infosField.getText())) {
-            infos="'"+infosField.getText()+"'";
+            infos="'"+(infosField.getText().replaceAll("'","\\\\'")) + "'";
         } else {
             infos="NULL";
         }
@@ -176,8 +176,8 @@ public class ModifyClient extends AbstractManageClient {
             //here we have a delivery adress different from the main one
             //first we prepare the delivery adress strings
             String streetD,cityD,zip_codeD,countryD;
-            streetD=streetDAd.getText();
-            cityD=cityDAd.getText();
+            streetD=streetDAd.getText().replaceAll("'","\\\\'");
+            cityD=cityDAd.getText().replaceAll("'","\\\\'");
             zip_codeD=zipDAd.getText();
             if ("".equals(countryDAd.getText())) {
                 countryD="NULL";
@@ -204,8 +204,6 @@ public class ModifyClient extends AbstractManageClient {
                         "WHERE ad_id="+Integer.toString(rowAd);
             stmt.executeUpdate(sqlQuery);
             
-            
-            
             //for the delivery adress, we should check if it was the same before the change
             if (rowAd == rowDAd) {
                 //if it was the same, we have a new delivery Adress to insert
@@ -221,15 +219,13 @@ public class ModifyClient extends AbstractManageClient {
                 long key=-1L;
             
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    key = generatedKeys.getLong(1);
-                }
-                else {
-                    throw new SQLException("Creating adress failed, no ID obtained.");
-                }
+                    if (generatedKeys.next()) {
+                        key = generatedKeys.getLong(1);
+                    } else {
+                        throw new SQLException("Creating adress failed, no ID obtained.");
+                    }
                 }
                 
-            
                 delivery_adress = Long.toString(key);  //adress est l'id de l'adresse inseree
                                 
                 sqlQuery = "UPDATE V_Clients\n" +
@@ -284,7 +280,7 @@ public class ModifyClient extends AbstractManageClient {
     //Test if the name field is not already in the db, if yes display message in dialog
     @Override
     protected boolean verifyName(JTextField text,String message) {
-        String str = text.getText();
+        String str = text.getText().replaceAll("'","\\\\'");
         Statement stmt=null;
         try{
             stmt = conn.createStatement();

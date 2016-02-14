@@ -49,8 +49,8 @@ public class AddClient2 extends AbstractManageClient {
         //we prepare the values to be added
         //for the Adresses table
         String street,city,zip_code,country;
-        street=streetMAd.getText();
-        city=cityMAd.getText();
+        street=streetMAd.getText().replaceAll("'","\\\\'");
+        city=cityMAd.getText().replaceAll("'","\\\\'");
         zip_code=zipMAd.getText();
         if ("".equals(countryMAd.getText())) {
             country="NULL";
@@ -60,8 +60,7 @@ public class AddClient2 extends AbstractManageClient {
         
         //for the Clients table        
         String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
-        name=nameField.getText();
-        name=name.replaceAll("'","\\\\'");    //in case there is apostrophe in the string, we replace ' by \' 
+        name=nameField.getText().replaceAll("'","\\\\'");   //in case there is apostrophe in the string, we replace ' by \' 
         if ("".equals(phone1Field.getText())) {
             phone1="NULL";
         } else {
@@ -83,7 +82,7 @@ public class AddClient2 extends AbstractManageClient {
             qq="'"+qqField.getText()+"'";
         }
         if (!"".equals(infosField.getText())) {
-            infos="'"+infosField.getText()+"'";
+            infos="'"+(infosField.getText().replaceAll("'","\\\\'")) + "'";
         } else {
             infos="NULL";
         }
@@ -144,8 +143,8 @@ public class AddClient2 extends AbstractManageClient {
             //here we have a delivery adress different from the main one
             //first we prepare the delivery adress strings
             String streetD,cityD,zip_codeD,countryD;
-            streetD=streetDAd.getText();
-            cityD=cityDAd.getText();
+            streetD=streetDAd.getText().replaceAll("'","\\\\'");
+            cityD=cityDAd.getText().replaceAll("'","\\\\'");
             zip_codeD=zipDAd.getText();
             if ("".equals(countryDAd.getText())) {
                 countryD="NULL";

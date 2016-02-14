@@ -142,7 +142,8 @@ public class SignIn_W extends javax.swing.JFrame {
                 MainWindow.setExtendedState(AppWindow.MAXIMIZED_BOTH);
                 MainWindow.setVisible(true);
             } catch (SQLException ex) {
-                Logger.getLogger(SignIn_W.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Unexpected error\nDetails : "+ex.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
             }
         } 
     }//GEN-LAST:event_jButton1ActionPerformed
