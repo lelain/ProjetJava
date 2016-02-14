@@ -34,7 +34,7 @@ public class ManCat extends AbstractManageCat {
 //Constructor
     
     //uses the AbstractManageCat constructor, intialises the new components and place them in the dialog 
-    public ManCat(java.awt.Frame parent, boolean modal, ProdTab product) {
+    public ManCat(java.awt.Frame parent, boolean modal, ProductTab product) {
         super(parent, modal,product);
         
         //construction and initialisation of the components
@@ -572,7 +572,7 @@ public class ManCat extends AbstractManageCat {
         
         //update the table
         try {
-            prodTab.updateProdTable();
+            prodTab.updateProductTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);

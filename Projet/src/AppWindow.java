@@ -26,7 +26,7 @@ public class AppWindow extends javax.swing.JFrame {
         
         myClientTab = new ClientTab(this);
         tabbedPane.addTab("Clients",myClientTab);
-        myProductTab = new ProdTab(this);
+        myProductTab = new ProductTab(this);
         tabbedPane.addTab("Products",myProductTab);
         myOrderTab = new OrderTab(this);
         tabbedPane.addTab("Orders",myOrderTab);
@@ -189,7 +189,7 @@ public class AppWindow extends javax.swing.JFrame {
         return myClientTab;
     }
     
-    public ProdTab getProdTab() {
+    public ProductTab getProductTab() {
         return myProductTab;
     }
     
@@ -202,7 +202,7 @@ public class AppWindow extends javax.swing.JFrame {
     
     private final Connection conn;
     private final ClientTab myClientTab;
-    private final ProdTab myProductTab;
+    private final ProductTab myProductTab;
     private final OrderTab myOrderTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;

@@ -103,7 +103,7 @@ public class OrderTab extends AbstractTab {
             });
 
         } catch (SQLException ex) {
-            Logger.getLogger(ProdTab.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductTab.class.getName()).log(Level.SEVERE, null, ex);
         }
         jScrollPane1.setViewportView(jTable1);
 

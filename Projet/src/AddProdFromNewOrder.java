@@ -16,7 +16,7 @@ public class AddProdFromNewOrder extends AddProd {
 //Constructor
     
     //we mainly use the AbstractManageClient constructor
-    public AddProdFromNewOrder(AppWindow parent, ProdTab product, AddOrdArticle ordArt, boolean modal) {
+    public AddProdFromNewOrder(AppWindow parent, ProductTab product, AddOrdArticle ordArt, boolean modal) {
         super(parent, product, modal);
         
         this.ordArt=ordArt;

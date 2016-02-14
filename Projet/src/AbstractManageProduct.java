@@ -35,7 +35,7 @@ import javax.swing.event.DocumentListener;
 abstract class AbstractManageProduct extends javax.swing.JDialog implements DocumentListener {
 
 //variables shared by the extended classes
-    protected ProdTab product;   //the product tab we will display the dialog
+    protected ProductTab product;   //the product tab we will display the dialog
     protected String[] brands;      //array containing the brands to display in the combo box
     protected String[] unitString;  //array containing the quantity unit to display in combo box
     protected String[] priceUnitString;    //array containing the price unit to display in combo box
@@ -73,7 +73,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     
 //Constructor
     
-     public AbstractManageProduct(AppWindow parent, ProdTab product, boolean modal) {
+     public AbstractManageProduct(AppWindow parent, ProductTab product, boolean modal) {
         super(parent, modal);
         
         //To have English in my dialog
@@ -820,7 +820,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
 //Public methods
     
     //get the productTab
-    public ProdTab getProductTab() {
+    public ProductTab getProductTab() {
         return product;
     }
     

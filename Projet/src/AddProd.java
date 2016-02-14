@@ -22,7 +22,7 @@ public class AddProd extends AbstractManageProduct {
 //Constructor
     
     //construct the dialog, using mainly the AbstractManageProduct constructor 
-    public AddProd(AppWindow parent, ProdTab product, boolean modal) {
+    public AddProd(AppWindow parent, ProductTab product, boolean modal) {
         super(parent, product, modal);
         
         //initialisation of the what need to be
@@ -74,7 +74,7 @@ public class AddProd extends AbstractManageProduct {
         
         
         try {
-            product.updateProdTable();
+            product.updateProductTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);

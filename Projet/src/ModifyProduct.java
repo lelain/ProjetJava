@@ -26,7 +26,7 @@ public class ModifyProduct extends AbstractManageProduct {
 //Constructor
     
     //construct the dialog, using mainly the AbstractManageProduct constructor, and initialise the fields or combo with the contents of the selected row
-    public ModifyProduct(AppWindow parent, ProdTab product, boolean modal,HashMap contents, int row) {
+    public ModifyProduct(AppWindow parent, ProductTab product, boolean modal,HashMap contents, int row) {
         super(parent, product, modal);
         
         this.row=row;
@@ -106,7 +106,7 @@ public class ModifyProduct extends AbstractManageProduct {
         
         
         try {
-            product.updateProdTable();
+            product.updateProductTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);

@@ -22,7 +22,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
 //Variables 
     
     //Variables shared by the extended classes
-    protected ProdTab prodTab;   //the Product tab in which the dialog will be display
+    protected ProductTab prodTab;   //the Product tab in which the dialog will be display
     protected ArrayList<String[]> treeString;   //the tree
     
     //Components shared by extended classes
@@ -44,7 +44,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
 //Constructor
     
     //Construction and initialisation of shared elements
-    protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProdTab product) {
+    protected AbstractManageCat(java.awt.Frame parent, boolean modal, ProductTab product) {
         super(parent, modal);   //Only build the frame using the JDialog constructor
         
         //initialisation of variables 
@@ -269,7 +269,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     
 //Public Methods 
     
-    public ProdTab getProductTab() {
+    public ProductTab getProductTab() {
         return prodTab;
     }
     

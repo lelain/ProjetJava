@@ -447,7 +447,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // add a new product
-        AddProdFromNewOrder NewProdW = new AddProdFromNewOrder(orderTab.getMainWin(),orderTab.getMainWin().getProdTab(),this,true);       
+        AddProdFromNewOrder NewProdW = new AddProdFromNewOrder(orderTab.getMainWin(),orderTab.getMainWin().getProductTab(),this,true);       
         NewProdW.setLocationRelativeTo(null);
         NewProdW.setVisible(true);
         
