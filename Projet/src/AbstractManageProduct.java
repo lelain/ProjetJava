@@ -790,35 +790,6 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         return str;
     }
     
-    //check if the text in the jtextField is a double. Show a message if not
-    protected boolean isDouble(JTextField text,String message) {
-        String str = text.getText();
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        }
-    }
-    
-    //return true if the length of the text in the jTextField is less than length. if not, display a message
-    protected boolean verifyLenght(JTextField text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
     //make sure that the fields are ok
     protected boolean fieldsRight() {
         //verify that fiels are correctly filled
@@ -826,18 +797,18 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             return false;
         }
         
-        if (!verifyLenght(nameField,100,"Name too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(nameField,100,"Name too long, please make it shorter",this)) {
             return false;
         }
         
         if (!"".equals(quantField.getText())) {
-            if (!isDouble(quantField,"Quantity should be a number")) {
+            if (!Utilities.isDouble(quantField,"Quantity should be a number",this)) {
                 return false;
             }
         }
         
         if (!"".equals(priceField.getText())) {
-            if (!isDouble(priceField,"Price should be a number")) {
+            if (!Utilities.isDouble(priceField,"Price should be a number",this)) {
                 return false;
             }
         }

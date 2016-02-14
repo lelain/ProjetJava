@@ -75,7 +75,7 @@ public class SolveCatConflict extends javax.swing.JDialog {
 
         jLabel1.setText("Integrity of the data base");
 
-        jLabel2.setText("<html>Because you modified or removed a category, some of the products<br> in the data base do not have anymore a correct category.<br>Please choose a new category for these products.</html> ");
+        jLabel2.setText("<html>Because you modified or removed a category, some of the products<br> in the data base do not anymore have a correct category.<br>Please choose a new category for these products.</html> ");
 
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel3.setText("Category");
@@ -332,8 +332,8 @@ public class SolveCatConflict extends javax.swing.JDialog {
     }
 
     private final AbstractManageCat myManageCat;
-    private ArrayList<String[]> treeString;
-    private int[] id;
+    private final ArrayList<String[]> treeString;
+    private final int[] id;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel brand;
     private javax.swing.JComboBox<String> catCombo;

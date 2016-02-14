@@ -353,18 +353,6 @@ public class OrderTab extends AbstractTab {
     }//GEN-LAST:event_addOrderActionPerformed
 
     
-    protected boolean isDouble(String str,String message) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            return false;
-        }
-    }
-    
-    
     private void orderStateComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_orderStateComboItemStateChanged
         // TODO add your handling code here:
         String cost="";
@@ -376,7 +364,7 @@ public class OrderTab extends AbstractTab {
             rmbLab.setText("");
         } else {
             cost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) : ") ;
-            if (!isDouble(cost,"The cost should be a number")) {
+            if (!Utilities.isDouble(cost,"The cost should be a number",this)) {
                 //if not number, we set the combo to 'not sent'
                 orderStateCombo.setSelectedIndex(0);
                 return;

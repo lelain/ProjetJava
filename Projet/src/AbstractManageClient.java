@@ -81,16 +81,6 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         
         //construct the components
         initComponents();
-        
-        //add listeners to the fields
-        streetMAd.getDocument().addDocumentListener(this);
-        cityMAd.getDocument().addDocumentListener(this);
-        countryMAd.getDocument().addDocumentListener(this);
-        zipMAd.getDocument().addDocumentListener(this); 
-        streetDAd.getDocument().addDocumentListener(this);
-        cityDAd.getDocument().addDocumentListener(this);
-        zipDAd.getDocument().addDocumentListener(this);
-        nameField.getDocument().addDocumentListener(this);
 
     }
 
@@ -410,6 +400,16 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         );
 
         pack();
+        
+        //add listeners to the fields
+        streetMAd.getDocument().addDocumentListener(this);
+        cityMAd.getDocument().addDocumentListener(this);
+        countryMAd.getDocument().addDocumentListener(this);
+        zipMAd.getDocument().addDocumentListener(this); 
+        streetDAd.getDocument().addDocumentListener(this);
+        cityDAd.getDocument().addDocumentListener(this);
+        zipDAd.getDocument().addDocumentListener(this);
+        nameField.getDocument().addDocumentListener(this);
     }// </editor-fold>                        
 
     //close the window
@@ -473,48 +473,6 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         }
     }
       
-
-    //Test if the field is an Int, if not display message in dialog
-    private boolean isInt(JTextField text,String message) {
-        String str = text.getText();
-        if (!str.matches("^-?\\d+$")) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        }
-        return true;
-    }
-    
-    //Test if the length of the field is less than length, if not display message in dialog
-    private boolean verifyLenght(JTextField text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    //Test if the length of the text area is less than length, if not display message in dialog
-    private boolean verifyLenght(JTextArea text,int length,String message) {
-        if (text.getText().length() > length) {
-            
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
     
 //Protected methods : can be used or extended by extended classes
  
@@ -556,52 +514,52 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
     
     //Test if the fields are correctly filled
     protected boolean fieldsRight() {
-        if (!verifyLenght(nameField,40,"Name too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(nameField,40,"Name too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(emailField,30,"Email adress too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(emailField,30,"Email adress too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(phone1Field,20,"Phone number too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(phone1Field,20,"Phone number too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(phone2Field,20,"Phone number too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(phone2Field,20,"Phone number too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(qqField,20,"QQ number too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(qqField,20,"QQ number too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(streetMAd,80,"Street too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(streetMAd,80,"Street too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(streetDAd,80,"Street too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(streetDAd,80,"Street too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(cityMAd,30,"City too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(cityMAd,30,"City too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(cityDAd,30,"City too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(cityDAd,30,"City too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(zipMAd,8,"Zip code too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(zipMAd,8,"Zip code too long, please make it shorter",this)) {
             return false;
         }
-        if (!isInt(zipMAd,"Zip code should be numbers")) {
+        if (!Utilities.isInt(zipMAd,"Zip code should be numbers",this)) {
             return false;
         }
-        if (!verifyLenght(zipDAd,8,"Zip code too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(zipDAd,8,"Zip code too long, please make it shorter",this)) {
             return false;
         }
-        if (!isInt(zipDAd,"Zip code should be numbers")) {
+        if (!Utilities.isInt(zipDAd,"Zip code should be numbers",this)) {
             return false;
         }
-        if (!verifyLenght(countryMAd,40,"Country too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(countryMAd,40,"Country too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(countryDAd,40,"Country too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(countryDAd,40,"Country too long, please make it shorter",this)) {
             return false;
         }
-        if (!verifyLenght(infosField,500,"Information too long, please make it shorter")) {
+        if (!Utilities.verifyLenght(infosField,500,"Information too long, please make it shorter",this)) {
             return false;
         }
         if (!verifyName(nameField,"Name already in the data base, please find a new one")) {

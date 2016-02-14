@@ -38,7 +38,7 @@ public class ProdTab extends AbstractTab {
 
 //Variables
 
-      private DefaultMutableTreeNode top;   //to help dealing with the tree
+    private DefaultMutableTreeNode top;   //to help dealing with the tree
     
 //Component in the tab
                       

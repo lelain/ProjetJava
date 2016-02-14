@@ -1,7 +1,5 @@
 
-import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
-import java.awt.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,6 +28,9 @@ public class AddOrder extends javax.swing.JDialog {
 
     /**
      * Creates new form AddOrder
+     * @param parent
+     * @param order
+     * @param modal
      */
     public AddOrder(java.awt.Frame parent, OrderTab order, boolean modal) {
         super(parent, modal);
@@ -636,18 +637,10 @@ public class AddOrder extends javax.swing.JDialog {
             
             
             infosLab.setText(ordArt.get(row)[11].substring(1,ordArt.get(row)[11].length()-1));
-        }
-        
-        
-        
+        }        
     }
     
-    private static double arrondi(double x, int n) {
-        double pow = Math.pow(10, n);
-	return (Math.floor(x * pow)) / pow;
-    }
-    
-    
+
     private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
         // add a client, using the addClient dialog
         AddClientFromOrder NewClientW = new AddClientFromOrder(order.getMainWin(),order.getMainWin().getClientTab(),this,true);       
@@ -936,10 +929,10 @@ public class AddOrder extends javax.swing.JDialog {
                 if ( index != -1) {
                     Double oldVal = selPrice.get(index);
                     Double x = Double.parseDouble(ordArt.get(i)[4]) * Double.parseDouble(ordArt.get(i)[3]);
-                    selPrice.set(index,arrondi(oldVal + x , 3));
+                    selPrice.set(index,Utilities.arrondi(oldVal + x , 3));
                 } else {
                     Double x = Double.parseDouble(ordArt.get(i)[4]) * Double.parseDouble(ordArt.get(i)[3]);
-                    selPrice.add(arrondi(x,3));
+                    selPrice.add(Utilities.arrondi(x,3));
                     spUnit.add(ordArt.get(i)[5].substring(1,ordArt.get(i)[5].length()-1));
                 }
             } else {
@@ -967,10 +960,10 @@ public class AddOrder extends javax.swing.JDialog {
                 if ( index != -1) {
                     Double oldVal = buyPrice.get(index);
                     Double x = Double.parseDouble(ordArt.get(i)[6]) * Double.parseDouble(ordArt.get(i)[3]);
-                    buyPrice.set(index,arrondi(oldVal + x , 3));
+                    buyPrice.set(index,Utilities.arrondi(oldVal + x , 3));
                 } else {
                     Double x = Double.parseDouble(ordArt.get(i)[6]) * Double.parseDouble(ordArt.get(i)[3]);
-                    buyPrice.add(arrondi(x,3));
+                    buyPrice.add(Utilities.arrondi(x,3));
                     bpUnit.add(ordArt.get(i)[7].substring(1,ordArt.get(i)[7].length()-1));
                 }
             } else {

@@ -18,6 +18,7 @@ public class AppWindow extends javax.swing.JFrame {
     /**
      * Creates new form AppWindow
      * @param conn
+     * @throws java.sql.SQLException
      */
     public AppWindow(Connection conn) throws SQLException {
         this.conn=conn;

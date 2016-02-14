@@ -612,42 +612,26 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         }
         
         if (priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() != 0) {
-            return ( isDouble(bpriceField,"The price should be a float") &&
-                isDouble(changeRateField,"The change rate should be a float") );     
+            return ( Utilities.isDouble(bpriceField,"The price should be a float",this) &&
+                Utilities.isDouble(changeRateField,"The change rate should be a float",this) );     
         }
 
         if (!priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() == 0) {
-            return  isDouble(spriceField,"The price should be a float");    
+            return  Utilities.isDouble(spriceField,"The price should be a float",this);    
         }
         
      
         
         if (!priceFixedCheck.isSelected() && stateOrdCombo.getSelectedIndex() != 0) {
-            return  ( isDouble(spriceField,"The price should be a float") && 
-                isDouble(bpriceField,"The price should be a float") &&
-                isDouble(changeRateField,"The change rate should be a float") );     
+            return  ( Utilities.isDouble(spriceField,"The price should be a float",this) && 
+                Utilities.isDouble(bpriceField,"The price should be a float",this) &&
+                Utilities.isDouble(changeRateField,"The change rate should be a float",this) );     
         }
         
         //normally we should not go here 
         JOptionPane.showMessageDialog(this, "Problem somewhere in checking the fields",
                     "Warning", JOptionPane.WARNING_MESSAGE);
         return false;
-    }
-
-
-        //check if the text in the jtextField is a double. Show a message if not
-    protected boolean isDouble(JTextField text,String message) {
-        String str = text.getText();
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, message,
-                    "Warning", JOptionPane.WARNING_MESSAGE);
-            text.requestFocus();
-            text.selectAll();
-            return false;
-        }
     }
     
     private void initLab() {

@@ -147,6 +147,7 @@ public class ClientTab extends AbstractTab {
         iLab.setText("Infos : ");
         iLab.setEnabled(false);
 
+        tLab.setEditable(false);
         tLab.setColumns(20);
         tLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         tLab.setRows(5);
