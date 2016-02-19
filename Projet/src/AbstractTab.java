@@ -45,7 +45,8 @@ abstract class AbstractTab extends JPanel {
         Vector<String> columnNames = new Vector<String>();
         int columnCount = metaData.getColumnCount();
         for (int column = 1; column <= columnCount; column++) {
-            columnNames.add(metaData.getColumnLabel(column));
+            String str = metaData.getColumnLabel(column).replace('_',' ');
+            columnNames.add(str);
         }
 
         // data of the table

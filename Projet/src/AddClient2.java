@@ -59,7 +59,7 @@ public class AddClient2 extends AbstractManageClient {
         }
         
         //for the Clients table        
-        String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
+        String name,phone1,phone2,adress,delivery_adress,email,weixin,infos;
         name=nameField.getText().replaceAll("'","\\\\'");   //in case there is apostrophe in the string, we replace ' by \' 
         if ("".equals(phone1Field.getText())) {
             phone1="NULL";
@@ -76,10 +76,10 @@ public class AddClient2 extends AbstractManageClient {
         } else {
             email="'"+emailField.getText()+"'";
         }
-        if ("".equals(qqField.getText())) {
-            qq="NULL";
+        if ("".equals(weixinField.getText())) {
+            weixin="NULL";
         } else {
-            qq="'"+qqField.getText()+"'";
+            weixin="'"+weixinField.getText()+"'";
         }
         if (!"".equals(infosField.getText())) {
             infos="'"+(infosField.getText().replaceAll("'","\\\\'")) + "'";
@@ -115,9 +115,9 @@ public class AddClient2 extends AbstractManageClient {
             adress = Long.toString(key);  //adress est l'id de l'adresse inseree
             delivery_adress=Long.toString(key);
             
-            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,weixin,infos)\n" +
                        "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
-                                email+","+qq+","+infos+");";
+                                email+","+weixin+","+infos+");";
             int affecRows = stmt.executeUpdate(sqlQuery); 
             
             if (affecRows == 0) {
@@ -183,9 +183,9 @@ public class AddClient2 extends AbstractManageClient {
             adress = Long.toString(key1);  //adress est l'id de l'adresse inseree la premiere
             delivery_adress=Long.toString(key2);
             
-            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,qq,infos)\n" +
+            sqlQuery = "INSERT INTO V_Clients (name,phone1,phone2,adress,delivery_adress,email,weixin,infos)\n" +
                        "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+delivery_adress+","+
-                                email+","+qq+","+infos+");";
+                                email+","+weixin+","+infos+");";
             int affecRows = stmt.executeUpdate(sqlQuery); 
             
             if (affecRows == 0) {

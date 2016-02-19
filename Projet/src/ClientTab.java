@@ -32,9 +32,6 @@ public class ClientTab extends AbstractTab {
         //Add sorter on the table
         clientTable.setAutoCreateRowSorter(true);
         
-        //clientTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
-        //clientTable.setFillsViewportHeight(true);
-        
         //we only want a single selection for this table
         clientTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
         
@@ -58,6 +55,18 @@ public class ClientTab extends AbstractTab {
         dStreetLab.setFont(new java.awt.Font("MS Song", 0, 12));
         dZipLab.setFont(new java.awt.Font("MS Song", 0, 12));
         tLab.setFont(new java.awt.Font("MS Song", 0, 10));
+        
+        //labs on the right side
+        cityLab.setText("");
+        countryLab.setText("");
+        dCityLab.setText("");
+        dCountryLab.setText("");
+        dStreetLab.setText("");
+        dZipLab.setText("");
+        phone2Lab.setText("");
+        streetLab.setText("");
+        tLab.setText("");
+        zipLab.setText("");
         
         paneForTable.setViewportView(clientTable);
           
@@ -148,6 +157,7 @@ public class ClientTab extends AbstractTab {
         iLab.setEnabled(false);
 
         tLab.setEditable(false);
+        tLab.setBackground(new java.awt.Color(229, 227, 224));
         tLab.setColumns(20);
         tLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
         tLab.setRows(5);
@@ -481,7 +491,7 @@ public class ClientTab extends AbstractTab {
             Connection conn=mainWin.getConnection();
             stmt = conn.createStatement();
             String sqlQuery;
-            sqlQuery = "SELECT V_Clients.name,V_Clients.phone1,V_Clients.phone2,V_Clients.adress,V_Clients.delivery_adress,V_Clients.email,V_Clients.qq,V_Clients.infos,"
+            sqlQuery = "SELECT V_Clients.name,V_Clients.phone1,V_Clients.phone2,V_Clients.adress,V_Clients.delivery_adress,V_Clients.email,V_Clients.weixin,V_Clients.infos,"
                     + "main.street,main.city,main.country,main.zip_code,"
                     + "dev.street,dev.city,dev.country,dev.zip_code "
                     + "from V_Clients inner join V_Adresses as main on V_Clients.adress=main.ad_id "
@@ -493,7 +503,7 @@ public class ClientTab extends AbstractTab {
                 content.put(2,rs.getString("V_Clients.phone1"));
                 content.put(3,rs.getString("V_Clients.phone2"));
                 content.put(4,rs.getString("V_Clients.email"));
-                content.put(5,rs.getString("V_Clients.qq"));
+                content.put(5,rs.getString("V_Clients.weixin"));
                 content.put(6,rs.getString("V_Clients.infos"));
                 content.put(7,rs.getString("main.street"));
                 content.put(8,rs.getString("main.city"));
@@ -608,7 +618,7 @@ public class ClientTab extends AbstractTab {
         try{
             Connection conn=mainWin.getConnection();
             Statement stmt = conn.createStatement();
-            rs = stmt.executeQuery("select name as Name, phone1 as Phone, email as Email, qq as Weixin "
+            rs = stmt.executeQuery("select name as Name, phone1 as Phone, email as Email, weixin as Weixin "
               + "from V_Clients");
         } catch(SQLException se) {
                 //Handle errors for JDBC

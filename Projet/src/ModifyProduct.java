@@ -128,8 +128,9 @@ public class ModifyProduct extends AbstractManageProduct {
     //return true if for a given category, a product with the same name already exists
     @Override
     protected boolean isDuplicateEntry(JTextField name, JComboBox<String> brand) {
-        String brandStr = "'"+(String) brand.getSelectedItem()+"'";
-        String nameStr = "'"+name.getText()+"'";
+        String brandStr = (String) brand.getSelectedItem();
+        brandStr="'" + brandStr.replaceAll("'","\\\\'") + "'";
+        String nameStr = "'"+ (name.getText().replaceAll("'","\\\\'")) +"'";
         
         Statement stmt=null;
             try{

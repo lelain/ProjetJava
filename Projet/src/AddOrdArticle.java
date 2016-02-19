@@ -522,7 +522,17 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         if (verified()) {
             //First we stock all we have from the dialog
             String brand = "'" + brandCombo.getSelectedItem() + "'";
-            String name = "'" + nameCombo.getSelectedItem() + "'";
+            
+            //brand2 is only for the request
+            String brand2 = (String) brandCombo.getSelectedItem();
+            brand2 = "'" + brand2.replaceAll("'","\\\\'") + "'";
+            
+            String name =  "'" + nameCombo.getSelectedItem()+ "'";
+            
+            //name2 is only for the request
+            String name2 = (String) nameCombo.getSelectedItem();
+            name2 = "'" + name2.replaceAll("'","\\\\'") + "'";
+            
             String quantity = quant.getValue().toString();
             
             String sellingPr,spUnit;
@@ -549,7 +559,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
             
             String infos="NULL";
             if (!"".equals(infosArea.getText())) {
-                infos = infosArea.getText().replaceAll("'","\\\\'") ;
+                infos = infosArea.getText() ;
                 infos = "'" + infos + "'";
             }
         
@@ -559,7 +569,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
             try{
                 stmt = orderTab.getMainWin().getConnection().createStatement();
                 String sqlQuery;
-                sqlQuery="SELECT pr_id from V_Products where brand="+brand+" and name="+name;
+                sqlQuery="SELECT pr_id from V_Products where brand="+brand2+" and name="+name2;
                 ResultSet rs = stmt.executeQuery(sqlQuery);
                 if (rs.next()) { articleId = rs.getString("pr_id"); }
             } catch(SQLException se) {
@@ -635,6 +645,31 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }
     
     private void initLab() {
+        bPriceLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        categoryLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        equalLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        infosArea.setFont(new java.awt.Font("MS Song", 0, 12));
+        infosText.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel1.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel10.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel11.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel15.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel2.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel3.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel4.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel5.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel6.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel7.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel8.setFont(new java.awt.Font("MS Song", 0, 12));
+        priceLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        punitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        quantityLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        qunitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        rateBUnitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        rateLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        rateSUnitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        sPriceLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        
         rateSUnitLab.setText((String)spUnitCombo.getSelectedItem());
         rateBUnitLab.setText((String)bpUnitCombo.getSelectedItem());
        
@@ -849,12 +884,13 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     public void updateNameCombo() {
         //we search the number of brand in the database and store it in size
         String brand = (String) brandCombo.getSelectedItem();
+        brand = "'" + brand.replaceAll("'","\\\\'") + "'";
         Statement stmt = null;
         int size=0;
         try{
             stmt = orderTab.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery="SELECT COUNT(name) from V_Products where brand='"+brand+"'"; 
+            sqlQuery="SELECT COUNT(name) from V_Products where brand="+brand; 
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { size = rs.getInt("COUNT(name)"); }
         } catch(SQLException se) {
@@ -877,7 +913,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         try{
             stmt = orderTab.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery = "SELECT name FROM V_Products where brand='"+brand+"'";
+            sqlQuery = "SELECT name FROM V_Products where brand="+brand;
             ResultSet rs = stmt.executeQuery(sqlQuery);
             int i=0;
             while (rs.next()) { 
@@ -905,7 +941,9 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     public void updateInfos() {
         String brandStr, nameStr;
         brandStr = (String) brandCombo.getSelectedItem();
+        brandStr = brandStr.replaceAll("'","\\\\'");
         nameStr = (String) nameCombo.getSelectedItem();
+        nameStr = nameStr.replaceAll("'","\\\\'");
         
         String category="",quantity="",qunit="",price="",punit="",infos="";
         Statement stmt = null;

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -51,6 +53,47 @@ public class AddOrder extends javax.swing.JDialog {
                 tableValueChangedEvent(e);  
             }
         });
+        
+        adressLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        bpTotLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        bpriceLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        bpriceUnitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        changeRateLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        clientInfosLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        emailLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        infosLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        infosOrderArea.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel1.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel10.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel11.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel12.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel13.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel14.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel15.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel16.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel17.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel18.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel19.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel2.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel20.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel21.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel22.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel3.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel4.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel5.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel6.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel7.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel8.setFont(new java.awt.Font("MS Song", 0, 12));
+        jLabel9.setFont(new java.awt.Font("MS Song", 0, 12));
+        nbArtLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        phone1Lab.setFont(new java.awt.Font("MS Song", 0, 12));
+        phone2Lab.setFont(new java.awt.Font("MS Song", 0, 12));
+        weixinLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        spTotLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        spriceLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        spriceUnitLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        stateLab.setFont(new java.awt.Font("MS Song", 0, 12));
+        
         
         spriceLab.setText("");
         spriceUnitLab.setText("");
@@ -130,7 +173,7 @@ public class AddOrder extends javax.swing.JDialog {
         jLabel19 = new javax.swing.JLabel();
         emailLab = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        qqLab = new javax.swing.JLabel();
+        weixinLab = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         adressLab = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
@@ -277,10 +320,10 @@ public class AddOrder extends javax.swing.JDialog {
         emailLab.setText("emailLab");
 
         jLabel20.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
-        jLabel20.setText("QQ : ");
+        jLabel20.setText("weixin : ");
 
-        qqLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        qqLab.setText("qqLab");
+        weixinLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
+        weixinLab.setText("weixinLab");
 
         jLabel21.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         jLabel21.setText("Address : ");
@@ -419,7 +462,7 @@ public class AddOrder extends javax.swing.JDialog {
                                                     .addGroup(layout.createSequentialGroup()
                                                         .addComponent(jLabel20)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(qqLab))
+                                                        .addComponent(weixinLab))
                                                     .addGroup(layout.createSequentialGroup()
                                                         .addComponent(jLabel19)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -464,7 +507,7 @@ public class AddOrder extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel20)
-                            .addComponent(qqLab))
+                            .addComponent(weixinLab))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel19)
@@ -549,7 +592,7 @@ public class AddOrder extends javax.swing.JDialog {
     private void initLab() {
         String phone1="";
         String phone2="";
-        String qq="";
+        String weixin="";
         String email="";
         String address="";
         String infos="";
@@ -558,13 +601,13 @@ public class AddOrder extends javax.swing.JDialog {
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,qq,infos from V_Clients as cl"
+            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,weixin,infos from V_Clients as cl"
                    + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clients[0]+"'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { 
                 phone1 = rs.getString("phone1");
                 phone2 = rs.getString("phone2");
-                qq = rs.getString("qq");
+                weixin = rs.getString("weixin");
                 email = rs.getString("email");
                 address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
                 infos = rs.getString("infos");
@@ -583,7 +626,7 @@ public class AddOrder extends javax.swing.JDialog {
         
         phone1Lab.setText(phone1);
         phone2Lab.setText(phone2);
-        qqLab.setText(qq);
+        weixinLab.setText(weixin);
         emailLab.setText(email);
         adressLab.setText(address);
         clientInfosLab.setText(infos);
@@ -635,8 +678,11 @@ public class AddOrder extends javax.swing.JDialog {
                 stateLab.setText("article received in China");
             }
             
-            
-            infosLab.setText(ordArt.get(row)[11].substring(1,ordArt.get(row)[11].length()-1));
+            if ("NULL".equals(ordArt.get(row)[11])) {
+                infosLab.setText("");
+            } else {
+                infosLab.setText(ordArt.get(row)[11].substring(1,ordArt.get(row)[11].length()-1));
+            }
         }        
     }
     
@@ -670,22 +716,25 @@ public class AddOrder extends javax.swing.JDialog {
         //when selecting client, update the information about him
         String phone1="";
         String phone2="";
-        String qq="";
+        String weixin="";
         String email="";
         String address="";
         String infos="";
+        
+        String clientName = (String) clientsCombo.getSelectedItem();
+        clientName = clientName.replaceAll("'","\\\\'");
         
         Statement stmt = null;
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,qq,infos from V_Clients as cl"
-                   + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clientsCombo.getSelectedItem()+"'";
+            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,weixin,infos from V_Clients as cl"
+                   + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clientName+"'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { 
                 phone1 = rs.getString("phone1");
                 phone2 = rs.getString("phone2");
-                qq = rs.getString("qq");
+                weixin = rs.getString("weixin");
                 email = rs.getString("email");
                 address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
                 infos = rs.getString("infos");
@@ -704,7 +753,7 @@ public class AddOrder extends javax.swing.JDialog {
         
         phone1Lab.setText(phone1);
         phone2Lab.setText(phone2);
-        qqLab.setText(qq);
+        weixinLab.setText(weixin);
         emailLab.setText(email);
         adressLab.setText(address);
         clientInfosLab.setText(infos);
@@ -713,10 +762,9 @@ public class AddOrder extends javax.swing.JDialog {
         
     }//GEN-LAST:event_clientsComboItemStateChanged
 
+    //when clicking th finish button, make the insert requests and update the orderTab
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        // make the insert requests and update the orderTab
         // first the insert in the Orders table
-        
         //the date
         Calendar cal = Calendar.getInstance();
         cal.setTime(jDateChooser1.getDate());
@@ -727,14 +775,16 @@ public class AddOrder extends javax.swing.JDialog {
         String date = "'" + year + "-" + month + "-" + day + "'";
         
         //the client id
-        String client = "";
+        String clientId = "";
+        String clientName = (String) clientsCombo.getSelectedItem();
+        clientName = clientName.replaceAll("'","\\\\'");
         Statement stmt = null;
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery = "SELECT cl_id FROM V_Clients WHERE name='"+clientsCombo.getSelectedItem()+"'";
+            sqlQuery = "SELECT cl_id FROM V_Clients WHERE name='"+clientName+"'";
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { client = rs.getString("cl_id"); }
+            if (rs.next()) { clientId = rs.getString("cl_id"); }
         } catch(SQLException se) {
             //Handle errors for JDBC
             JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
@@ -747,10 +797,11 @@ public class AddOrder extends javax.swing.JDialog {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
 
-        //the info
+        //the infos
         String infos="NULL";
         if (!"".equals(infosOrderArea.getText())) {
-            infos = "'" + infosOrderArea.getText() + "'";
+            infos = infosOrderArea.getText().replaceAll("'","\\\\'");
+            infos = "'" + infos + "'";
         }
         
         //now the request for the Orders table
@@ -761,7 +812,7 @@ public class AddOrder extends javax.swing.JDialog {
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery = "INSERT INTO V_Orders (date,clients,infos,state) VALUES ("+date+","+client+","+infos+",0)";
+            sqlQuery = "INSERT INTO V_Orders (date,clients,infos,state) VALUES ("+date+","+clientId+","+infos+",0)";
             
             int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
             
@@ -785,10 +836,15 @@ public class AddOrder extends javax.swing.JDialog {
             orderId = Long.toString(key);  //adress est l'id de l'adresse inseree
             
             //Now the inserts in the ord_Article table
+            String infosOrd = "";
+            
             for (int i=0; i<ordArt.size(); i++) {
+                //the apostrophe thing could appear for 11 (infos)
+                infosOrd = ordArt.get(i)[11].substring(1,ordArt.get(i)[11].length()-1);
+                infosOrd = infosOrd.replaceAll("'","\\\\'");
                 sqlQuery = "INSERT INTO V_Ord_Articles (ord,article,quantity,selling_price,sp_unit,buying_price,bp_unit,change_rate,paid,state,infos) "
                     + "VALUES ("+orderId+","+ordArt.get(i)[0]+","+ordArt.get(i)[3]+","+ordArt.get(i)[4]+","
-                        +ordArt.get(i)[5]+","+ordArt.get(i)[6]+","+ordArt.get(i)[7]+","+ordArt.get(i)[8]+","+ordArt.get(i)[9]+","+ordArt.get(i)[10]+","+ordArt.get(i)[11]+")";
+                        +ordArt.get(i)[5]+","+ordArt.get(i)[6]+","+ordArt.get(i)[7]+","+ordArt.get(i)[8]+","+ordArt.get(i)[9]+","+ordArt.get(i)[10]+",'"+infosOrd+"')";
                 int affecRows = stmt.executeUpdate(sqlQuery); 
                 if (affecRows == 0) {
                     JOptionPane.showMessageDialog(this, "Insert request failed, no row affected" ,
@@ -808,8 +864,16 @@ public class AddOrder extends javax.swing.JDialog {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
-        //TODO update the orderTab
         
+        //update the orderTab
+        try {
+            order.updateOrderTable();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem updating the order table\nDetails : "+ex.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        //Finally close the window
         this.dispose();
     }//GEN-LAST:event_okButtonActionPerformed
 
@@ -1043,7 +1107,7 @@ public class AddOrder extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel phone1Lab;
     private javax.swing.JLabel phone2Lab;
-    private javax.swing.JLabel qqLab;
+    private javax.swing.JLabel weixinLab;
     private javax.swing.JButton removeLign;
     private javax.swing.JLabel spTotLab;
     private javax.swing.JLabel spriceLab;

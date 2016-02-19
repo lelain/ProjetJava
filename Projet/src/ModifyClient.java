@@ -41,7 +41,7 @@ public class ModifyClient extends AbstractManageClient {
         phone1Field.setText(content.get(2));
         phone2Field.setText(content.get(3));
         emailField.setText(content.get(4));
-        qqField.setText(content.get(5));
+        weixinField.setText(content.get(5));
         infosField.append(content.get(6));
         streetMAd.setText(content.get(7));
         cityMAd.setText(content.get(8));
@@ -97,7 +97,7 @@ public class ModifyClient extends AbstractManageClient {
         }
         
         //for the Clients table        
-        String name,phone1,phone2,adress,delivery_adress,email,qq,infos;
+        String name,phone1,phone2,adress,delivery_adress,email,weixin,infos;
         name=nameField.getText().replaceAll("'","\\\\'");
         if ("".equals(phone1Field.getText())) {
             phone1="NULL";
@@ -114,10 +114,10 @@ public class ModifyClient extends AbstractManageClient {
         } else {
             email="'"+emailField.getText()+"'";
         }
-        if ("".equals(qqField.getText())) {
-            qq="NULL";
+        if ("".equals(weixinField.getText())) {
+            weixin="NULL";
         } else {
-            qq="'"+qqField.getText()+"'";
+            weixin="'"+weixinField.getText()+"'";
         }
         if (!"".equals(infosField.getText())) {
             infos="'"+(infosField.getText().replaceAll("'","\\\\'")) + "'";
@@ -148,7 +148,7 @@ public class ModifyClient extends AbstractManageClient {
             
             sqlQuery = "UPDATE V_Clients \n" +
                         "SET name='"+name+"',phone1="+phone1+",phone2="+phone2+",adress="+Integer.toString(rowAd)+
-                        ",delivery_adress="+Integer.toString(rowAd)+",email="+email+",qq="+qq+",infos="+infos+"\n"+
+                        ",delivery_adress="+Integer.toString(rowAd)+",email="+email+",weixin="+weixin+",infos="+infos+"\n"+
                         "WHERE cl_id="+Integer.toString(row);
             stmt.executeUpdate(sqlQuery);
             
@@ -230,7 +230,7 @@ public class ModifyClient extends AbstractManageClient {
                                 
                 sqlQuery = "UPDATE V_Clients\n" +
                             "SET name='"+name+"',phone1="+phone1+",phone2="+phone2+",adress="+Integer.toString(rowAd)+
-                            ",delivery_adress="+delivery_adress+",email="+email+",qq="+qq+",infos="+infos+"\n"+
+                            ",delivery_adress="+delivery_adress+",email="+email+",weixin="+weixin+",infos="+infos+"\n"+
                             "WHERE cl_id="+Integer.toString(row);
                 stmt.executeUpdate(sqlQuery);
             } else {
@@ -243,7 +243,7 @@ public class ModifyClient extends AbstractManageClient {
                 //and then for Clients table
                 sqlQuery = "UPDATE V_Clients\n" +
                             "SET name='"+name+"',phone1="+phone1+",phone2="+phone2+",adress="+Integer.toString(rowAd)+
-                            ",delivery_adress="+Integer.toString(rowDAd)+",email="+email+",qq="+qq+",infos="+infos+"\n"+
+                            ",delivery_adress="+Integer.toString(rowDAd)+",email="+email+",weixin="+weixin+",infos="+infos+"\n"+
                             "WHERE cl_id="+Integer.toString(row)+";";
                 stmt.executeUpdate(sqlQuery);
             

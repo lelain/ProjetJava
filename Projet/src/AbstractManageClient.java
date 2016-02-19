@@ -60,7 +60,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
     protected javax.swing.JButton okButton;
     protected javax.swing.JTextField phone1Field;
     protected javax.swing.JTextField phone2Field;
-    protected javax.swing.JTextField qqField;
+    protected javax.swing.JTextField weixinField;
     protected javax.swing.JLabel streetD;
     protected javax.swing.JTextField streetDAd;
     protected javax.swing.JTextField streetMAd;
@@ -103,7 +103,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         jLabel4 = new javax.swing.JLabel();
         emailField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        qqField = new javax.swing.JTextField();
+        weixinField = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
@@ -147,7 +147,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
 
         jLabel4.setText("E-mail");
 
-        jLabel5.setText("qq");
+        jLabel5.setText("weixin");
 
         jLabel6.setText("Adress");
 
@@ -278,7 +278,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
                                             .addComponent(jLabel5))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(qqField, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                                            .addComponent(weixinField, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                                             .addComponent(emailField))))
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -346,7 +346,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
                     .addComponent(jLabel2)
                     .addComponent(phone1Field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(qqField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(weixinField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -525,7 +525,7 @@ abstract class AbstractManageClient extends javax.swing.JDialog implements Docum
         if (!Utilities.verifyLenght(phone2Field,20,"Phone number too long, please make it shorter",this)) {
             return false;
         }
-        if (!Utilities.verifyLenght(qqField,20,"QQ number too long, please make it shorter",this)) {
+        if (!Utilities.verifyLenght(weixinField,20,"weixin number too long, please make it shorter",this)) {
             return false;
         }
         if (!Utilities.verifyLenght(streetMAd,80,"Street too long, please make it shorter",this)) {

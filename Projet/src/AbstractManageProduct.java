@@ -616,6 +616,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     //Add a new brand in the dialog
     protected void addBrandActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String answerBrand = JOptionPane.showInputDialog (this, "New brand :") ;
+        String answerBrandEchap = answerBrand.replaceAll("'","\\\\'");
         
         //check the length
         if (answerBrand.length() > 80) {
@@ -631,7 +632,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
             try{
                 stmt = product.getMainWin().getConnection().createStatement();
                 String sqlQuery;
-                sqlQuery="select brand from V_Products where brand='"+answerBrand+"'";
+                sqlQuery="select brand from V_Products where brand='"+answerBrandEchap+"'";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
                 if (rs.next()) { 
                     //here we already have this name in the database --> impossible
@@ -764,9 +765,11 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         
         String [] str = new String [8]; //an array of String to stock the category,brand,name,quantity,qunit,price,punit,infos, in this order
         
-        str[0]="'"+(String)catCombo.getSelectedItem()+"'";
-        str[1]="'"+(String)brandCombo.getSelectedItem()+"'";
-        str[2]="'"+nameField.getText()+"'";
+        str[0]=(String)catCombo.getSelectedItem();
+        str[0]="'" + str[0].replaceAll("'","\\\\'") + "'";
+        str[1]=(String)brandCombo.getSelectedItem();
+        str[1]="'" + str[1].replaceAll("'","\\\\'") + "'";
+        str[2]="'"+ (nameField.getText().replaceAll("'","\\\\'"))+"'";
         if ("".equals(quantField.getText())) {
             str[3]="NULL";
             str[4]="NULL";
@@ -784,7 +787,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         if ("".equals(jTextArea1.getText())) {
             str[7]="NULL";
         } else {
-            str[7]="'"+jTextArea1.getText()+"'";
+            str[7]="'"+(jTextArea1.getText().replaceAll("'","\\\\'"))+"'";
         }
         
         return str;
