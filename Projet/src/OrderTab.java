@@ -370,7 +370,12 @@ public class OrderTab extends AbstractTab {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
+        int viewRow = jTable1.getSelectedRow();
+        long idRow = (long) jTable1.getValueAt(viewRow,0);
         
+        UpdateOrder NewUpdateOrderW = new UpdateOrder(getMainWin(),this,idRow,true);       
+        NewUpdateOrderW.setLocationRelativeTo(null);
+        NewUpdateOrderW.setVisible(true); 
     }//GEN-LAST:event_updateButtonActionPerformed
 
     //when a row is selected in the order table
@@ -509,7 +514,7 @@ public class OrderTab extends AbstractTab {
     }
     
     //get the content to display in the delails of order table 
-    private ResultSet getDetailsOfOrder(long or_id) throws SQLException {
+    public ResultSet getDetailsOfOrder(long or_id) throws SQLException {
         ResultSet rs = null;
         try{
             Connection conn=mainWin.getConnection();

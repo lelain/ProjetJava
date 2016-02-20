@@ -71,5 +71,61 @@ abstract class AbstractTab extends JPanel {
         return tableModel;
     }
     
+    //build the table model, given a ResultSet. Static so can be used without constructing a tab object
+    public static DefaultTableModel buildTableModel2(ResultSet rs) throws SQLException {
+
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        // names of columns
+        Vector<String> columnNames = new Vector<String>();
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            String str = metaData.getColumnLabel(column).replace('_',' ');
+            columnNames.add(str);
+        }
+
+        // data of the table      
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        while (rs.next()) {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                if (columnIndex==4) { 
+                    vector.add(rs.getBoolean(columnIndex));
+                } else {
+                    vector.add(rs.getObject(columnIndex)); 
+                }
+            }
+            data.add(vector);
+        }
+        
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                if (column==2 || column==3) {
+                    return true;
+                } else { 
+                    return false; 
+                }
+            }
+            
+            @Override
+            public Class<?> getColumnClass(int col) {
+                if (col == 3) {
+                    return Boolean.class;
+                } else  {
+                    return String.class;
+                } 
+            }
+            
+
+            
+        };
+
+        return tableModel;
+        }
+                
+                
+    
     
 }
