@@ -4,10 +4,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -98,6 +102,10 @@ public class UpdateOrder extends javax.swing.JDialog {
         jSeparator2 = new javax.swing.JSeparator();
         jLabel35 = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
+        jComboBox5 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -191,7 +199,7 @@ public class UpdateOrder extends javax.swing.JDialog {
         jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 0, 50, 1));
         jSpinner1.setEnabled(false);
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText(" - ");
         jTextField1.setEnabled(false);
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RMB", "Euros" }));
@@ -200,10 +208,10 @@ public class UpdateOrder extends javax.swing.JDialog {
         jCheckBox1.setText("price yet to be fixed");
         jCheckBox1.setEnabled(false);
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
         jComboBox3.setEnabled(false);
 
-        jTextField2.setText("jTextField2");
+        jTextField2.setText(" - ");
         jTextField2.setEnabled(false);
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Euros", "RMB" }));
@@ -212,13 +220,25 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel33.setText("=");
         jLabel33.setEnabled(false);
 
-        jTextField3.setText("jTextField3");
+        jTextField3.setText(" - ");
         jTextField3.setEnabled(false);
 
         jLabel34.setText("buyingUnit");
         jLabel34.setEnabled(false);
 
         jLabel35.setText("Order");
+
+        jCheckBox2.setText("Paid");
+        jCheckBox2.setEnabled(false);
+
+        jLabel8.setText("-  Money received : ");
+        jLabel8.setEnabled(false);
+
+        jTextField4.setText(" - ");
+        jTextField4.setEnabled(false);
+
+        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RMB", "Euros" }));
+        jComboBox5.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,30 +248,98 @@ public class UpdateOrder extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel35)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator3))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel13)
-                        .addGap(11, 11, 11)
-                        .addComponent(jSeparator2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jButton2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1))
+                            .addComponent(jSeparator2)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel3)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(1, 1, 1)
+                                        .addComponent(jLabel2)
+                                        .addGap(253, 253, 253)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel9)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel10)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel11))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel12)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jScrollPane1))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel26)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel29)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel30))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel27)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel28))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel31)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel32)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel25)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel15)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel16)
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jCheckBox1))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jCheckBox2)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel18)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -262,7 +350,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel20)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
@@ -274,66 +362,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel34))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel16)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBox1))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel25)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane3))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel26)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel29)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel30))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel31)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel32))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel27)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel28)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2)
-                                .addGap(252, 252, 252)
-                                .addComponent(jLabel7)
-                                .addGap(3, 3, 3)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel4))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel5)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel6)))
-                                .addGap(255, 255, 255)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel10)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel11))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel12)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane1)))))))
+                                                .addComponent(jLabel34)))))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -343,7 +372,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel35)
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 7, Short.MAX_VALUE)
+                .addGap(0, 8, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -356,55 +385,22 @@ public class UpdateOrder extends javax.swing.JDialog {
                     .addComponent(jLabel9)
                     .addComponent(jLabel10)
                     .addComponent(jLabel11))
-                .addGap(10, 10, 10)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel13))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel18)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel23)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel33)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel34))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel25)
-                                .addGap(74, 74, 74))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel5)
+                                .addComponent(jLabel6))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel13)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -419,8 +415,44 @@ public class UpdateOrder extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel31)
-                            .addComponent(jLabel32))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                            .addComponent(jLabel32)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel16)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jCheckBox1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jCheckBox2)
+                            .addComponent(jLabel8)
+                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel18)
+                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel20)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel23)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel33)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel34))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel25)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -499,7 +531,7 @@ public class UpdateOrder extends javax.swing.JDialog {
             ResultSet rs = stmt.executeQuery("select prod.brand as Brand,prod.name as Name,"
                     + "ord.state as Article_state,ord.paid as Paid,ord.money_received as Money_received from V_Ord_Articles AS ord inner join V_Products AS prod "
                     + "on ord.article=prod.pr_id inner join V_Orders on V_Orders.or_id=ord.ord where V_Orders.or_id="+Long.toString(orderId));
-            jTable1.setModel(OrderTab.buildTableModel2(rs));
+            jTable1.setModel(OrderTab.buildTableModel(rs));
         } catch(SQLException se) {
                 //Handle errors for JDBC
                 JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
@@ -543,12 +575,27 @@ public class UpdateOrder extends javax.swing.JDialog {
                 case "3" : jTable1.setValueAt("Received in China",i,2);
                     break;
             }
-            
-            
+            switch (jTable1.getValueAt(i,3).toString()) {
+                case "0" : jTable1.setValueAt("No",i,3);
+                    break;
+                case "1" : jTable1.setValueAt("Yes",i,3);
+                    break;
+            }
         }
         
-        //column's cell editors/renderers.
-        setUpComboColumn(jTable1.getColumnModel().getColumn(2));
+        //change the width of the fourth column of the table
+        TableColumn col = jTable1.getColumnModel().getColumn(3);
+        col.setPreferredWidth(25);
+        
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);  
+        
+        ListSelectionModel rowSM = jTable1.getSelectionModel();
+        rowSM.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                tableValueChangedEvent(e);  
+            }
+        });
+        
         
     }
     
@@ -584,8 +631,6 @@ public class UpdateOrder extends javax.swing.JDialog {
                 stmt.close();
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
-        
-
         
         Double totRMB=0.;    
         Double totRMBbuy=0.; 
@@ -624,9 +669,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                         break;
                 }
             }
-            
-            
-            
+ 
         }
         
         String str="";
@@ -664,19 +707,154 @@ public class UpdateOrder extends javax.swing.JDialog {
         
     }
     
-    private void setUpComboColumn(TableColumn stateColumn) {
-        //Set up the editor for the sport cells.
-        JComboBox comboBox = new JComboBox();
-        comboBox.addItem("Not purchased");
-        comboBox.addItem("Purchased");
-        comboBox.addItem("Sent to China");
-        comboBox.addItem("Received in China");
-        stateColumn.setCellEditor(new DefaultCellEditor(comboBox));
- 
-        //Set up tool tips for the sport cells.
-        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setToolTipText("Click for updating this article state");
-        stateColumn.setCellRenderer(renderer);
+    
+    private void tableValueChangedEvent(ListSelectionEvent e) {
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        if (lsm.isSelectionEmpty()) {
+            jLabel15.setEnabled(false);
+            jSpinner1.setEnabled(false);
+            jSpinner1.setValue(1);
+            jLabel16.setEnabled(false);
+            jTextField1.setEnabled(false);
+            jTextField1.setText(" - ");
+            jComboBox2.setEnabled(false);
+            jCheckBox1.setEnabled(false);
+            jCheckBox1.setSelected(false);
+            jCheckBox2.setEnabled(false);
+            jCheckBox2.setSelected(false);
+            jLabel8.setEnabled(false);
+            jTextField4.setEnabled(false);
+            jTextField4.setText(" - ");
+            jComboBox5.setEnabled(false);
+            jLabel18.setEnabled(false);
+            jComboBox3.setEnabled(false);
+            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { " - " } ));
+            jLabel20.setEnabled(false);
+            jTextField2.setEnabled(false);
+            jTextField2.setText(" - ");
+            jComboBox4.setEnabled(false);
+            jLabel23.setEnabled(false);
+            jLabel24.setEnabled(false);
+            jLabel24.setText( "sellingUnit" );
+            jLabel33.setEnabled(false);
+            jTextField3.setEnabled(false);
+            jTextField3.setText( " - " );
+            jLabel34.setEnabled(false);
+            jLabel34.setText( "sellingUnit" );
+            jLabel25.setEnabled(false);
+            jTextArea2.setEnabled(false);
+            jTextArea2.setText("");
+        } else {
+            Statement stmt = null;
+            try{
+                stmt = order.getMainWin().getConnection().createStatement();
+                String artId = Integer.toString(jTable1.getSelectedRow());
+                
+                ResultSet rs = stmt.executeQuery("select quantity,selling_price,sp_unit,buying_price,bp_unit,"
+                        + "change_rate,paid,state,infos,money_received,mr_unit from V_Ord_Articles "
+                        + "where V_Ord_Articles.ord="+Long.toString(orderId) + " LIMIT " + artId + ",1") ;
+                if (rs.next()) {
+                    jLabel15.setEnabled(true);
+                    jSpinner1.setEnabled(true);
+                    jSpinner1.setValue(rs.getInt("quantity"));
+                    
+                    jLabel16.setEnabled(true);
+                    jCheckBox1.setEnabled(true);
+                    if (null==rs.getString("sp_unit")) {
+                        jTextField1.setText(" - ");
+                        jTextField1.setEnabled(false);
+                        jComboBox2.setSelectedItem("RMB");
+                        jComboBox2.setEnabled(false);
+                        jCheckBox1.setSelected(true);
+                    } else {
+                        jTextField1.setText(Double.toString(rs.getDouble("selling_price")));
+                        jTextField1.setEnabled(true);
+                        jComboBox2.setSelectedItem(rs.getString("sp_unit"));
+                        jComboBox2.setEnabled(true);
+                    }
+                    
+                    jCheckBox2.setEnabled(true);
+                    jLabel8.setEnabled(true);
+                    if ("0".equals(rs.getString("paid"))) {
+                        jCheckBox2.setSelected(false);
+                        jTextField4.setText(" - ");
+                        jTextField4.setEnabled(false);
+                        jComboBox5.setSelectedItem("RMB");
+                        jComboBox5.setEnabled(false);
+                    } else {
+                        jCheckBox2.setSelected(true);
+                        jTextField4.setText(rs.getString("money_received"));
+                        jTextField4.setEnabled(true);
+                        jComboBox5.setSelectedItem(rs.getString("mr_unit"));
+                        jComboBox5.setEnabled(true);
+                    }
+                    
+                    jLabel18.setEnabled(true);
+                    jLabel20.setEnabled(true);
+                    jLabel23.setEnabled(true);
+                    jLabel24.setEnabled(true);
+                    jLabel24.setText(jComboBox2.getSelectedItem().toString());
+                    jLabel33.setEnabled(true);
+                    jLabel34.setEnabled(true);
+                    jLabel34.setText(jComboBox4.getSelectedItem().toString());
+                    jComboBox3.setEnabled(true);
+                    switch (rs.getString("state")) {
+                        case "0" :
+                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Not purchased","Purchased","Sent to China","Received in China"}));
+                            jTextField2.setEnabled(false);
+                            jTextField2.setText(" - ");
+                            jComboBox4.setEnabled(false);
+                            jComboBox4.setSelectedItem("Euros");
+                            jTextField3.setEnabled(false);
+                            jTextField3.setText( " - " );
+                            break;
+                        case "1" :
+                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Purchased","Sent to China","Received in China"}));
+                            jTextField2.setEnabled(true);
+                            jTextField2.setText(rs.getString("buying_price"));
+                            jComboBox4.setEnabled(true);
+                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
+                            jTextField3.setEnabled(true);
+                            jTextField3.setText(rs.getString("change_rate"));
+                            break;
+                        case "2" :
+                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Sent to China","Received in China"}));
+                            jTextField2.setEnabled(true);
+                            jTextField2.setText(rs.getString("buying_price"));
+                            jComboBox4.setEnabled(true);
+                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
+                            jTextField3.setEnabled(true);
+                            jTextField3.setText(rs.getString("change_rate"));
+                            break;
+                        case "3" :
+                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Received in China"}));
+                            jTextField2.setEnabled(true);
+                            jTextField2.setText(rs.getString("buying_price"));
+                            jComboBox4.setEnabled(true);
+                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
+                            jTextField3.setEnabled(true);
+                            jTextField3.setText(rs.getString("change_rate"));
+                            break;    
+                    }
+                    
+                    jLabel25.setEnabled(true);
+                    jTextArea2.setEnabled(true);
+                    jTextArea2.setText(rs.getString("infos"));
+                  
+                }
+                
+            } catch(SQLException se) {
+                    //Handle errors for JDBC
+                    JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
+                        "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        }
     }
     
     
@@ -686,10 +864,12 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
+    private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -718,6 +898,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -732,5 +913,6 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
