@@ -1,3 +1,8 @@
+import static java.awt.AWTEvent.ITEM_EVENT_MASK;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,8 +13,13 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -41,6 +51,98 @@ public class UpdateOrder extends javax.swing.JDialog {
         initTable();
         initTotal();
         
+        ListenItem.setActive(true);
+        ListenChange.setActive(true);
+        ListenDocument.setActive(true);
+        
+        jCheckBox1.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jCheckBox1ItemStateChanged(evt);
+            }
+        });
+        
+        jCheckBox2.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jCheckBox2ItemStateChanged(evt);
+            }
+        });
+        
+        jComboBox2.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
+        
+        jComboBox3.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jComboBox3ItemStateChanged(evt);
+            }
+        });
+        
+        jComboBox4.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jComboBox4ItemStateChanged(evt);
+            }
+        });
+        
+        jComboBox5.addItemListener(new ListenItem() {
+            @Override
+            public void doPerformAction(java.awt.event.ItemEvent evt) {
+                jComboBox5ItemStateChanged(evt);
+            }
+        });
+        
+        jSpinner1.addChangeListener(new ListenChange() {
+            @Override
+            public void doPerformAction(ChangeEvent evt) {
+                jSpinner1StateChanged(evt);
+            }
+        });
+        
+        
+        //Pour que le jspinner ne soit pas editable
+        ((JSpinner.DefaultEditor) jSpinner1.getEditor()).getTextField().setEditable(false);
+        
+        //add listeners to the fields
+        jTextField1.getDocument().addDocumentListener(new ListenDocument() {
+            @Override
+            public void doPerformAction(DocumentEvent evt) {
+                jTextField1StateChanged(evt);
+            }
+        });
+        
+        jTextField2.getDocument().addDocumentListener(new ListenDocument() {
+            @Override
+            public void doPerformAction(DocumentEvent evt) {
+                jTextField2StateChanged(evt);
+            }
+        });
+        
+        jTextField3.getDocument().addDocumentListener(new ListenDocument() {
+            @Override
+            public void doPerformAction(DocumentEvent evt) {
+                jTextField3StateChanged(evt);
+            }
+        });
+        
+        jTextField4.getDocument().addDocumentListener(new ListenDocument() {
+            @Override
+            public void doPerformAction(DocumentEvent evt) {
+                jTextField4StateChanged(evt);
+            }
+        });
+        
+        jTextArea2.getDocument().addDocumentListener(new ListenDocument() {
+            @Override
+            public void doPerformAction(DocumentEvent evt) {
+                jTextArea2StateChanged(evt);
+            }
+        });
         
     }
 
@@ -64,7 +166,6 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -106,6 +207,9 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel8 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         jComboBox5 = new javax.swing.JComboBox<>();
+        jTextField5 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -128,8 +232,6 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel7.setText("State : ");
 
         jLabel9.setText("Sending cost : ");
-
-        jLabel10.setText("cost");
 
         jLabel11.setText("RMB");
 
@@ -195,8 +297,13 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel32.setText("jLabel32");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not sent", "Sent to client", "Received by client" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 0, 50, 1));
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 50, 1));
         jSpinner1.setEnabled(false);
 
         jTextField1.setText(" - ");
@@ -216,6 +323,11 @@ public class UpdateOrder extends javax.swing.JDialog {
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Euros", "RMB" }));
         jComboBox4.setEnabled(false);
+        jComboBox4.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox4ItemStateChanged(evt);
+            }
+        });
 
         jLabel33.setText("=");
         jLabel33.setEnabled(false);
@@ -240,6 +352,17 @@ public class UpdateOrder extends javax.swing.JDialog {
         jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RMB", "Euros" }));
         jComboBox5.setEnabled(false);
 
+        jTextField5.setText("jTextField5");
+
+        jButton3.setText("Reset changes");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Update table");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -253,15 +376,13 @@ public class UpdateOrder extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator3))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel13)
+                        .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton2)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton1))
-                            .addComponent(jSeparator2)))
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 746, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,15 +407,16 @@ public class UpdateOrder extends javax.swing.JDialog {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel9)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabel12)
+                                                    .addComponent(jLabel9))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel10)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel11))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel12)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jScrollPane1))))))
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addGroup(layout.createSequentialGroup()
+                                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(jLabel11))
+                                                    .addComponent(jScrollPane1)))))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
@@ -327,7 +449,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel16)
                                         .addGap(3, 3, 3)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -337,7 +459,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                         .addGap(18, 18, 18)
                                         .addComponent(jLabel8)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
@@ -350,7 +472,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(jLabel20)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(layout.createSequentialGroup()
@@ -360,9 +482,13 @@ public class UpdateOrder extends javax.swing.JDialog {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel33)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel34)))))))))
+                                                .addComponent(jLabel34))))))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -372,7 +498,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel35)
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 8, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -383,8 +509,8 @@ public class UpdateOrder extends javax.swing.JDialog {
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -394,10 +520,10 @@ public class UpdateOrder extends javax.swing.JDialog {
                                 .addComponent(jLabel5)
                                 .addComponent(jLabel6))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 52, Short.MAX_VALUE)
                         .addComponent(jLabel13)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -457,13 +583,216 @@ public class UpdateOrder extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+        String orderState = (String) jComboBox1.getSelectedItem();
+        if (("Sent to client".equals(orderState) || "Received by client".equals(orderState)) && " - ".equals(jTextField5.getText())) {
+            String sendCost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) :") ;
+            while (!Utilities.isDouble(sendCost,"The sending cost should be a number",this)) {
+                sendCost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) :") ;
+            } 
+            jTextField5.setText(sendCost);
+            jLabel11.setText("RMB");
+        }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    
+    private void jCheckBox1ItemStateChanged(java.awt.event.ItemEvent evt) {                                            
+        int i = jTable1.getSelectedRow();
+        
+        ListenDocument.setActive(false);
+        
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            jTextField1.setEnabled(false);
+            jComboBox2.setEnabled(false);
+            jTextField1.setText(" - ");
+            jComboBox2.setSelectedItem("RMB");
+            sellPrice.set(i, null);
+            spUnit.set(i,null);
+        } else {
+            jTextField1.setEnabled(true);
+            jTextField1.setText("");
+            jComboBox2.setEnabled(true);
+            spUnit.set(i, jComboBox2.getSelectedItem().toString());
+        }
+        
+        ListenDocument.setActive(true);
+    }
+    
+    
+    private void jCheckBox2ItemStateChanged(java.awt.event.ItemEvent evt) {                                            
+        int i = jTable1.getSelectedRow();
+        
+        ListenDocument.setActive(false);
+        
+        if (evt.getStateChange() != ItemEvent.SELECTED) {
+            jTextField4.setEnabled(false);
+            jComboBox5.setEnabled(false);
+            jTextField4.setText(" - ");
+            jComboBox5.setSelectedItem("RMB");
+            paid.set(i, false);
+            mrUnit.set(i,null);
+            moneyReceived.set(i,null);
+        } else {
+            jTextField4.setEnabled(true);
+            jTextField4.setText("");
+            jComboBox5.setEnabled(true);
+            paid.set(i, true);
+            mrUnit.set(i,jComboBox5.getSelectedItem().toString()); 
+        }
+        
+        ListenDocument.setActive(true);
+    }
+       
+    
+    
+    
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {          
+        int i = jTable1.getSelectedRow();
+        spUnit.set(i,jComboBox2.getSelectedItem().toString());
+        
+        jLabel24.setText(jComboBox2.getSelectedItem().toString());
+        
+        ListenDocument.setActive(false);
+        
+        if (jComboBox2.getSelectedItem() == jComboBox4.getSelectedItem()) {
+            jTextField3.setText("1");
+            rate.set(i,1.);
+        } else {
+            jTextField3.setText(" - ");
+        }
+        
+        ListenDocument.setActive(true);
+    }           
+    
+    
+    
+    private void jComboBox3ItemStateChanged(java.awt.event.ItemEvent evt) {                                            
+        int i = jTable1.getSelectedRow();
+        
+        switch (jComboBox3.getSelectedItem().toString()) {
+            case "Not purchased" :
+                articleState.set(i,0);
+                bpUnit.set(i,null);
+                buyPrice.set(i,null);
+                rate.set(i,null);
+                break;
+            case "Purchased" :
+                articleState.set(i,1);
+                bpUnit.set(i,jComboBox4.getSelectedItem().toString());
+                break;
+            case "Sent to China" :
+                articleState.set(i,2);
+                bpUnit.set(i,jComboBox4.getSelectedItem().toString());
+                break;
+            case "Received in China" :
+                articleState.set(i,3);
+                bpUnit.set(i,jComboBox4.getSelectedItem().toString());
+                break;
+        }
+        
+        ListenDocument.setActive(false);
+        
+        String artState = jComboBox3.getSelectedItem().toString();
+        if ("Not purchased".equals(artState)) {
+            jTextField2.setEnabled(false);
+            jTextField2.setText(" - ");
+            jComboBox4.setEnabled(false);
+            jComboBox4.setSelectedItem("Euros");
+            jTextField3.setEnabled(false);
+            jTextField3.setText(" - ");
+        } else {
+            jTextField2.setEnabled(true);
+            jTextField2.setText("");
+            jComboBox4.setEnabled(true);
+            jTextField3.setEnabled(true);
+            jTextField3.setText("");
+        }
+        
+        ListenDocument.setActive(true);
+        
+    }
+        
+    
+    
+    private void jComboBox4ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox4ItemStateChanged
+        int i = jTable1.getSelectedRow();
+        bpUnit.set(i,jComboBox4.getSelectedItem().toString());
+        
+        jLabel34.setText(jComboBox4.getSelectedItem().toString());
+        
+        ListenDocument.setActive(false);
+        
+        if (jComboBox2.getSelectedItem() == jComboBox4.getSelectedItem()) {
+            jTextField3.setText("1");
+            rate.set(i,1.);
+        } else {
+            jTextField3.setText(" - ");
+        }
+        
+        ListenDocument.setActive(true);
+    }//GEN-LAST:event_jComboBox4ItemStateChanged
+
+    
+    private void jComboBox5ItemStateChanged(java.awt.event.ItemEvent evt) {          
+        int i = jTable1.getSelectedRow();
+        mrUnit.set(i,jComboBox5.getSelectedItem().toString());
+    }           
+    
+    private void jSpinner1StateChanged(ChangeEvent evt) {
+        int i = jTable1.getSelectedRow();
+        quantity.set(i, (int) jSpinner1.getValue());
+    }
+    
+    
+    //Undo the changes we eventually made in the dialog. Restore the data as they are in the db
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        ListenItem.setActive(false);
+        ListenChange.setActive(false);
+        ListenDocument.setActive(false);
+        initLab();
+        initTotal();
+        initTable();
+        ListenItem.setActive(true);
+        ListenChange.setActive(true);
+        ListenDocument.setActive(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    
+    private void jTextField1StateChanged(DocumentEvent e) {
+        int i = jTable1.getSelectedRow();
+        sellPrice.set(i,Double.parseDouble(jTextField1.getText())); 
+    }
+    
+    private void jTextField2StateChanged(DocumentEvent e) {
+        int i = jTable1.getSelectedRow();
+        buyPrice.set(i,Double.parseDouble(jTextField2.getText())); 
+    }
+    
+    private void jTextField3StateChanged(DocumentEvent e) {
+        int i = jTable1.getSelectedRow();
+        rate.set(i,Double.parseDouble(jTextField3.getText())); 
+    }
+    
+    private void jTextField4StateChanged(DocumentEvent e) {
+        int i = jTable1.getSelectedRow();
+        moneyReceived.set(i,Double.parseDouble(jTextField4.getText())); 
+    }
+    
+    private void jTextArea2StateChanged(DocumentEvent e) {
+        int i = jTable1.getSelectedRow();
+        infos.set(i,jTextArea2.getText()); 
+    }
     
     private void initLab() { 
 
@@ -507,17 +836,18 @@ public class UpdateOrder extends javax.swing.JDialog {
         
         if ("0".equals(state)) {
             jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Not sent", "Sent to client", "Received by client" }));
-            jLabel10.setText(" - ");
+            jTextField5.setText(" - ");
+            jTextField5.setEnabled(false);
             jLabel11.setText("");
         }
         if ("1".equals(state)) {
             jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sent to client", "Received by client" }));
-            jLabel10.setText(sendCost);
+            jTextField5.setText(sendCost);
             jLabel11.setText("RMB");
         }
         if ("2".equals(state)) {
             jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Received by client" }));
-            jLabel10.setText(sendCost);
+            jTextField5.setText(sendCost);
             jLabel11.setText("RMB");
         }
 
@@ -525,7 +855,46 @@ public class UpdateOrder extends javax.swing.JDialog {
     }
     
     private void initTable() {
+        paid = new ArrayList<> ();
+        moneyReceived = new ArrayList<> ();
+        mrUnit = new ArrayList<> ();
+        articleState = new ArrayList<> ();
+        rate = new ArrayList<> ();
+        infos = new ArrayList<> ();
+        
+        //initialisation of the different data fields 
         Statement stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select state,paid,money_received,mr_unit,change_rate,infos "
+                    + "from V_Ord_Articles where ord="+Long.toString(orderId));
+            while (rs.next()) {
+                if (rs.getInt("paid") == 0) {
+                    paid.add(false);
+                } else {
+                    paid.add(true);
+                }
+                moneyReceived.add(rs.getDouble("money_received"));
+                mrUnit.add(rs.getString("mr_unit"));
+                articleState.add(rs.getInt("state"));
+                rate.add(rs.getDouble("change_rate"));
+                infos.add(rs.getString("infos"));
+            }
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        
+        //Creation of the table
+        stmt = null;
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select prod.brand as Brand,prod.name as Name,"
@@ -544,26 +913,11 @@ public class UpdateOrder extends javax.swing.JDialog {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
-        stmt = null;
-        int nbRow=0;
-        try{
-            stmt = order.getMainWin().getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("select count(*) from V_Ord_Articles where ord="+Long.toString(orderId));
-            if (rs.next()) {
-                nbRow=rs.getInt("count(*)");
-            }
-        } catch(SQLException se) {
-                //Handle errors for JDBC
-                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            //finally block used to close resources
-            try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
-        }//end finally
+
+        int nbRow=paid.size();
         
+        //change the int code by the corresponding string (for the article state)
+        //same for paid 0=No / 1=Yes
         for (int i=0; i<nbRow; i++) {
             switch (jTable1.getValueAt(i,2).toString()) {
                 case "0" : jTable1.setValueAt("Not purchased",i,2);
@@ -600,11 +954,11 @@ public class UpdateOrder extends javax.swing.JDialog {
     }
     
     private void initTotal() {
-        ArrayList<Integer> quantity = new ArrayList<> ();
-        ArrayList<Double> sellPrice = new ArrayList<> ();
-        ArrayList<String> spUnit = new ArrayList<> ();
-        ArrayList<Double> buyPrice = new ArrayList<> ();
-        ArrayList<String> bpUnit = new ArrayList<> ();
+        quantity = new ArrayList<> ();
+        sellPrice = new ArrayList<> ();
+        spUnit = new ArrayList<> ();
+        buyPrice = new ArrayList<> ();
+        bpUnit = new ArrayList<> ();
         String incomplS = "";
         String incomplB = "";
         
@@ -745,124 +1099,135 @@ public class UpdateOrder extends javax.swing.JDialog {
             jTextArea2.setEnabled(false);
             jTextArea2.setText("");
         } else {
-            Statement stmt = null;
-            try{
-                stmt = order.getMainWin().getConnection().createStatement();
-                String artId = Integer.toString(jTable1.getSelectedRow());
-                
-                ResultSet rs = stmt.executeQuery("select quantity,selling_price,sp_unit,buying_price,bp_unit,"
-                        + "change_rate,paid,state,infos,money_received,mr_unit from V_Ord_Articles "
-                        + "where V_Ord_Articles.ord="+Long.toString(orderId) + " LIMIT " + artId + ",1") ;
-                if (rs.next()) {
-                    jLabel15.setEnabled(true);
-                    jSpinner1.setEnabled(true);
-                    jSpinner1.setValue(rs.getInt("quantity"));
+            
+            ListenItem.setActive(false);
+            ListenChange.setActive(false);
+            ListenDocument.setActive(false);
+            
+            int i = jTable1.getSelectedRow();
+
+            jLabel15.setEnabled(true);
+            jSpinner1.setEnabled(true);
+            jSpinner1.setValue(quantity.get(i));
                     
-                    jLabel16.setEnabled(true);
-                    jCheckBox1.setEnabled(true);
-                    if (null==rs.getString("sp_unit")) {
-                        jTextField1.setText(" - ");
-                        jTextField1.setEnabled(false);
-                        jComboBox2.setSelectedItem("RMB");
-                        jComboBox2.setEnabled(false);
-                        jCheckBox1.setSelected(true);
-                    } else {
-                        jTextField1.setText(Double.toString(rs.getDouble("selling_price")));
-                        jTextField1.setEnabled(true);
-                        jComboBox2.setSelectedItem(rs.getString("sp_unit"));
-                        jComboBox2.setEnabled(true);
-                    }
-                    
-                    jCheckBox2.setEnabled(true);
-                    jLabel8.setEnabled(true);
-                    if ("0".equals(rs.getString("paid"))) {
-                        jCheckBox2.setSelected(false);
-                        jTextField4.setText(" - ");
-                        jTextField4.setEnabled(false);
-                        jComboBox5.setSelectedItem("RMB");
-                        jComboBox5.setEnabled(false);
-                    } else {
-                        jCheckBox2.setSelected(true);
-                        jTextField4.setText(rs.getString("money_received"));
-                        jTextField4.setEnabled(true);
-                        jComboBox5.setSelectedItem(rs.getString("mr_unit"));
-                        jComboBox5.setEnabled(true);
-                    }
-                    
-                    jLabel18.setEnabled(true);
-                    jLabel20.setEnabled(true);
-                    jLabel23.setEnabled(true);
-                    jLabel24.setEnabled(true);
-                    jLabel24.setText(jComboBox2.getSelectedItem().toString());
-                    jLabel33.setEnabled(true);
-                    jLabel34.setEnabled(true);
-                    jLabel34.setText(jComboBox4.getSelectedItem().toString());
-                    jComboBox3.setEnabled(true);
-                    switch (rs.getString("state")) {
-                        case "0" :
-                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Not purchased","Purchased","Sent to China","Received in China"}));
-                            jTextField2.setEnabled(false);
-                            jTextField2.setText(" - ");
-                            jComboBox4.setEnabled(false);
-                            jComboBox4.setSelectedItem("Euros");
-                            jTextField3.setEnabled(false);
-                            jTextField3.setText( " - " );
-                            break;
-                        case "1" :
-                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Purchased","Sent to China","Received in China"}));
-                            jTextField2.setEnabled(true);
-                            jTextField2.setText(rs.getString("buying_price"));
-                            jComboBox4.setEnabled(true);
-                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
-                            jTextField3.setEnabled(true);
-                            jTextField3.setText(rs.getString("change_rate"));
-                            break;
-                        case "2" :
-                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Sent to China","Received in China"}));
-                            jTextField2.setEnabled(true);
-                            jTextField2.setText(rs.getString("buying_price"));
-                            jComboBox4.setEnabled(true);
-                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
-                            jTextField3.setEnabled(true);
-                            jTextField3.setText(rs.getString("change_rate"));
-                            break;
-                        case "3" :
-                            jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Received in China"}));
-                            jTextField2.setEnabled(true);
-                            jTextField2.setText(rs.getString("buying_price"));
-                            jComboBox4.setEnabled(true);
-                            jComboBox4.setSelectedItem(rs.getString("bp_unit"));
-                            jTextField3.setEnabled(true);
-                            jTextField3.setText(rs.getString("change_rate"));
-                            break;    
-                    }
-                    
-                    jLabel25.setEnabled(true);
-                    jTextArea2.setEnabled(true);
-                    jTextArea2.setText(rs.getString("infos"));
-                  
+            jLabel16.setEnabled(true);
+            jCheckBox1.setEnabled(true);
+            
+            if (null==spUnit.get(i)) {
+                jTextField1.setText(" - ");
+                jTextField1.setEnabled(false);
+                jComboBox2.setSelectedItem("RMB");
+                jComboBox2.setEnabled(false);
+                jCheckBox1.setSelected(true);
+            } else {
+                if (sellPrice.get(i)==null) {
+                    jTextField1.setText("");
+                } else {
+                    jTextField1.setText(Double.toString(sellPrice.get(i)));
                 }
-                
-            } catch(SQLException se) {
-                    //Handle errors for JDBC
-                    JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
-                        "Warning", JOptionPane.ERROR_MESSAGE);
-            } finally {
-                //finally block used to close resources
-                try{
-                    if(stmt!=null)
-                    stmt.close();
-                }catch(SQLException se2){ }// nothing we can do
-            }//end finally
+                jTextField1.setEnabled(true);
+                jCheckBox1.setSelected(false);
+                jComboBox2.setSelectedItem(spUnit.get(i));
+                jComboBox2.setEnabled(true);
+            }
+                    
+            jCheckBox2.setEnabled(true);
+            jLabel8.setEnabled(true);
+            if (!paid.get(i)) {
+                jCheckBox2.setSelected(false);
+                jTextField4.setText(" - ");
+                jTextField4.setEnabled(false);
+                jComboBox5.setSelectedItem("RMB");
+                jComboBox5.setEnabled(false);
+            } else {
+                jCheckBox2.setSelected(true);
+                jTextField4.setText(Double.toString(moneyReceived.get(i)));
+                jTextField4.setEnabled(true);
+                jComboBox5.setSelectedItem(mrUnit.get(i));
+                jComboBox5.setEnabled(true);
+            }
+                    
+            jLabel18.setEnabled(true);
+            jLabel20.setEnabled(true);
+            jLabel23.setEnabled(true);
+            jLabel24.setEnabled(true);
+            jLabel24.setText(jComboBox2.getSelectedItem().toString());
+            jLabel33.setEnabled(true);
+            jLabel34.setEnabled(true);
+            jLabel34.setText(jComboBox4.getSelectedItem().toString());
+            jComboBox3.setEnabled(true);
+            switch (articleState.get(i)) {
+                case 0 :
+                    jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Not purchased","Purchased","Sent to China","Received in China"}));
+                    jTextField2.setEnabled(false);
+                    jTextField2.setText(" - ");
+                    jComboBox4.setEnabled(false);
+                    jComboBox4.setSelectedItem("Euros");
+                    jTextField3.setEnabled(false);
+                    jTextField3.setText( " - " );
+                    break;
+                case 1 :
+                    jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Purchased","Sent to China","Received in China"}));
+                    jTextField2.setEnabled(true);
+                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    jComboBox4.setEnabled(true);
+                    jComboBox4.setSelectedItem(bpUnit.get(i));
+                    jTextField3.setEnabled(true);
+                    jTextField3.setText(Double.toString(rate.get(i)));
+                    break;
+                case 2 :
+                    jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Sent to China", "Received in China"}));
+                    jTextField2.setEnabled(true);
+                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    jComboBox4.setEnabled(true);
+                    jComboBox4.setSelectedItem(bpUnit.get(i));
+                    jTextField3.setEnabled(true);
+                    jTextField3.setText(Double.toString(rate.get(i)));
+                    break;
+                case 3 :
+                    jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Received in China"}));
+                    jTextField2.setEnabled(true);
+                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    jComboBox4.setEnabled(true);
+                    jComboBox4.setSelectedItem(bpUnit.get(i));
+                    jTextField3.setEnabled(true);
+                    jTextField3.setText(Double.toString(rate.get(i)));
+                    break;
+            }
+                    
+            jLabel25.setEnabled(true);
+            jTextArea2.setEnabled(true);
+            jTextArea2.setText(infos.get(i));
+            
+            ListenItem.setActive(true);
+            ListenChange.setActive(true);
+            ListenDocument.setActive(true);
+   
         }
     }
     
     
     private final Long orderId;
     private final OrderTab order;
+    
+    //the articles infos we are going to modify 
+    private ArrayList<Integer> quantity;
+    private ArrayList<Double> sellPrice;
+    private ArrayList<String> spUnit;
+    private ArrayList<Double> buyPrice;
+    private ArrayList<String> bpUnit;
+    private ArrayList<Boolean> paid;
+    private ArrayList<Double> moneyReceived;
+    private ArrayList<String> mrUnit;
+    private ArrayList<Integer> articleState;
+    private ArrayList<Double> rate;
+    private ArrayList<String> infos;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -871,7 +1236,6 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -914,5 +1278,79 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
+
+    
+}
+
+abstract class ListenItem implements ItemListener { 
+    
+    private static boolean active = true;
+    
+    public static void setActive(boolean active){
+        ListenItem.active = active;
+    }
+    
+    protected abstract void doPerformAction(ItemEvent e);
+    
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        if(active){
+            doPerformAction(e);
+        }
+    }
+}
+
+
+abstract class ListenChange implements ChangeListener { 
+    
+    private static boolean active = true;
+    
+    public static void setActive(boolean active){
+        ListenChange.active = active;
+    }
+    
+    protected abstract void doPerformAction(ChangeEvent e);
+    
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if(active){
+            doPerformAction(e);
+        }
+    }
+}
+
+
+abstract class ListenDocument implements DocumentListener {
+    
+    private static boolean active = true;
+    
+    public static void setActive(boolean active){
+        ListenDocument.active = active;
+    }
+    
+    protected abstract void doPerformAction(DocumentEvent e);
+    
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        if (active) {
+            doPerformAction(e);
+        }
+    }
+    
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        if (active) {
+            doPerformAction(e);
+        }
+    }
+        
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        if (active) {
+            doPerformAction(e);
+        }
+    }
+    
 }

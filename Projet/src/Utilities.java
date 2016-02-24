@@ -44,7 +44,7 @@ public class Utilities {
         }
     }
     
-    //check if the string str is a double. Show a message if not in the parentCo component
+    //check if the string str is a double. Show a message if not, in the parentCo component
     public static boolean isDouble(String str,String message, Component parentCo) {
         try {
             Double.parseDouble(str);
