@@ -23,6 +23,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 /*
@@ -229,7 +230,7 @@ public class UpdateOrder extends javax.swing.JDialog {
 
         jLabel6.setText("jLabel6");
 
-        jLabel7.setText("State : ");
+        jLabel7.setText("Status : ");
 
         jLabel9.setText("Sending cost : ");
 
@@ -251,7 +252,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Brand", "Name", "State", "Paid", "Money received"
+                "Brand", "Name", "Status", "Paid", "Money received"
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -262,7 +263,7 @@ public class UpdateOrder extends javax.swing.JDialog {
         jLabel16.setText("Selling price : ");
         jLabel16.setEnabled(false);
 
-        jLabel18.setText("Order state : ");
+        jLabel18.setText("Order status : ");
         jLabel18.setEnabled(false);
 
         jLabel20.setText("Buying price : ");
@@ -362,6 +363,11 @@ public class UpdateOrder extends javax.swing.JDialog {
         });
 
         jButton4.setText("Update table");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -602,6 +608,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 sendCost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) :") ;
             } 
             jTextField5.setText(sendCost);
+            jTextField5.setEnabled(true);
             jLabel11.setText("RMB");
         }
     }//GEN-LAST:event_jComboBox1ItemStateChanged
@@ -768,25 +775,123 @@ public class UpdateOrder extends javax.swing.JDialog {
         ListenDocument.setActive(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        ListenItem.setActive(false);
+        ListenChange.setActive(false);
+        ListenDocument.setActive(false);
+        
+        int nbRow=paid.size();
+        
+        Object data[][] = new Object [nbRow][5];
+        
+        //we need the brand and name of the products. they are in the first and second column of data 
+        Statement stmt = null;
+        int i=0;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("select prod.brand,prod.name "
+                    + "from V_Ord_Articles as ordA inner join V_Products as prod on ordA.article=prod.pr_id "
+                    + "where ordA.ord="+Long.toString(orderId));
+            while (rs.next()) {
+                data[i][0]=rs.getString("prod.brand");
+                data[i][1]=rs.getString("prod.name");
+                i++;
+            }
+        } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, select request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        
+        //change the int code by the corresponding string (for the article state)
+        //same for paid 0=No / 1=Yes
+        for (i=0; i<nbRow; i++) {
+            switch (articleState.get(i)) {
+                case 0 : data[i][2]="Not purchased";
+                    break;
+                case 1 : data[i][2]="Purchased";
+                    break;
+                case 2 : data[i][2]="Sent to China";
+                    break;    
+                case 3 : data[i][2]="Received in China";
+                    break;
+            }
+            
+            if (paid.get(i) == false) {
+                data[i][3]="No";
+            } else {
+                data[i][3]="Yes";
+            }
+            
+            data[i][4]=moneyReceived.get(i);
+        }
+        
+        String columnNames[] = new String[] { "Brand", "Name", "Status", "Paid", "Money received"} ;
+        
+        DefaultTableModel tableModel = new DefaultTableModel(data, columnNames) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+        };
+      
+        jTable1.setModel(tableModel);
+          
+        TableColumn col = jTable1.getColumnModel().getColumn(3);
+        col.setPreferredWidth(25);
+        
+        
+        
+        ListenItem.setActive(true);
+        ListenChange.setActive(true);
+        ListenDocument.setActive(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     
     private void jTextField1StateChanged(DocumentEvent e) {
         int i = jTable1.getSelectedRow();
-        sellPrice.set(i,Double.parseDouble(jTextField1.getText())); 
+        if (Utilities.isDouble(jTextField1)) {
+            sellPrice.set(i,Double.parseDouble(jTextField1.getText())); 
+        } else {
+            sellPrice.set(i,null);
+        }   
     }
     
     private void jTextField2StateChanged(DocumentEvent e) {
         int i = jTable1.getSelectedRow();
-        buyPrice.set(i,Double.parseDouble(jTextField2.getText())); 
+        if (Utilities.isDouble(jTextField2)) {
+            buyPrice.set(i,Double.parseDouble(jTextField2.getText())); 
+        } else {
+            buyPrice.set(i,null);
+        }
     }
     
     private void jTextField3StateChanged(DocumentEvent e) {
         int i = jTable1.getSelectedRow();
-        rate.set(i,Double.parseDouble(jTextField3.getText())); 
+        if (Utilities.isDouble(jTextField3)) {
+            rate.set(i,Double.parseDouble(jTextField3.getText())); 
+        } else {
+            rate.set(i,null);
+        }
     }
     
     private void jTextField4StateChanged(DocumentEvent e) {
         int i = jTable1.getSelectedRow();
-        moneyReceived.set(i,Double.parseDouble(jTextField4.getText())); 
+        if (Utilities.isDouble(jTextField4)) {
+            moneyReceived.set(i,Double.parseDouble(jTextField4.getText())); 
+        } else {
+            moneyReceived.set(i,null); 
+        }
     }
     
     private void jTextArea2StateChanged(DocumentEvent e) {
@@ -843,11 +948,13 @@ public class UpdateOrder extends javax.swing.JDialog {
         if ("1".equals(state)) {
             jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sent to client", "Received by client" }));
             jTextField5.setText(sendCost);
+            jTextField5.setEnabled(true);
             jLabel11.setText("RMB");
         }
         if ("2".equals(state)) {
             jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Received by client" }));
             jTextField5.setText(sendCost);
+            jTextField5.setEnabled(true);
             jLabel11.setText("RMB");
         }
 
@@ -898,7 +1005,7 @@ public class UpdateOrder extends javax.swing.JDialog {
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             ResultSet rs = stmt.executeQuery("select prod.brand as Brand,prod.name as Name,"
-                    + "ord.state as Article_state,ord.paid as Paid,ord.money_received as Money_received from V_Ord_Articles AS ord inner join V_Products AS prod "
+                    + "ord.state as Article_status,ord.paid as Paid,ord.money_received as Money_received from V_Ord_Articles AS ord inner join V_Products AS prod "
                     + "on ord.article=prod.pr_id inner join V_Orders on V_Orders.or_id=ord.ord where V_Orders.or_id="+Long.toString(orderId));
             jTable1.setModel(OrderTab.buildTableModel(rs));
         } catch(SQLException se) {
@@ -1141,7 +1248,12 @@ public class UpdateOrder extends javax.swing.JDialog {
                 jComboBox5.setEnabled(false);
             } else {
                 jCheckBox2.setSelected(true);
-                jTextField4.setText(Double.toString(moneyReceived.get(i)));
+                if (moneyReceived.get(i)==null) {
+                    jTextField4.setText("");
+                } else {
+                    jTextField4.setText(Double.toString(moneyReceived.get(i)));
+                }
+                
                 jTextField4.setEnabled(true);
                 jComboBox5.setSelectedItem(mrUnit.get(i));
                 jComboBox5.setEnabled(true);
@@ -1169,29 +1281,53 @@ public class UpdateOrder extends javax.swing.JDialog {
                 case 1 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Purchased","Sent to China","Received in China"}));
                     jTextField2.setEnabled(true);
-                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    if (buyPrice.get(i)==null) {
+                        jTextField2.setText("");
+                    } else {
+                        jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    }
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    jTextField3.setText(Double.toString(rate.get(i)));
+                    if (rate.get(i)==null) {
+                        jTextField3.setText("");
+                    } else {
+                        jTextField3.setText(Double.toString(rate.get(i)));
+                    }
                     break;
                 case 2 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Sent to China", "Received in China"}));
                     jTextField2.setEnabled(true);
-                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    if (buyPrice.get(i)==null) {
+                        jTextField2.setText("");
+                    } else {
+                        jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    }
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    jTextField3.setText(Double.toString(rate.get(i)));
+                    if (rate.get(i)==null) {
+                        jTextField3.setText("");
+                    } else {
+                        jTextField3.setText(Double.toString(rate.get(i)));
+                    }
                     break;
                 case 3 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Received in China"}));
                     jTextField2.setEnabled(true);
-                    jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    if (buyPrice.get(i)==null) {
+                        jTextField2.setText("");
+                    } else {
+                        jTextField2.setText(Double.toString(buyPrice.get(i)));
+                    }
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    jTextField3.setText(Double.toString(rate.get(i)));
+                    if (rate.get(i)==null) {
+                        jTextField3.setText("");
+                    } else {
+                        jTextField3.setText(Double.toString(rate.get(i)));
+                    }
                     break;
             }
                     

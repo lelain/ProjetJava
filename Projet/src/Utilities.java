@@ -44,6 +44,17 @@ public class Utilities {
         }
     }
     
+    //check if the text in the jtextField is a double. Do not show message, just retur false if not a double
+    public static boolean isDouble(JTextField text) {
+        String str = text.getText();
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
     //check if the string str is a double. Show a message if not, in the parentCo component
     public static boolean isDouble(String str,String message, Component parentCo) {
         try {
