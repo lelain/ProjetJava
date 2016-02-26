@@ -215,8 +215,18 @@ public class UpdateOrder extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButton1.setText("Finish");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Order number :");
 
@@ -353,8 +363,6 @@ public class UpdateOrder extends javax.swing.JDialog {
         jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RMB", "Euros" }));
         jComboBox5.setEnabled(false);
 
-        jTextField5.setText("jTextField5");
-
         jButton3.setText("Reset changes");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -419,7 +427,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(layout.createSequentialGroup()
-                                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                         .addComponent(jLabel11))
                                                     .addComponent(jScrollPane1)))))))
@@ -720,10 +728,11 @@ public class UpdateOrder extends javax.swing.JDialog {
             jTextField3.setText(" - ");
         } else {
             jTextField2.setEnabled(true);
-            jTextField2.setText("");
+            jTextField2.setText(Double.toString(buyPrice.get(i)));
             jComboBox4.setEnabled(true);
+            jComboBox4.setSelectedItem(bpUnit.get(i));
             jTextField3.setEnabled(true);
-            jTextField3.setText("");
+            jTextField3.setText(Double.toString(rate.get(i)));
         }
         
         ListenDocument.setActive(true);
@@ -764,6 +773,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     
     //Undo the changes we eventually made in the dialog. Restore the data as they are in the db
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //TODO also for the status, sendCost and infos of the order
         ListenItem.setActive(false);
         ListenChange.setActive(false);
         ListenDocument.setActive(false);
@@ -775,6 +785,8 @@ public class UpdateOrder extends javax.swing.JDialog {
         ListenDocument.setActive(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    
+    //when cliing the update table button
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         ListenItem.setActive(false);
@@ -850,12 +862,200 @@ public class UpdateOrder extends javax.swing.JDialog {
         TableColumn col = jTable1.getColumnModel().getColumn(3);
         col.setPreferredWidth(25);
         
-        
+        updateTotal();
         
         ListenItem.setActive(true);
         ListenChange.setActive(true);
         ListenDocument.setActive(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    //when cliking the cancel button. Just close the window, without any change
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    //when cliking the finish button
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO function to verify the dialog, not allow the price to be empty 
+        //update of the orders table
+        //we prepare the strings
+
+        
+        
+        String status = jComboBox1.getSelectedItem().toString();
+        String sendCost="";
+        switch (status) {
+            case "Not sent" :
+                status = "0";
+                sendCost="NULL";
+                break;
+            case "Sent to client" :
+                status = "1";
+                sendCost=jTextField5.getText();
+                break;
+            case "Received by client" :
+                status = "2";
+                sendCost=jTextField5.getText();
+                break;
+        }
+        
+        String infosOrd;
+        if ("".equals(jTextArea1.getText())) {
+            infosOrd= "'" + (jTextArea1.getText().replaceAll("'","\\\\'")) + "'";
+        } else {
+            infosOrd="NULL";
+        }
+        
+        //we make the update statement
+        Statement stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="UPDATE V_Orders SET state="+status+",send_cost="+sendCost+",infos="+infosOrd
+                    + " where or_id="+Long.toString(orderId);
+            int affectedRows = stmt.executeUpdate(sqlQuery); 
+            //si 1 : normal, si 0 pas normal
+            if (affectedRows == 0) {
+                JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        
+        //next for the ord_articles table
+
+        //we need the first oAr_id to start the update
+        int id=0;
+        stmt = null;
+        try{
+            stmt = order.getMainWin().getConnection().createStatement();
+            String sqlQuery;
+            sqlQuery="SELECT oAr_id from V_Ord_Articles where ord="+Long.toString(orderId);
+            //we just want the first result
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) { 
+                id = rs.getInt("oAr_id");
+            }
+            
+        } catch(SQLException se) {
+            //Handle errors for JDBC
+            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                "Warning", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            //finally block used to close resources
+            try{
+                if(stmt!=null)
+                stmt.close();
+            }catch(SQLException se2){ }// nothing we can do
+        }//end finally
+        
+        
+        String paidStr,sellingPr,sellUnit,buyingPr,buyUnit,mr,moneyUnit,rateStr,artInfos;
+        for (int i=0; i<quantity.size(); i++) {
+            stmt = null;
+            
+            //prepare the strings
+            if (sellPrice.get(i)!=0.0) {
+                sellingPr=Double.toString(sellPrice.get(i));
+                sellUnit = "'" + spUnit.get(i) + "'";
+            } else {
+                sellingPr="NULL";
+                sellUnit = "NULL";
+            }    
+            
+            if (buyPrice.get(i)!=0.0) {
+                buyingPr=Double.toString(buyPrice.get(i));
+                buyUnit = "'" + bpUnit.get(i) + "'";
+            } else {
+                buyingPr="NULL";
+                buyUnit = "NULL";
+            }   
+            
+            if (moneyReceived.get(i)!=0.0) {
+                mr=Double.toString(moneyReceived.get(i));
+                moneyUnit = "'" + mrUnit.get(i) + "'";
+            } else {
+                mr="NULL";
+                moneyUnit = "NULL";
+            } 
+            
+            if (rate.get(i)!=0.0) {
+                rateStr=Double.toString(rate.get(i));
+            } else {
+                rateStr="NULL";
+            }   
+            
+            if (infos.get(i)!=null) {
+                artInfos="'" + (infos.get(i).replaceAll("'","\\\\'")) + "'";
+            } else {
+                artInfos = "NULL";
+            }
+            
+            
+            if (paid.get(i)) {
+                paidStr = "1";
+            } else {
+                paidStr = "0";
+            }
+            try{
+                stmt = order.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="UPDATE V_Ord_Articles SET "
+                        + "quantity="+quantity.get(i)
+                        + ",selling_price="+sellingPr
+                        + ",sp_unit="+sellUnit
+                        + ",buying_price="+buyingPr
+                        + ",bp_unit="+buyUnit
+                        + ",change_rate="+rateStr
+                        + ",paid="+paidStr
+                        + ",state="+articleState.get(i) 
+                        + ",infos="+artInfos
+                        + ",money_received="+mr
+                        + ",mr_unit="+moneyUnit
+                        + " where oAr_id="+Integer.toString(id+i);
+                
+                int affectedRows = stmt.executeUpdate(sqlQuery); 
+                //si 1 : normal, si 0 pas normal
+                if (affectedRows == 0) {
+                    JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+                }
+            
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        }
+        
+        //update the orderTab
+        try {
+            order.updateOrderTable();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Unexpected error, problem updating the order table\nDetails : "+ex.getMessage(),
+                  "Warning", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        this.dispose();
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     
     private void jTextField1StateChanged(DocumentEvent e) {
@@ -1168,6 +1368,83 @@ public class UpdateOrder extends javax.swing.JDialog {
         
     }
     
+    private void updateTotal() {
+        String incomplS = "";
+        String incomplB = "";
+        Double totRMB=0.;    
+        Double totRMBbuy=0.; 
+        Double totEur=0.;
+        Double totEurbuy=0.;
+        int totQuant = 0;
+        for (int i=0; i<quantity.size(); i++) {        
+            //for quantity
+            totQuant += quantity.get(i);
+            
+            //for selling price
+            if (null==spUnit.get(i)) {
+                incomplS = " (incomplete information)";
+            } else {
+                switch (spUnit.get(i)) {
+                    case "RMB":
+                        totRMB += sellPrice.get(i) * quantity.get(i);
+                        break;
+                    case "Euros":
+                        totEur += sellPrice.get(i) * quantity.get(i);
+                        break;
+                }
+            }
+            
+            
+            //for buying price
+            if (null==bpUnit.get(i)) {
+                incomplB = " (incomplete information)";
+            } else {
+                switch (bpUnit.get(i)) {
+                    case "RMB":
+                        totRMBbuy += buyPrice.get(i) * quantity.get(i);
+                        break;
+                    case "Euros":
+                        totEurbuy += buyPrice.get(i) * quantity.get(i);
+                        break;
+                }
+            }
+ 
+        }
+        
+        String str="";
+        if (totRMB!=0 && totEur!=0) {
+            str = totRMB + " RMB + " + totEur + " Euros " + incomplS;
+        }
+        if (totRMB==0 && totEur!=0) {
+            str = totEur + " Euros " + incomplS;
+        }
+        if (totRMB!=0 && totEur==0) {
+            str = totRMB + " RMB " + incomplS;
+        }
+        if (totRMB==0 && totEur==0) {
+            str = incomplS;
+        }
+        
+        jLabel30.setText(str);
+        jLabel28.setText(Integer.toString(totQuant));
+        
+        str="";
+        if (totRMBbuy!=0 && totEurbuy!=0) {
+            str = totRMBbuy + " RMB + " + totEurbuy + " Euros " + incomplB;
+        }
+        if (totRMBbuy==0 && totEurbuy!=0) {
+            str = totEurbuy + " Euros " + incomplB;
+        }
+        if (totRMBbuy!=0 && totEurbuy==0) {
+            str = totRMBbuy + " RMB " + incomplB;
+        }
+        if (totRMBbuy==0 && totEurbuy==0) {
+            str = incomplB;
+        }
+        
+        jLabel32.setText(str);
+    }
+    
     
     private void tableValueChangedEvent(ListSelectionEvent e) {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
@@ -1227,7 +1504,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 jComboBox2.setEnabled(false);
                 jCheckBox1.setSelected(true);
             } else {
-                if (sellPrice.get(i)==null) {
+                if (sellPrice.get(i)==0.0) {
                     jTextField1.setText("");
                 } else {
                     jTextField1.setText(Double.toString(sellPrice.get(i)));
@@ -1248,7 +1525,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 jComboBox5.setEnabled(false);
             } else {
                 jCheckBox2.setSelected(true);
-                if (moneyReceived.get(i)==null) {
+                if (moneyReceived.get(i)==0.0) {
                     jTextField4.setText("");
                 } else {
                     jTextField4.setText(Double.toString(moneyReceived.get(i)));
@@ -1281,7 +1558,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 case 1 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[] { "Purchased","Sent to China","Received in China"}));
                     jTextField2.setEnabled(true);
-                    if (buyPrice.get(i)==null) {
+                    if (buyPrice.get(i)==0.0) {
                         jTextField2.setText("");
                     } else {
                         jTextField2.setText(Double.toString(buyPrice.get(i)));
@@ -1289,7 +1566,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    if (rate.get(i)==null) {
+                    if (rate.get(i)==0.0) {
                         jTextField3.setText("");
                     } else {
                         jTextField3.setText(Double.toString(rate.get(i)));
@@ -1298,7 +1575,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 case 2 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Sent to China", "Received in China"}));
                     jTextField2.setEnabled(true);
-                    if (buyPrice.get(i)==null) {
+                    if (buyPrice.get(i)==0.0) {
                         jTextField2.setText("");
                     } else {
                         jTextField2.setText(Double.toString(buyPrice.get(i)));
@@ -1306,7 +1583,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    if (rate.get(i)==null) {
+                    if (rate.get(i)==0.0) {
                         jTextField3.setText("");
                     } else {
                         jTextField3.setText(Double.toString(rate.get(i)));
@@ -1315,7 +1592,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 case 3 :
                     jComboBox3.setModel(new DefaultComboBoxModel(new String[]{"Received in China"}));
                     jTextField2.setEnabled(true);
-                    if (buyPrice.get(i)==null) {
+                    if (buyPrice.get(i)==0.0) {
                         jTextField2.setText("");
                     } else {
                         jTextField2.setText(Double.toString(buyPrice.get(i)));
@@ -1323,7 +1600,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                     jComboBox4.setEnabled(true);
                     jComboBox4.setSelectedItem(bpUnit.get(i));
                     jTextField3.setEnabled(true);
-                    if (rate.get(i)==null) {
+                    if (rate.get(i)==0.0) {
                         jTextField3.setText("");
                     } else {
                         jTextField3.setText(Double.toString(rate.get(i)));
