@@ -58,8 +58,14 @@ public class AddCat extends AbstractManageCat {
                     addChildButton.setEnabled(true);
                     // fill the jList2 with the item corresponding to the level 1 selection
                     int index = jList1.getSelectedIndex();
-                    String[] level2=new String[treeString.get(index).length];
-                    System.arraycopy(treeString.get(index), 1, level2, 1, level2.length - 1);
+                    
+                    /*treeString, for each category, first the category, then the subcategories
+                    [cat1, subcat11, subcat12;
+                     cat2, subcat21, subcat22, subcat23]
+                    So level2 is the length of a line -1
+                    */
+                    String[] level2=new String[treeString.get(index).length-1];
+                    System.arraycopy(treeString.get(index), 1, level2, 0, level2.length);
                     jList2.setListData(level2);
                     }
                 }

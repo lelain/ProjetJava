@@ -6,6 +6,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -131,14 +132,16 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     
     //update the list of children categories
     protected void updateList2(int index) {
-        String[] level2=new String[treeString.get(index).length];
-        System.arraycopy(treeString.get(index), 1, level2, 1, level2.length - 1);
+        String[] level2=new String[treeString.get(index).length-1];
+        System.arraycopy(treeString.get(index), 1, level2, 0, level2.length);
         jList2.setListData(level2);
     }
     
     //add a new parent category
     protected void addParentButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
         String answerCat = JOptionPane.showInputDialog (this, "New category :") ;
+        
+        if (answerCat==null) { return; }
         
         //check the length
         if (answerCat.length() > 80) {
@@ -176,6 +179,7 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
     protected void addChildButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // add a child
         String answerCat = JOptionPane.showInputDialog (this, "New subcategory :") ;
+        if (answerCat==null) { return; }
         if (answerCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
                     "Warning", JOptionPane.WARNING_MESSAGE);
@@ -222,7 +226,8 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
-        Path file = FileSystems.getDefault().getPath("Tree", "products.txt"); 
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Maths","M2","Java","Projet","ProjetJava","Projet","Tree","products.txt");  
+        
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
             textBefore+=line+"\n";

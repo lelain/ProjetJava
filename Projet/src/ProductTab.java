@@ -5,6 +5,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -112,7 +113,7 @@ public class ProductTab extends AbstractTab {
         //in the file, after the tag $tree$, on one line we have the main node following by the children
         ArrayList<String[]> level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
-        Path file = FileSystems.getDefault().getPath("Tree", "products.txt");   
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Maths","M2","Java","Projet","ProjetJava","Projet","Tree","products.txt");  
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -739,6 +740,7 @@ public class ProductTab extends AbstractTab {
             }
 
         }
+        
         return tree;
     }
     

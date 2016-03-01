@@ -267,8 +267,8 @@ public class SolveCatConflict extends javax.swing.JDialog {
         catCombo.setModel(new MyComboModel(cat));
         catCombo.setSelectedIndex(1);
         
-        Font f1 = catCombo.getFont();
-        Font f2 = new Font("Tahoma", 0, 14);
+        final Font f1 = catCombo.getFont();
+        final Font f2 = new Font("Tahoma", 0, 14);
 
         catCombo.setRenderer(new DefaultListCellRenderer() {
             @Override

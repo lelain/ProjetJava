@@ -36,6 +36,7 @@ public class AddProdFromNewOrder extends AddProd {
         if (fieldsRight()) {
             insertProduct();
             ordArt.updateBrandCombo((String) brandCombo.getSelectedItem());
+            ordArt.updateNameCombo();
             this.dispose();
         }  
     }  

@@ -597,12 +597,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
             data[8] = rate;
             data[9] = "0";     //not paid
             data[10] = state;
-            data[11] = infos;
-        
-            for (int i=0 ; i<12 ; i++ ) {
-                System.out.println(data[i]);
-            }
- 
+            data[11] = infos; 
         
             addOrder.addOrdArt(data);
             addOrder.updateTable();
@@ -731,53 +726,59 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     
     private void initNameCombo() {
         //we search the number of brand in the database and store it in size
-        Statement stmt = null;
         int size=0;
-        try{
-            stmt = orderTab.getMainWin().getConnection().createStatement();
-            String sqlQuery;
-            sqlQuery="SELECT COUNT(name) from V_Products where brand='"+brands[0]+"'";  //When initialize brandCombo, we set the first item in the brands array string
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { size = rs.getInt("COUNT(name)"); }
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                  "Warning", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            //finally block used to close resources
+        if (brands.length!=0) {
+            Statement stmt = null;
             try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
-        }//end finally
+                stmt = orderTab.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT COUNT(name) from V_Products where brand='"+brands[0]+"'";  //When initialize brandCombo, we set the first item in the brands array string
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { size = rs.getInt("COUNT(name)"); }
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        }
+        
         
         //now I can create my String tab
         names = new String[size];
         
         //we populate it with the brands in the data base
-        stmt = null;
-        try{
-            stmt = orderTab.getMainWin().getConnection().createStatement();
-            String sqlQuery;
-            sqlQuery = "SELECT name FROM V_Products where brand='"+brands[0]+"'";
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            int i=0;
-            while (rs.next()) { 
-                names[i]=rs.getString("name");  
-                i++; 
-            }
-                        
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                  "Warning", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            //finally block used to close resources
+        if (brands.length!=0) {
+            Statement stmt = null;
             try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
-        }//end finally 
+                stmt = orderTab.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery = "SELECT name FROM V_Products where brand='"+brands[0]+"'";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                int i=0;
+                while (rs.next()) { 
+                    names[i]=rs.getString("name");  
+                    i++; 
+                }
+                        
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally 
+        }
+        
         
         //sort the array
         Arrays.sort(names);
@@ -785,35 +786,39 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     
     private void initInfos() {
         String brandStr, nameStr;
-        brandStr = brands[0];
-        nameStr = names[0];
-        
         String category="",quantity="",qunit="",price="",punit="",infos="";
-        Statement stmt = null;
-        try{
-            stmt = orderTab.getMainWin().getConnection().createStatement();
-            String sqlQuery;
-            sqlQuery="SELECT category,quantity,qunit,price,punit,infos from V_Products where brand='"+brandStr+"' and name='"+nameStr+"'"; 
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { 
-                category = rs.getString("category");
-                quantity = rs.getString("quantity");
-                qunit = rs.getString("qunit");
-                price = rs.getString("price");
-                punit = rs.getString("punit");
-                infos = rs.getString("infos");    
-            }
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                  "Warning", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            //finally block used to close resources
+        
+        if (brands.length!=0) {
+            brandStr = brands[0];
+            nameStr = names[0];
+        
+            
+            Statement stmt = null;
             try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
-        }//end finally
+                stmt = orderTab.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT category,quantity,qunit,price,punit,infos from V_Products where brand='"+brandStr+"' and name='"+nameStr+"'"; 
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { 
+                    category = rs.getString("category");
+                    quantity = rs.getString("quantity");
+                    qunit = rs.getString("qunit");
+                    price = rs.getString("price");
+                    punit = rs.getString("punit");
+                    infos = rs.getString("infos");    
+                }
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        }
         
         categoryLab.setText(category);
         quantityLab.setText(quantity);

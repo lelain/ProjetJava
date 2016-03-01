@@ -128,7 +128,6 @@ public class AddClient2 extends AbstractManageClient {
             
             } catch(SQLException se) {
                 //Handle errors for JDBC
-                System.out.println("Error Code: " + ((SQLException)se).getErrorCode());
                 JOptionPane.showMessageDialog(this, "Unexpected error - " + name +" - , Request problem\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
             } finally {

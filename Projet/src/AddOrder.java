@@ -187,7 +187,7 @@ public class AddOrder extends javax.swing.JDialog {
 
         jLabel2.setText("Date");
 
-        jLabel3.setText("Client : ");
+        jLabel3.setText("Client  ");
 
         clientsCombo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -320,10 +320,10 @@ public class AddOrder extends javax.swing.JDialog {
         emailLab.setText("emailLab");
 
         jLabel20.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
-        jLabel20.setText("weixin : ");
+        jLabel20.setText("QQ : ");
 
         weixinLab.setFont(new java.awt.Font("Ubuntu", 0, 13)); // NOI18N
-        weixinLab.setText("weixinLab");
+        weixinLab.setText("qqLab");
 
         jLabel21.setFont(new java.awt.Font("Ubuntu", 2, 13)); // NOI18N
         jLabel21.setText("Address : ");
@@ -597,33 +597,36 @@ public class AddOrder extends javax.swing.JDialog {
         String address="";
         String infos="";
         
-        Statement stmt = null;
-        try{
-            stmt = order.getMainWin().getConnection().createStatement();
-            String sqlQuery;
-            sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,weixin,infos from V_Clients as cl"
-                   + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clients[0]+"'";
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { 
-                phone1 = rs.getString("phone1");
-                phone2 = rs.getString("phone2");
-                weixin = rs.getString("weixin");
-                email = rs.getString("email");
-                address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
-                infos = rs.getString("infos");
-            }
-        } catch(SQLException se) {
-            //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
-                  "Warning", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            //finally block used to close resources
+        if (clients.length!=0) {
+            Statement stmt = null;
             try{
-                if(stmt!=null)
-                stmt.close();
-            }catch(SQLException se2){ }// nothing we can do
-        }//end finally
+                stmt = order.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT phone1,phone2,ad.street,ad.city,ad.zip_code,email,weixin,infos from V_Clients as cl"
+                    + " inner join V_Adresses as ad on cl.delivery_adress=ad.ad_id where cl.name='"+clients[0]+"'";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) { 
+                    phone1 = rs.getString("phone1");
+                    phone2 = rs.getString("phone2");
+                    weixin = rs.getString("weixin");
+                    email = rs.getString("email");
+                    address = rs.getString("ad.street") + ", " + rs.getString("ad.city") + ", " + rs.getString("ad.zip_code");
+                    infos = rs.getString("infos");
+                }
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+        } 
         
+
         phone1Lab.setText(phone1);
         phone2Lab.setText(phone2);
         weixinLab.setText(weixin);
@@ -758,8 +761,6 @@ public class AddOrder extends javax.swing.JDialog {
         adressLab.setText(address);
         clientInfosLab.setText(infos);
         
-        
-        
     }//GEN-LAST:event_clientsComboItemStateChanged
 
     //when clicking th finish button, make the insert requests and update the orderTab
@@ -777,6 +778,12 @@ public class AddOrder extends javax.swing.JDialog {
         //the client id
         String clientId = "";
         String clientName = (String) clientsCombo.getSelectedItem();
+        
+        if (clientName == null) {
+            JOptionPane.showMessageDialog(this, "Make sure you select a client","Warning", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
         clientName = clientName.replaceAll("'","\\\\'");
         Statement stmt = null;
         try{
@@ -787,7 +794,7 @@ public class AddOrder extends javax.swing.JDialog {
             if (rs.next()) { clientId = rs.getString("cl_id"); }
         } catch(SQLException se) {
             //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+            JOptionPane.showMessageDialog(this, "Unexpected error, request problem.\nDetails : "+se.getMessage(),
                   "Warning", JOptionPane.ERROR_MESSAGE);
         } finally {
             //finally block used to close resources
@@ -927,7 +934,6 @@ public class AddOrder extends javax.swing.JDialog {
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) { size = rs.getInt("col"); }
             //now I can create my String tab
-            System.out.println("size : " +size);
             clients = new String[size];
             for (int i=0; i<size; i++) {
                 rs.next();
@@ -1107,11 +1113,11 @@ public class AddOrder extends javax.swing.JDialog {
     private javax.swing.JButton okButton;
     private javax.swing.JLabel phone1Lab;
     private javax.swing.JLabel phone2Lab;
-    private javax.swing.JLabel weixinLab;
     private javax.swing.JButton removeLign;
     private javax.swing.JLabel spTotLab;
     private javax.swing.JLabel spriceLab;
     private javax.swing.JLabel spriceUnitLab;
     private javax.swing.JLabel stateLab;
+    private javax.swing.JLabel weixinLab;
     // End of variables declaration//GEN-END:variables
 }

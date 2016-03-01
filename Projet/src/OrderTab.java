@@ -46,6 +46,9 @@ public class OrderTab extends AbstractTab {
         TableColumn col = jTable1.getColumnModel().getColumn(0);
         col.setPreferredWidth(13);
         
+        //change the fields code with the corresponding string
+        changeFieldsAll();
+        
         //change the width of the third column of the detail order table
         col = jTable2.getColumnModel().getColumn(2);
         col.setPreferredWidth(25);
@@ -418,6 +421,7 @@ public class OrderTab extends AbstractTab {
             try {
                 myRowSet = getDetailsOfOrder(idRow);
                 jTable2.setModel(buildTableModel(myRowSet));
+                changeFieldsOrder();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Unexpected error getting the order details \nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -496,6 +500,40 @@ public class OrderTab extends AbstractTab {
                
     }
     
+    private void changeFieldsAll() {
+        for (int i=0; i<jTable1.getRowCount(); i++) {
+            switch (jTable1.getValueAt(i,4).toString()) {
+                case "0" : jTable1.setValueAt("Not sent",i,4);
+                    break;
+                case "1" : jTable1.setValueAt("Sent to client",i,4);
+                    break;
+                case "2" : jTable1.setValueAt("Received by client",i,4);
+                    break;    
+            }
+        }
+    }
+    
+    private void changeFieldsOrder() {
+        for (int i=0; i<jTable2.getRowCount(); i++) {
+            switch (jTable2.getValueAt(i,3).toString()) {
+                case "0" : jTable2.setValueAt("Not purchased",i,3);
+                    break;
+                case "1" : jTable2.setValueAt("Purchased",i,3);
+                    break;
+                case "2" : jTable2.setValueAt("Sent to China",i,3);
+                    break;    
+                case "3" : jTable2.setValueAt("Received in China",i,3);
+                    break;
+            }
+            switch (jTable2.getValueAt(i,4).toString()) {
+                case "0" : jTable2.setValueAt("No",i,4);
+                    break;
+                case "1" : jTable2.setValueAt("Yes",i,4);
+                    break;
+            }
+        }
+    }
+    
     //get the content to display in the order table
     private ResultSet getContentsOfTable() throws SQLException {
         ResultSet rs = null;
@@ -529,6 +567,8 @@ public class OrderTab extends AbstractTab {
         } 
         return rs;
     }
+    
+    
 
     
 //Public methods
@@ -536,6 +576,7 @@ public class OrderTab extends AbstractTab {
     //update the content of the table
     public void updateOrderTable() throws SQLException {
         jTable1.setModel(buildTableModel(getContentsOfTable()));
+        changeFieldsAll();
     }
 
 

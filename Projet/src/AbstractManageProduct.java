@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -294,7 +295,7 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we take them from the file
         level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
-        Path file = FileSystems.getDefault().getPath("Tree", "products.txt");   
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Maths","M2","Java","Projet","ProjetJava","Projet","Tree","products.txt");  
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -340,8 +341,8 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     //initialisation of the font of the Category combo box
     private void initCatComboFont() {
         //A voir pourquoi ca marche!!!
-        Font f1 = catCombo.getFont();
-        Font f2 = new Font("Tahoma", 0, 14);
+        final Font f1 = catCombo.getFont();
+        final Font f2 = new Font("Tahoma", 0, 14);
 
         catCombo.setRenderer(new DefaultListCellRenderer() {
             @Override

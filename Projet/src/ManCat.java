@@ -87,8 +87,8 @@ public class ManCat extends AbstractManageCat {
                     }
                     //fill the jList2 with the item corresponding to the level 1 selection
                     int index = jList1.getSelectedIndex();
-                    String[] level2=new String[treeString.get(index).length];
-                    System.arraycopy(treeString.get(index), 1, level2, 1, level2.length - 1);
+                    String[] level2=new String[treeString.get(index).length-1];
+                    System.arraycopy(treeString.get(index), 1, level2, 0, level2.length);
                     jList2.setListData(level2);
                     
                     
@@ -115,12 +115,12 @@ public class ManCat extends AbstractManageCat {
                         modifyChild.setEnabled(true);
                         removeChild.setEnabled(true);
                         //je sais pas pourquoi il commence a 1 ici
-                        if (index2==1) { 
+                        if (index2==0) { 
                             childUp.setEnabled(false); 
                         } else {
                             childUp.setEnabled(true);
                         }
-                        if (index2==treeString.get(index1).length-1) { 
+                        if (index2==treeString.get(index1).length-2) { 
                             childDown.setEnabled(false); 
                         } else {
                             childDown.setEnabled(true);
@@ -342,6 +342,7 @@ public class ManCat extends AbstractManageCat {
     private void modifyParentActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // modify a parent
         String modCat = JOptionPane.showInputDialog (this, "New category :",jList1.getSelectedValue()) ;
+        if (modCat==null) { return; }
         if (modCat.length() > 80) {
             JOptionPane.showMessageDialog(this, "Category too long, please make it shorter",
                     "Warning", JOptionPane.WARNING_MESSAGE);
@@ -377,6 +378,8 @@ public class ManCat extends AbstractManageCat {
 
         String modCat = JOptionPane.showInputDialog (this, "New subcategory :",jList2.getSelectedValue()) ;
         
+        if (modCat==null) {return;}
+        
         //check if there is not already this entry
         if (!childIsAlone(modCat)) {
             JOptionPane.showMessageDialog(this, "This category already exists",
@@ -395,7 +398,7 @@ public class ManCat extends AbstractManageCat {
             int index2=jList2.getSelectedIndex();
             String[] subCat = new String[treeString.get(index1).length];   //we copy what we already have
             System.arraycopy(treeString.get(index1), 0, subCat, 0, subCat.length);
-            subCat[index2]=modCat;  //and add the new one 
+            subCat[index2+1]=modCat;  //and add the new one 
             treeString.set(index1,subCat);
             updateList2(index1);
             jList2.setSelectedIndex(index2);
@@ -407,13 +410,14 @@ public class ManCat extends AbstractManageCat {
         // moving upstairs
         int index1 = jList1.getSelectedIndex();
         int index2 = jList2.getSelectedIndex();
-        //if we are on the top of the list we do nothing
+        
+        //if we are on the top of the list we do nothing, normally the button is disabled...
         if (index2==0) {return;}
         //else 
         String[] copy=treeString.get(index1).clone();
-        String s = copy[index2-1];
-        copy[index2-1]=copy[index2];
-        copy[index2]=s;
+        String s = copy[index2];
+        copy[index2]=copy[index2+1];
+        copy[index2+1]=s;
         treeString.set(index1,copy);
         //refresh the list
         updateList2(index1);
@@ -429,9 +433,9 @@ public class ManCat extends AbstractManageCat {
         if (index2==treeString.get(index1).length-1) {return;}
         //else 
         String[] copy=treeString.get(index1).clone();
-        String s = copy[index2+1];
-        copy[index2+1]=copy[index2];
-        copy[index2]=s;
+        String s = copy[index2+2];
+        copy[index2+2]=copy[index2+1];
+        copy[index2+1]=s;
         treeString.set(index1,copy);
         //refresh the list
         updateList2(index1);
@@ -473,7 +477,7 @@ public class ManCat extends AbstractManageCat {
             String[] subCat = new String[treeString.get(index1).length-1];      //one string less 
             int j=0;
             for (int i=0; i<treeString.get(index1).length; i++) {
-                if (i!=index2) {
+                if (i!=index2+1) {
                     subCat[j]=treeString.get(index1)[i];
                     j++;
                 } 
