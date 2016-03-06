@@ -591,8 +591,13 @@ public class ClientTab extends AbstractTab {
                 stmt.executeUpdate(sqlQuery);
             } catch(SQLException se) {
                 //Handle errors for JDBC
-                JOptionPane.showMessageDialog(this, "Unexpected error, delete request problem\nDetails : "+se.getMessage(),
+                if (se.getErrorCode() == 1451) { 
+                    JOptionPane.showMessageDialog(this, "You can not remove this client. It is used elsewhere in the database.\nDetails : "+se.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Unexpected error, delete request problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+                }
             } finally {
             //finally block used to close resources
             try{

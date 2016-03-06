@@ -148,6 +148,8 @@ public class OrderTab extends AbstractTab {
             }
         });
 
+        jSplitPane1.setDividerLocation(300);
+
         jScrollPane1.setViewportView(jTable1);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
@@ -257,7 +259,7 @@ public class OrderTab extends AbstractTab {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

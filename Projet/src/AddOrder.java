@@ -845,10 +845,16 @@ public class AddOrder extends javax.swing.JDialog {
             //Now the inserts in the ord_Article table
             String infosOrd = "";
             
+            System.out.println("avant insert : " + ordArt.get(0)[11]);
+            
             for (int i=0; i<ordArt.size(); i++) {
                 //the apostrophe thing could appear for 11 (infos)
-                infosOrd = ordArt.get(i)[11].substring(1,ordArt.get(i)[11].length()-1);
-                infosOrd = infosOrd.replaceAll("'","\\\\'");
+                //only if not == NULL
+                if (!"NULL".equals(ordArt.get(i)[11])) {
+                    infosOrd = ordArt.get(i)[11].substring(1,ordArt.get(i)[11].length()-1);
+                    infosOrd = infosOrd.replaceAll("'","\\\\'");
+                }
+                
                 sqlQuery = "INSERT INTO V_Ord_Articles (ord,article,quantity,selling_price,sp_unit,buying_price,bp_unit,change_rate,paid,state,infos) "
                     + "VALUES ("+orderId+","+ordArt.get(i)[0]+","+ordArt.get(i)[3]+","+ordArt.get(i)[4]+","
                         +ordArt.get(i)[5]+","+ordArt.get(i)[6]+","+ordArt.get(i)[7]+","+ordArt.get(i)[8]+","+ordArt.get(i)[9]+","+ordArt.get(i)[10]+",'"+infosOrd+"')";

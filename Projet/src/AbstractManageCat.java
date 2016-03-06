@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -226,7 +225,8 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
-        Path file = Paths.get(System.getProperty("user.home"),"Documents","Maths","M2","Java","Projet","ProjetJava","Projet","Tree","products.txt");  
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -254,7 +254,11 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
             try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
                 String newText=textBefore;
                 for (int i=0; i<treeString.size(); i++) {
-                    String newline = String.join("/", treeString.get(i));
+                    String newline = "";
+                    for (int j=0; j<treeString.get(i).length-1; j++) {
+                        newline += treeString.get(i)[j]+"/";
+                    }
+                    newline+=treeString.get(i)[treeString.get(i).length-1];
                     newText+=newline+"\n";
                 }
                 newText+=textAfter;

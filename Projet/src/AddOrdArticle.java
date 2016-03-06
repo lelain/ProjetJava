@@ -127,6 +127,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
             }
         });
 
+        nameCombo.setToolTipText( nameCombo.getSelectedItem().toString());
         nameCombo.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 nameComboItemStateChanged(evt);
@@ -342,11 +343,11 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
                                                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 449, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
-                                                .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(57, 57, 57)
+                                                .addComponent(brandCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jLabel3)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(nameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jButton1)))))))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -438,11 +439,15 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         // when we choose an other brand, we update the nameCombo
         updateNameCombo();
         updateInfos();
+        //also update the tooltip
+        nameCombo.setToolTipText( nameCombo.getSelectedItem().toString());
     }//GEN-LAST:event_brandComboItemStateChanged
 
     private void nameComboItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_nameComboItemStateChanged
         //when we choose an other product we update the information about the newly selected one
         updateInfos();
+        //also update the tooltip
+        nameCombo.setToolTipText( nameCombo.getSelectedItem().toString());
     }//GEN-LAST:event_nameComboItemStateChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
