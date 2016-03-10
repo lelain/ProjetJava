@@ -24,12 +24,15 @@ public class AppWindow extends javax.swing.JFrame {
         this.conn=conn;
         initComponents();
         
+        myHomeTab = new HomeTab(this);
+        tabbedPane.addTab("Home",myHomeTab);
         myClientTab = new ClientTab(this);
         tabbedPane.addTab("Clients",myClientTab);
         myProductTab = new ProductTab(this);
         tabbedPane.addTab("Products",myProductTab);
         myOrderTab = new OrderTab(this);
         tabbedPane.addTab("Orders",myOrderTab);
+        
     }
 
     
@@ -143,6 +146,10 @@ public class AppWindow extends javax.swing.JFrame {
         return conn;
     }
     
+    public HomeTab getHomeTab() {
+        return myHomeTab;
+    }
+    
     public ClientTab getClientTab() {
         return myClientTab;
     }
@@ -155,6 +162,9 @@ public class AppWindow extends javax.swing.JFrame {
         return myOrderTab;
     }
     
+    public javax.swing.JTabbedPane getTabbedPane() {
+        return tabbedPane;
+    }
     
 //Variables
     
@@ -162,6 +172,7 @@ public class AppWindow extends javax.swing.JFrame {
     private final ClientTab myClientTab;
     private final ProductTab myProductTab;
     private final OrderTab myOrderTab;
+    private final HomeTab myHomeTab;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;

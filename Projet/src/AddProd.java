@@ -75,6 +75,7 @@ public class AddProd extends AbstractManageProduct {
         
         try {
             product.updateProductTable();
+            product.getMainWin().getHomeTab().updateLab();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);

@@ -43,7 +43,7 @@ public class OrderTab extends AbstractTab {
         initComponents();
         
         //change the width of the first column of the main table
-        TableColumn col = jTable1.getColumnModel().getColumn(0);
+        TableColumn col = orderTable.getColumnModel().getColumn(0);
         col.setPreferredWidth(13);
         
         //change the fields code with the corresponding string
@@ -77,13 +77,13 @@ public class OrderTab extends AbstractTab {
         deliveryAdLab.setText("");
         
         //add sorter and selection listener on the table
-        jTable1.setAutoCreateRowSorter(true);
+        orderTable.setAutoCreateRowSorter(true);
         jTable2.setAutoCreateRowSorter(true);
         
-        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);    
+        orderTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);    
         jTable2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
         
-        ListSelectionModel rowSM = jTable1.getSelectionModel();
+        ListSelectionModel rowSM = orderTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 tableValueChangedEvent(e);  
@@ -110,7 +110,7 @@ public class OrderTab extends AbstractTab {
         updateButton = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(model);
+        orderTable = new javax.swing.JTable(model);
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -150,7 +150,7 @@ public class OrderTab extends AbstractTab {
 
         jSplitPane1.setDividerLocation(300);
 
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(orderTable);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
 
@@ -367,20 +367,32 @@ public class OrderTab extends AbstractTab {
     
     //when clicking add order button. Create a new dialog for adding order
     private void addOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOrderActionPerformed
+        int nbRowBefore = orderTable.getRowCount();
+
         // add a new order
         AddOrder NewOrderW = new AddOrder(getMainWin(),this,true);       
         NewOrderW.setLocationRelativeTo(null);
         NewOrderW.setVisible(true); 
+        
+        int nbRowAfter = orderTable.getRowCount();
+        if (nbRowBefore != nbRowAfter) {
+            orderTable.getSelectionModel().addSelectionInterval(nbRowBefore,nbRowBefore); 
+        }
+        
     }//GEN-LAST:event_addOrderActionPerformed
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        int viewRow = jTable1.getSelectedRow();
-        long idRow = (long) jTable1.getValueAt(viewRow,0);
+        int viewRow = orderTable.getSelectedRow();
+        long idRow = (long) orderTable.getValueAt(viewRow,0);
+        
+        int modelRow = orderTable.convertRowIndexToModel(viewRow);
         
         UpdateOrder NewUpdateOrderW = new UpdateOrder(getMainWin(),this,idRow,true);       
         NewUpdateOrderW.setLocationRelativeTo(null);
         NewUpdateOrderW.setVisible(true); 
+        
+        orderTable.getSelectionModel().addSelectionInterval(modelRow,modelRow); 
     }//GEN-LAST:event_updateButtonActionPerformed
 
     //when a row is selected in the order table
@@ -403,6 +415,22 @@ public class OrderTab extends AbstractTab {
             jTextArea1.setEnabled(false);
             jTextArea2.setEnabled(false);
             jLabel1.setEnabled(false);
+            
+            jTable2.setModel(new javax.swing.table.DefaultTableModel(
+                new Object [][] {  }, new String [] { "Brand", "Name", "Quantity", "Article state", "Paid"
+            } ) {
+                boolean[] canEdit = new boolean [] { false, false, false, false, false };
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return canEdit [columnIndex];
+                }
+            });
+            
+            //change the width of the third column of the detail order table
+            TableColumn col = jTable2.getColumnModel().getColumn(2);
+            col.setPreferredWidth(25);
+            
             jTable2.setEnabled(false);
             phone1Lab.setText("");
             phone2Lab.setText("");
@@ -416,8 +444,8 @@ public class OrderTab extends AbstractTab {
             
             //if a line is selected, selectedRow take the order id 
             //and we enable the details of the order
-            int viewRow = jTable1.getSelectedRow();
-            long idRow = (long) jTable1.getValueAt(viewRow,0);
+            int viewRow = orderTable.getSelectedRow();
+            long idRow = (long) orderTable.getValueAt(viewRow,0);
                    
             ResultSet myRowSet;
             try {
@@ -503,13 +531,13 @@ public class OrderTab extends AbstractTab {
     }
     
     private void changeFieldsAll() {
-        for (int i=0; i<jTable1.getRowCount(); i++) {
-            switch (jTable1.getValueAt(i,4).toString()) {
-                case "0" : jTable1.setValueAt("Not sent",i,4);
+        for (int i=0; i<orderTable.getRowCount(); i++) {
+            switch (orderTable.getValueAt(i,4).toString()) {
+                case "0" : orderTable.setValueAt("Not sent",i,4);
                     break;
-                case "1" : jTable1.setValueAt("Sent to client",i,4);
+                case "1" : orderTable.setValueAt("Sent to client",i,4);
                     break;
-                case "2" : jTable1.setValueAt("Received by client",i,4);
+                case "2" : orderTable.setValueAt("Received by client",i,4);
                     break;    
             }
         }
@@ -577,8 +605,17 @@ public class OrderTab extends AbstractTab {
     
     //update the content of the table
     public void updateOrderTable() throws SQLException {
-        jTable1.setModel(buildTableModel(getContentsOfTable()));
+        orderTable.setModel(buildTableModel(getContentsOfTable()));
         changeFieldsAll();
+        
+        //change the width of the first column of the main table
+        TableColumn col = orderTable.getColumnModel().getColumn(0);
+        col.setPreferredWidth(13);
+    }
+    
+    
+    public javax.swing.JTable getOrderTable() {
+        return orderTable;
     }
 
 
@@ -605,10 +642,10 @@ public class OrderTab extends AbstractTab {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTable orderTable;
     private javax.swing.JLabel phone1Lab;
     private javax.swing.JLabel phone2Lab;
     private javax.swing.JButton updateButton;

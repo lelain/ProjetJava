@@ -477,9 +477,17 @@ public class ClientTab extends AbstractTab {
     
     //When clicking the add button, we build and show a AddClient2 dialog
     private void addClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClientActionPerformed
+        int nbRowBefore = clientTable.getRowCount();
+        
+        
         AddClient2 NewClientW = new AddClient2(mainWin,this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
+        
+        int nbRowAfter = clientTable.getRowCount();
+        if (nbRowBefore != nbRowAfter) {
+            clientTable.getSelectionModel().addSelectionInterval(nbRowBefore,nbRowBefore); 
+        }
     }//GEN-LAST:event_addClientActionPerformed
     
     //When clicking the modif button, we first put all the needed information in an hashmap, 
@@ -533,9 +541,15 @@ public class ClientTab extends AbstractTab {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
         
+        
+        int viewRow = clientTable.getSelectedRow();
+        int modelRow = clientTable.convertRowIndexToModel(viewRow);
+        
         ModifyClient ModClientW = new ModifyClient(mainWin,this,true,content,selectedRow);       
         ModClientW.setLocationRelativeTo(null);
         ModClientW.setVisible(true);
+        
+        clientTable.getSelectionModel().addSelectionInterval(modelRow,modelRow); 
 
     }//GEN-LAST:event_modifButtonActionPerformed
 
@@ -608,6 +622,7 @@ public class ClientTab extends AbstractTab {
             //and we update the table
             try {
                 updateClientTable();
+                getMainWin().getHomeTab().updateLab();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -642,9 +657,14 @@ public class ClientTab extends AbstractTab {
     }
     
     
+    public JTable getClientTable() {
+        return clientTable;
+    }
+    
+    
 //Components of the tab
     
-    private JTable clientTable;
+    private final JTable clientTable;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addClient;
     private javax.swing.JLabel cityLab;

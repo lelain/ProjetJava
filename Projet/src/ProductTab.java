@@ -84,9 +84,9 @@ public class ProductTab extends AbstractTab {
         removeButton.setEnabled(false);
         
         //add sorter, single selection and selection listener on the table
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
-        ListSelectionModel rowSM = jTable1.getSelectionModel();
+        productTable.setAutoCreateRowSorter(true);
+        productTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);      
+        ListSelectionModel rowSM = productTable.getSelectionModel();
         rowSM.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 tableValueChangedEvent(e);  
@@ -165,7 +165,7 @@ public class ProductTab extends AbstractTab {
         jTree1 = new javax.swing.JTree(top);
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable(model);
+        productTable = new javax.swing.JTable(model);
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -193,7 +193,7 @@ public class ProductTab extends AbstractTab {
 
         jSplitPane1.setDividerLocation(650);
 
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(productTable);
 
         jSplitPane1.setLeftComponent(jScrollPane2);
 
@@ -352,10 +352,16 @@ public class ProductTab extends AbstractTab {
     }// </editor-fold>//GEN-END:initComponents
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        // TODO add your handling code here:
+        int nbRowBefore = productTable.getRowCount();
+        
         AddProd NewProductW = new AddProd(getMainWin(),this,true);       
         NewProductW.setLocationRelativeTo(null);
         NewProductW.setVisible(true);
+        
+        int nbRowAfter = productTable.getRowCount();
+        if (nbRowBefore != nbRowAfter) {
+            productTable.getSelectionModel().addSelectionInterval(nbRowBefore,nbRowBefore); 
+        }
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void modifyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyButtonActionPerformed
@@ -394,9 +400,16 @@ public class ProductTab extends AbstractTab {
             }catch(SQLException se2){ }// nothing we can do
         }//end finally
  
+        
+        int viewRow = productTable.getSelectedRow();
+        int modelRow = productTable.convertRowIndexToModel(viewRow);
+        
         ModifyProduct NewProductW = new ModifyProduct(mainWin,this,true,content,selectedRow);       
         NewProductW.setLocationRelativeTo(null);
         NewProductW.setVisible(true);
+        
+        productTable.getSelectionModel().addSelectionInterval(modelRow,modelRow); 
+        
     }//GEN-LAST:event_modifyButtonActionPerformed
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
@@ -463,6 +476,7 @@ public class ProductTab extends AbstractTab {
             //and update the table
             try {
                 updateProductTable();
+                getMainWin().getHomeTab().updateLab();
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Unexpected error, problem displaying the table \nDetails : "+ex.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
@@ -499,13 +513,13 @@ public class ProductTab extends AbstractTab {
             //if a line is selected, selectedRow take the client id 
             //and we enable the modif and remove buttons
             
-            int viewRow = jTable1.getSelectedRow();
+            int viewRow = productTable.getSelectedRow();
             
             
             Statement stmt=null;
-            String name=(String)jTable1.getValueAt(viewRow,2);
+            String name=(String)productTable.getValueAt(viewRow,2);
             name=name.replaceAll("'","\\\\'");
-            String brand=(String)jTable1.getValueAt(viewRow,1);
+            String brand=(String)productTable.getValueAt(viewRow,1);
             brand=brand.replaceAll("'","\\\\'");
             
             try{
@@ -612,11 +626,11 @@ public class ProductTab extends AbstractTab {
             // React to the node selection. 
             String str = pathToString(e.getPath());
             if ("ALL".equals(str)) {
-                jTable1.setModel(buildTableModel(getContentsOfTable()));
+                productTable.setModel(buildTableModel(getContentsOfTable()));
             } else {
                 //we drop the ALL/ at the start of the string 
                 str=str.replace("ALL/", "");
-                jTable1.setModel(buildTableModel(getContentsOfTable(str)));
+                productTable.setModel(buildTableModel(getContentsOfTable(str)));
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem creating table\nDetails : "+ex.getMessage(),
@@ -689,11 +703,11 @@ public class ProductTab extends AbstractTab {
         try {
             String str = pathToString(jTree1.getSelectionPath());
             if ("ALL".equals(str)) {
-                jTable1.setModel(buildTableModel(getContentsOfTable()));
+                productTable.setModel(buildTableModel(getContentsOfTable()));
             } else {
                 //we drop the ALL/ at the start of the string 
                 str=str.replace("ALL/", "");
-                jTable1.setModel(buildTableModel(getContentsOfTable(str)));
+                productTable.setModel(buildTableModel(getContentsOfTable(str)));
             }
                     
         } catch (SQLException ex) {
@@ -755,6 +769,11 @@ public class ProductTab extends AbstractTab {
         return tree;
     }
     
+    
+    public javax.swing.JTable getProductTable() {
+        return productTable;
+    }
+    
 //Variables
 
     private DefaultMutableTreeNode top;   //to help dealing with the tree
@@ -776,11 +795,11 @@ public class ProductTab extends AbstractTab {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTree jTree1;
     private javax.swing.JButton manageTreeButton;
     private javax.swing.JButton modifyButton;
+    private javax.swing.JTable productTable;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
 }

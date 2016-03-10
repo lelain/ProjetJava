@@ -661,7 +661,7 @@ public class UpdateOrder extends javax.swing.JDialog {
             jComboBox5.setSelectedItem("RMB");
             paid.set(i, false);
             mrUnit.set(i,null);
-            moneyReceived.set(i,null);
+            moneyReceived.set(i,0.0);
         } else {
             jTextField4.setEnabled(true);
             jTextField4.setText("");
@@ -790,7 +790,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
-    //when cliing the update table button
+    //when clicking the update table button
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         ListenItem.setActive(false);
@@ -986,7 +986,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 buyUnit = "NULL";
             }   
             
-            if (moneyReceived.get(i)!=0.0) {
+            if (moneyReceived.get(i)==null || moneyReceived.get(i)!=0.0) {
                 mr=Double.toString(moneyReceived.get(i));
                 moneyUnit = "'" + mrUnit.get(i) + "'";
             } else {

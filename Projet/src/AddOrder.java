@@ -845,8 +845,6 @@ public class AddOrder extends javax.swing.JDialog {
             //Now the inserts in the ord_Article table
             String infosOrd = "";
             
-            System.out.println("avant insert : " + ordArt.get(0)[11]);
-            
             for (int i=0; i<ordArt.size(); i++) {
                 //the apostrophe thing could appear for 11 (infos)
                 //only if not == NULL
@@ -881,6 +879,7 @@ public class AddOrder extends javax.swing.JDialog {
         //update the orderTab
         try {
             order.updateOrderTable();
+            order.getMainWin().getHomeTab().updateLab();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Unexpected error, problem updating the order table\nDetails : "+ex.getMessage(),
                   "Warning", JOptionPane.ERROR_MESSAGE);
