@@ -612,8 +612,12 @@ public class UpdateOrder extends javax.swing.JDialog {
         String orderState = (String) jComboBox1.getSelectedItem();
         if (("Sent to client".equals(orderState) || "Received by client".equals(orderState)) && " - ".equals(jTextField5.getText())) {
             String sendCost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) :") ;
+            
+            if (sendCost==null) { return; }
+            
             while (!Utilities.isDouble(sendCost,"The sending cost should be a number",this)) {
                 sendCost = JOptionPane.showInputDialog (this, "Sending cost (in RMB) :") ;
+                if (sendCost==null) { return; }
             } 
             jTextField5.setText(sendCost);
             jTextField5.setEnabled(true);

@@ -621,6 +621,9 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     //Add a new brand in the dialog
     protected void addBrandActionPerformed(java.awt.event.ActionEvent evt) {                                         
         String answerBrand = JOptionPane.showInputDialog (this, "New brand :") ;
+        
+        if (answerBrand==null) { return; }
+        
         String answerBrandEchap = answerBrand.replaceAll("'","\\\\'");
         
         //check the length
@@ -668,6 +671,8 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     protected void addQUnitActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
         String answerUnit = JOptionPane.showInputDialog (this, "New unit :") ;
+        
+        if (answerUnit==null) { return; }
         
         //verify the length
         if (answerUnit.length() > 10) {
@@ -717,6 +722,8 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
     protected void addPUnitActionPerformed(java.awt.event.ActionEvent evt) {                                         
         
         String answerUnit = JOptionPane.showInputDialog (this, "New currency :") ;
+        
+        if (answerUnit==null) { return; }
         
         //verify the length
         if (answerUnit.length() > 10) {
