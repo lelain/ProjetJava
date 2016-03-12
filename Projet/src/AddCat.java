@@ -153,27 +153,19 @@ public class AddCat extends AbstractManageCat {
 
 //Protected methods
     
-    //validate the the changes
+    //validate the changes
+    @Override
     protected void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         //save the change
         registerChanges();
         
         //update the combo
-        //if we use the addCat possibility from addProduct button
-        //if (dialMod==null) {
-            dialog.updateCatCombo(treeString);
-        //}
-        
-        //if we use the addCat from ModifyProduct
-        //if (dialog==null) {
-       //     dialMod.updateCatCombo();
-       // }
+        dialog.updateCatCombo(treeString); 
         
         //update the tree
         prodTab.updateTree(treeString);
         
         this.dispose();
-        
     }                                            
 
 }

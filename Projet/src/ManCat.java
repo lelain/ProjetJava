@@ -490,7 +490,8 @@ public class ManCat extends AbstractManageCat {
     }                                           
 
     //check if there are problems in the data base category field
-    //return the number of problems, 0 if no problem, -1 if we have an error with the request    
+    //return a list of integer with first the number of problems, 0 if no problem, null if we have an error with the request    
+    //and after the products id that have problem 
     private ArrayList<Integer> checkIntegrity() {
         
         //build all the string we need to test
@@ -506,7 +507,7 @@ public class ManCat extends AbstractManageCat {
             if (i!=cat.size()-1) {
                 where+="category<>"+cat.get(i)+" AND ";
             } else {
-                where+="category<>"+cat.get(i);
+                where+="category<>"+cat.get(i);     //if the last one, we don't add AND
             }
         }
 
@@ -515,18 +516,22 @@ public class ManCat extends AbstractManageCat {
         try{
             stmt = prodTab.getMainWin().getConnection().createStatement();
             String sqlQuery;
-            sqlQuery="select count(*) from V_Products where "+where+" union "+"select pr_id from V_Products where "+where;
+            sqlQuery="select count(*) from V_Products where "+where+" UNION ALL "+"select pr_id from V_Products where "+where;
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { 
-                result.add(rs.getInt("count(*)"));
-            } 
+            //if (rs.next()) { 
+              //  result.add(rs.getInt("count(*)"));
+            //} 
             while (rs.next()) {
                 result.add(rs.getInt("count(*)"));
             }
+            
+            System.out.println(where);
+            System.out.println(result);
+            
             return result;
         } catch(SQLException se) {
             //Handle errors for JDBC
-            JOptionPane.showMessageDialog(this, "Unexpected error, Request problem\nDetails : "+se.getMessage(),
+            JOptionPane.showMessageDialog(this, "Unexpected error, SELECT request problem in function checkIntegrity\nDetails : "+se.getMessage(),
                 "Warning", JOptionPane.ERROR_MESSAGE);
             return null;
         } finally {
@@ -565,9 +570,16 @@ public class ManCat extends AbstractManageCat {
     protected void finishButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         // manage the problems that can appear in the data base if categories were modified or removed
         ArrayList<Integer> pb = checkIntegrity();
-        if (pb.get(0)!=0) {
-            solveConflict(pb);
-        }
+        if (pb==null) {
+            JOptionPane.showMessageDialog(this, "The check for integrity failed. \nThe changes will be register but there could be some errors in the category column",
+                "Warning", JOptionPane.ERROR_MESSAGE);
+        } else {
+            //if problems, we solve them
+            if (pb.get(0)!=0) {
+                solveConflict(pb);
+            }
+        }        
+        
         //here there is no more conflict
         //we can write the new categories in the file
         //and update the tree and table
