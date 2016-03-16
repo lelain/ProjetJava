@@ -6,3 +6,6 @@ et l'exemple simpleTableDemo
 - faire en sorte qu'on puisse trier les colonnes
 
 - améliorer la dimension par défaut des colonnes
+
+- pour faire des stats regarder 'common apache' section maths 
+
