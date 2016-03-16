@@ -1,10 +1,7 @@
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,8 +11,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -24,7 +19,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -639,12 +633,11 @@ public class ProductTab extends AbstractTab {
     }
     
     private void manageTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_manageTreeButtonActionPerformed
-        // TODO add your handling code here:
-        //essai pour changement d'un DefaultMutableTreeNode en ArrayList<String[]>
         JFrame ancestor = (JFrame) SwingUtilities.getWindowAncestor(this);
         ManCat myManageCat = new ManCat(ancestor,true,this);
         myManageCat.setLocationRelativeTo(null);
         myManageCat.setVisible(true);
+
     }//GEN-LAST:event_manageTreeButtonActionPerformed
 
     

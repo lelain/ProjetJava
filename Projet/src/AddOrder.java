@@ -699,7 +699,7 @@ public class AddOrder extends javax.swing.JDialog {
 
     private void addLignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLignActionPerformed
         
-        AddOrdArticle NewOrdArticleW = new AddOrdArticle(order.getMainWin(),this,true);       
+        AddOrdArtFromAddOrder NewOrdArticleW = new AddOrdArtFromAddOrder(order.getMainWin(),this,true);       
         NewOrdArticleW.setLocationRelativeTo(null);
         NewOrdArticleW.setVisible(true);
     }//GEN-LAST:event_addLignActionPerformed

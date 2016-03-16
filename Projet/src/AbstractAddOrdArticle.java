@@ -21,7 +21,7 @@ import javax.swing.event.DocumentListener;
  *
  * @author brendan
  */
-public class AddOrdArticle extends javax.swing.JDialog implements DocumentListener {
+abstract class AbstractAddOrdArticle extends javax.swing.JDialog implements DocumentListener {
 
     /**
      * Creates new form AddOrdArticle
@@ -29,11 +29,11 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
      * @param addOrder
      * @param modal
      */
-    public AddOrdArticle(java.awt.Frame parent, AddOrder addOrder, boolean modal) {
+    public AbstractAddOrdArticle(AppWindow parent, boolean modal) {
         super(parent, modal);
         
-        this.orderTab=addOrder.getOrderTab();
-        this.addOrder=addOrder;
+        this.orderTab=parent.getOrderTab();
+        
 
         initBrandCombo();
         initNameCombo();
@@ -520,6 +520,9 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
         this.dispose();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    
+    abstract void action(String[] data);
+    
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         //Add the article order in the data base and update the addOrder dialog
         //prepare the string for the request
@@ -604,11 +607,9 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
             data[10] = state;
             data[11] = infos; 
         
-            addOrder.addOrdArt(data);
-            addOrder.updateTable();
-            addOrder.updateTotal();
-        
-            this.dispose();
+            action(data);
+            
+            
         }
         
         
@@ -1003,8 +1004,7 @@ public class AddOrdArticle extends javax.swing.JDialog implements DocumentListen
     }
     
     
-    private OrderTab orderTab;
-    private AddOrder addOrder;
+    private final OrderTab orderTab;
     private String[] brands;
     private String[] names;
     // Variables declaration - do not modify//GEN-BEGIN:variables

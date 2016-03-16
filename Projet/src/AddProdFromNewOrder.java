@@ -11,12 +11,12 @@
 public class AddProdFromNewOrder extends AddProd {
     
 //New variables
-    private final AddOrdArticle ordArt; 
+    private final AbstractAddOrdArticle ordArt; 
     
 //Constructor
     
     //we mainly use the AbstractManageClient constructor
-    public AddProdFromNewOrder(AppWindow parent, ProductTab product, AddOrdArticle ordArt, boolean modal) {
+    public AddProdFromNewOrder(AppWindow parent, ProductTab product, AbstractAddOrdArticle ordArt, boolean modal) {
         super(parent, product, modal);
         
         this.ordArt=ordArt;

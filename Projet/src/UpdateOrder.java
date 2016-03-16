@@ -1,20 +1,12 @@
-import static java.awt.AWTEvent.ITEM_EVENT_MASK;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,7 +14,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -211,6 +202,8 @@ public class UpdateOrder extends javax.swing.JDialog {
         jTextField5 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        addArtButton = new javax.swing.JButton();
+        removeArtButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -377,6 +370,21 @@ public class UpdateOrder extends javax.swing.JDialog {
             }
         });
 
+        addArtButton.setText("Add lign");
+        addArtButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addArtButtonActionPerformed(evt);
+            }
+        });
+
+        removeArtButton.setText("Remove");
+        removeArtButton.setEnabled(false);
+        removeArtButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeArtButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -393,7 +401,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 746, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addGap(18, 18, 18)
                         .addComponent(jButton1))
@@ -433,24 +441,25 @@ public class UpdateOrder extends javax.swing.JDialog {
                                                     .addComponent(jScrollPane1)))))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel26)
+                                        .addComponent(addArtButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(removeArtButton))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel29)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel26)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel27))
+                                            .addComponent(jLabel31))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel29)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel30))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel27)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel28))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel31)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel32)))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jLabel28)
+                                            .addComponent(jLabel30)
+                                            .addComponent(jLabel32)))
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel25)
@@ -512,7 +521,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel35)
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addGap(0, 23, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
@@ -534,15 +543,19 @@ public class UpdateOrder extends javax.swing.JDialog {
                                 .addComponent(jLabel5)
                                 .addComponent(jLabel6))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGap(0, 12, Short.MAX_VALUE)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 52, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jLabel13)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addArtButton)
+                            .addComponent(removeArtButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel26)
@@ -555,7 +568,8 @@ public class UpdateOrder extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel31)
-                            .addComponent(jLabel32)))
+                            .addComponent(jLabel32))
+                        .addGap(19, 19, 19))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel15)
@@ -592,7 +606,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel25)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -920,7 +934,7 @@ public class UpdateOrder extends javax.swing.JDialog {
             int affectedRows = stmt.executeUpdate(sqlQuery); 
             //si 1 : normal, si 0 pas normal
             if (affectedRows == 0) {
-                JOptionPane.showMessageDialog(this, "Request problem. No row inserted",
+                JOptionPane.showMessageDialog(this, "Request problem. No row inserted in table Orders",
                   "Warning", JOptionPane.ERROR_MESSAGE);
             }
             
@@ -939,17 +953,19 @@ public class UpdateOrder extends javax.swing.JDialog {
         
         //next for the ord_articles table
 
-        //we need the first oAr_id to start the update
-        int id=0;
+        //we need all the oAr_id to do the update
         stmt = null;
+        int id[] = new int[quantity.size()];
         try{
             stmt = order.getMainWin().getConnection().createStatement();
             String sqlQuery;
             sqlQuery="SELECT oAr_id from V_Ord_Articles where ord="+Long.toString(orderId);
             //we just want the first result
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) { 
-                id = rs.getInt("oAr_id");
+            int j=0;
+            while (rs.next()) { 
+                id[j] = rs.getInt("oAr_id");
+                j++;
             }
             
         } catch(SQLException se) {
@@ -1027,7 +1043,7 @@ public class UpdateOrder extends javax.swing.JDialog {
                         + ",infos="+artInfos
                         + ",money_received="+mr
                         + ",mr_unit="+moneyUnit
-                        + " where oAr_id="+Integer.toString(id+i);
+                        + " where oAr_id="+Integer.toString(id[i]);  
                 
                 int affectedRows = stmt.executeUpdate(sqlQuery); 
                 //si 1 : normal, si 0 pas normal
@@ -1060,6 +1076,64 @@ public class UpdateOrder extends javax.swing.JDialog {
         this.dispose();
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void addArtButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addArtButtonActionPerformed
+        AddOrdArtFromUpdate NewOrdArticleW = new AddOrdArtFromUpdate(order.getMainWin(),this,true);       
+        NewOrdArticleW.setLocationRelativeTo(null);
+        NewOrdArticleW.setVisible(true);
+        
+    }//GEN-LAST:event_addArtButtonActionPerformed
+
+    private void removeArtButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeArtButtonActionPerformed
+        int n = JOptionPane.showConfirmDialog(this,"Are you sure you want to remove this lign?"
+                , "Remove lign", JOptionPane.YES_NO_OPTION);
+        if (n == JOptionPane.NO_OPTION) {
+            //we do nothing if we don't want to remove
+        } else {
+            //we make the delete request
+            System.out.println(jTable1.getSelectedRow());
+            
+            
+            //we need the oAr_id to remove the good lign
+            int row=jTable1.getSelectedRow();
+            int i=0;
+            int id=0;
+            Statement stmt = null;
+            try{
+                stmt = order.getMainWin().getConnection().createStatement();
+                String sqlQuery;
+                sqlQuery="SELECT oAr_id from V_Ord_Articles where ord="+Long.toString(orderId);
+                //we just want the first result
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                rs.next();
+                while (i!=row) {
+                    rs.next();
+                    i++;
+                }
+                id = rs.getInt("oAr_id");
+                
+                sqlQuery="DELETE FROM V_Ord_Articles where oAr_id="+ Integer.toString(id);
+                stmt.executeUpdate(sqlQuery);
+            
+            } catch(SQLException se) {
+                //Handle errors for JDBC
+                JOptionPane.showMessageDialog(this, "Unexpected error, the delete request encounters a problem\nDetails : "+se.getMessage(),
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            } finally {
+                //finally block used to close resources
+                try{
+                    if(stmt!=null)
+                    stmt.close();
+                }catch(SQLException se2){ }// nothing we can do
+            }//end finally
+            
+            //And we update everything
+            updateTable();
+            updateTotalOut();
+        }
+        
+        
+    }//GEN-LAST:event_removeArtButtonActionPerformed
 
     
     private void jTextField1StateChanged(DocumentEvent e) {
@@ -1264,6 +1338,19 @@ public class UpdateOrder extends javax.swing.JDialog {
         
     }
     
+    
+    public void updateTable() {
+        ListenItem.setActive(false);
+        ListenChange.setActive(false);
+        ListenDocument.setActive(false);
+        
+        initTable();
+        
+        ListenItem.setActive(true);
+        ListenChange.setActive(true);
+        ListenDocument.setActive(true);
+    }
+    
     private void initTotal() {
         quantity = new ArrayList<> ();
         sellPrice = new ArrayList<> ();
@@ -1372,6 +1459,22 @@ public class UpdateOrder extends javax.swing.JDialog {
         
     }
     
+    
+    //the same as initTotal : update directly from the database
+    public void updateTotalOut() {
+        ListenItem.setActive(false);
+        ListenChange.setActive(false);
+        ListenDocument.setActive(false);
+        
+        initTotal();
+        
+        ListenItem.setActive(true);
+        ListenChange.setActive(true);
+        ListenDocument.setActive(true);
+    }
+    
+    
+    //
     private void updateTotal() {
         String incomplS = "";
         String incomplB = "";
@@ -1453,6 +1556,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     private void tableValueChangedEvent(ListSelectionEvent e) {
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         if (lsm.isSelectionEmpty()) {
+            removeArtButton.setEnabled(false);
             jLabel15.setEnabled(false);
             jSpinner1.setEnabled(false);
             jSpinner1.setValue(1);
@@ -1491,6 +1595,8 @@ public class UpdateOrder extends javax.swing.JDialog {
             ListenItem.setActive(false);
             ListenChange.setActive(false);
             ListenDocument.setActive(false);
+            
+            removeArtButton.setEnabled(true);
             
             int i = jTable1.getSelectedRow();
 
@@ -1624,6 +1730,14 @@ public class UpdateOrder extends javax.swing.JDialog {
     }
     
     
+    public Long getOrderId() {
+        return orderId;
+    }
+    
+    public OrderTab getOrderTab() {
+        return order;
+    }
+    
     private final Long orderId;
     private final OrderTab order;
     
@@ -1641,6 +1755,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     private ArrayList<String> infos;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addArtButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -1696,6 +1811,7 @@ public class UpdateOrder extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JButton removeArtButton;
     // End of variables declaration//GEN-END:variables
 
     
