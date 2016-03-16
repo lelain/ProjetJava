@@ -525,9 +525,6 @@ public class ManCat extends AbstractManageCat {
                 result.add(rs.getInt("count(*)"));
             }
             
-            System.out.println(where);
-            System.out.println(result);
-            
             return result;
         } catch(SQLException se) {
             //Handle errors for JDBC

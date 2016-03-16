@@ -1091,8 +1091,6 @@ public class UpdateOrder extends javax.swing.JDialog {
             //we do nothing if we don't want to remove
         } else {
             //we make the delete request
-            System.out.println(jTable1.getSelectedRow());
-            
             
             //we need the oAr_id to remove the good lign
             int row=jTable1.getSelectedRow();
