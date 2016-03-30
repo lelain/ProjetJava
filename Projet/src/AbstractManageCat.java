@@ -225,8 +225,8 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
-        //Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
-        Path file = Paths.get("categories.txt");
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        //Path file = Paths.get("categories.txt");
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();

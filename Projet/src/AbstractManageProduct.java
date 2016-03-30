@@ -294,8 +294,8 @@ abstract class AbstractManageProduct extends javax.swing.JDialog implements Docu
         //we take them from the file
         level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
-        //Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
-        Path file = Paths.get("categories.txt");
+        Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        //Path file = Paths.get("categories.txt");
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
