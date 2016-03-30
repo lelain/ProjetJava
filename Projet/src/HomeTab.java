@@ -131,7 +131,7 @@ public class HomeTab extends AbstractTab {
     private void newClientButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newClientButtonActionPerformed
         int nbRowBefore = Integer.parseInt(jLabel1.getText());
         
-        AddClient2 NewClientW = new AddClient2(mainWin,mainWin.getClientTab(),true);       
+        AddClient NewClientW = new AddClient(mainWin,mainWin.getClientTab(),true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
         

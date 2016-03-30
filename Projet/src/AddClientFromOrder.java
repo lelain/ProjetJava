@@ -8,7 +8,7 @@
  *
  * @author brendan
  */
-public class AddClientFromOrder extends AddClient2 {
+public class AddClientFromOrder extends AddClient {
     
 //New variables
     private final AddOrder order; 

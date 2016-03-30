@@ -1,0 +1,23 @@
+### Brendan LE LAIN                                ###
+### brendanlelain@hotmail.com	                   ###
+### 2015-2016                                      ###
+
+
+This project was implemented using NetBeans. The easiest way to access the sources is to use the import possibility of NetBeans.
+
+
+To run this project you need :
+- to install MySql (http://dev.mysql.com/downloads/mysql/#downloads)
+
+- create the database (it should be called 'bdd_appli') and user. For that, once you are connected to MySql as root, you can run the following requests :
+   CREATE DATABASE bdd_appli DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+   CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';   
+   GRANT ALL ON bdd_appli.* TO 'username'@'localhost' IDENTIFIED BY 'password'; 
+
+- create the tables using the file 'create_table.sql'. To do so, once you have selected the database bdd_appli (USE bdd_appli;), execute :
+   SOURCE /path/create_table.sql;
+
+
+
+
+

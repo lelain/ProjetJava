@@ -111,7 +111,8 @@ public class ProductTab extends AbstractTab {
         //in the file, after the tag $tree$, on one line we have the main node following by the children
         ArrayList<String[]> level = new ArrayList<> ();   //to store the nodes 
         Charset charset = Charset.forName("US-ASCII");   //to read the file
-        Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        //Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        Path file = Paths.get("categories.txt");
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -127,7 +128,7 @@ public class ProductTab extends AbstractTab {
             } 
             reader.close();
         } catch (IOException x) {
-            JOptionPane.showMessageDialog(this, "Problem loading the tree"+x.getMessage(),
+            JOptionPane.showMessageDialog(this, "Problem loading the tree "+x.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         }  
         

@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  *
  * @author brendan
  */
-public class AddClient2 extends AbstractManageClient {
+public class AddClient extends AbstractManageClient {
 
 //No new variables
     
@@ -23,7 +23,7 @@ public class AddClient2 extends AbstractManageClient {
 //Constructor
     
     //we mainly use the AbstractManageClient constructor
-    public AddClient2(AppWindow parent, ClientTab client, boolean modal) {
+    public AddClient(AppWindow parent, ClientTab client, boolean modal) {
         super(parent, client, modal);
 
         setComponents();

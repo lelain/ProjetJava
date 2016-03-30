@@ -225,8 +225,8 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
         String textBefore="";
         String textAfter="";
         Charset charset = Charset.forName("US-ASCII");
-        Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
-        
+        //Path file = Paths.get(System.getProperty("user.home"),"Documents","Projet_java","ressources","products.txt");  
+        Path file = Paths.get("categories.txt");
         
         try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
             String line=reader.readLine();
@@ -265,12 +265,12 @@ abstract class AbstractManageCat extends javax.swing.JDialog {
                 writer.write(newText, 0, newText.length());
                 writer.close();
             } catch (IOException x) {
-                JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+                JOptionPane.showMessageDialog(this, "Problem saving the tree "+x.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
             }
             reader.close();
         } catch (IOException x) {
-            JOptionPane.showMessageDialog(this, "Problem saving the tree"+x.getMessage(),
+            JOptionPane.showMessageDialog(this, "Problem saving the tree "+x.getMessage(),
                     "Warning", JOptionPane.ERROR_MESSAGE);
         } 
     }

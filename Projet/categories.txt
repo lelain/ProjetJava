@@ -1,0 +1,12 @@
+/**************************************/
+/* Configuration file - DO NOT MODIFY */
+/**************************************/
+
+$tree$
+Pharmacy/Skin care/Hair/Other
+Beauty/Parfume/Make up up/abc/Other
+Clothes/Sportwear/Other
+bb/Other
+ssdfg/dfgd/Other
+g/ggg/Other
+$endtree$

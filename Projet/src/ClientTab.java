@@ -480,7 +480,7 @@ public class ClientTab extends AbstractTab {
         int nbRowBefore = clientTable.getRowCount();
         
         
-        AddClient2 NewClientW = new AddClient2(mainWin,this,true);       
+        AddClient NewClientW = new AddClient(mainWin,this,true);       
         NewClientW.setLocationRelativeTo(null);
         NewClientW.setVisible(true);
         
