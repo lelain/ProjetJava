@@ -485,6 +485,7 @@ public class ClientTab extends AbstractTab {
         NewClientW.setVisible(true);
         
         int nbRowAfter = clientTable.getRowCount();
+        //In order to select the right row
         if (nbRowBefore != nbRowAfter) {
             clientTable.getSelectionModel().addSelectionInterval(nbRowBefore,nbRowBefore); 
         }

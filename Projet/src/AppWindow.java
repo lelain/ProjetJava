@@ -26,6 +26,8 @@ public class AppWindow extends javax.swing.JFrame {
         
         myHomeTab = new HomeTab(this);
         tabbedPane.addTab("Home",myHomeTab);
+        mySellerTab = new SellerTab(this);
+        tabbedPane.addTab("Sellers",mySellerTab);
         myClientTab = new ClientTab(this);
         tabbedPane.addTab("Clients",myClientTab);
         myProductTab = new ProductTab(this);
@@ -154,6 +156,10 @@ public class AppWindow extends javax.swing.JFrame {
         return myClientTab;
     }
     
+    public SellerTab getSelletTab() {
+        return mySellerTab;
+    }
+    
     public ProductTab getProductTab() {
         return myProductTab;
     }
@@ -170,6 +176,7 @@ public class AppWindow extends javax.swing.JFrame {
     
     private final Connection conn;
     private final ClientTab myClientTab;
+    private final SellerTab mySellerTab;
     private final ProductTab myProductTab;
     private final OrderTab myOrderTab;
     private final HomeTab myHomeTab;
