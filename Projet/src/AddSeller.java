@@ -52,32 +52,15 @@ public class AddSeller  extends AbstractManageSeller {
 //Protected methods
 
     //prepare the strings and make the insert request
-    protected void insertSeller() { 
+    protected void insertSeller(boolean hasAddress) { 
         Statement stmt = null;
         //we prepare the values to be added
         //for the Adresses table
-        String street,city,zip_code,country;
-        if ("".equals(jTextField6.getText())) {
-            street="NULL";
-        } else {
+        String street="",city="",zip_code="",country="";
+        if (hasAddress) {
             street=jTextField6.getText().replaceAll("'","\\\\'");
-        }
-        
-        if ("".equals(jTextField7.getText())) {
-            city="NULL";
-        } else {
             city=jTextField7.getText().replaceAll("'","\\\\'");
-        }
-        
-        if ("".equals(jTextField8.getText())) {
-            zip_code="NULL";
-        } else {
             zip_code=jTextField8.getText();
-        }
-        
-        if ("".equals(jTextField9.getText())) {
-            country="NULL";
-        } else {
             country="'"+jTextField9.getText()+"'";
         }
         
@@ -111,35 +94,37 @@ public class AddSeller  extends AbstractManageSeller {
         }
         
         
-        //TODO il faut faire en sorte que soit on mette pas du tout d'adresse, soit on la mette en entier
-        
-        
         try {
             stmt = conn.createStatement();
             String sqlQuery;
-            sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
-                   "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+");";
+            if (hasAddress) {
+                    sqlQuery = "INSERT INTO V_Adresses (street, city, zip_code,country)\n" +
+                    "VALUES ('"+street+"','"+city+"',"+zip_code+","+country+");";
 
-            int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
+                int affectedRows = stmt.executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS); //pour retourner le dernier id insere 
 
-            if (affectedRows == 0) {
-                JOptionPane.showMessageDialog(this, "Creating adress failed, no rows affected.",
-                    "Warning", JOptionPane.ERROR_MESSAGE);
-            }
-
-            long key=-1L;
-
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    key = generatedKeys.getLong(1);
-                }
-                else {
-                    JOptionPane.showMessageDialog(this, "Creating adress failed, no ID obtained.",
+                if (affectedRows == 0) {
+                    JOptionPane.showMessageDialog(this, "Creating adress failed, no rows affected.",
                         "Warning", JOptionPane.ERROR_MESSAGE);
                 }
-            }
 
-            adress = Long.toString(key);  //adress est l'id de l'adresse inseree
+                long key=-1L;
+
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        key = generatedKeys.getLong(1);
+                    }
+                    else {
+                        JOptionPane.showMessageDialog(this, "Creating adress failed, no ID obtained.",
+                            "Warning", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+
+                adress = Long.toString(key);  //adress est l'id de l'adresse inseree
+            } else {
+                adress = "NULL";
+            }
+            
 
             sqlQuery = "INSERT INTO V_Sellers (name,phone1,phone2,address,email,weixin,infos)\n" +
                    "VALUES ('"+name+"',"+phone1+","+phone2+","+adress+","+
@@ -177,11 +162,41 @@ public class AddSeller  extends AbstractManageSeller {
     @Override
     protected void okButtonActionPerformed(java.awt.event.ActionEvent evt) {                                         
         //before we send the request we make sure that the fields are correctly fill
-        if (fieldsRight()) {
-            insertSeller();
-            this.dispose();
-        } 
-        
+        if  (!"".equals(jTextField6.getText()) 
+              && !"".equals(jTextField7.getText()) 
+              && !"".equals(jTextField8.getText()) 
+              && !"".equals(jTextField9.getText())) {
+            //If the address is complete
+            if (fieldsRight()) {
+                insertSeller(true);
+                this.dispose();
+            } 
+        } else if ("".equals(jTextField6.getText()) 
+                && "".equals(jTextField7.getText()) 
+                && "".equals(jTextField8.getText()) 
+                && "".equals(jTextField9.getText())) {
+            //If no address at all 
+            if (fieldsRight()) {
+                insertSeller(false);
+                this.dispose();
+            }   
+        } else {
+            JOptionPane.showMessageDialog(this, "The address is not complete",
+                    "Warning", JOptionPane.ERROR_MESSAGE);
+            if ("".equals(jTextField6.getText())) {
+                jTextField6.requestFocus();
+                jTextField6.selectAll();
+            } else if ("".equals(jTextField7.getText())) {
+                jTextField7.requestFocus();
+                jTextField7.selectAll();
+            } else if ("".equals(jTextField8.getText())) {
+                jTextField8.requestFocus();
+                jTextField8.selectAll();
+            } else if ("".equals(jTextField9.getText())) {
+                jTextField9.requestFocus();
+                jTextField9.selectAll();
+            }
+            
+        }    
     }  
-    
 }
